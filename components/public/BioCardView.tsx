@@ -209,7 +209,6 @@ END:VCARD`;
           <div className="w-full space-y-2.5">
             {mainListLinks.length > 0 ? (
               mainListLinks.map((link, idx) => {
-                const colors = iconColorMap[link.icon] || iconColorMap.custom;
                 return (
                   <a
                     key={link._id || idx}
@@ -220,11 +219,9 @@ END:VCARD`;
                     className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#0a1f3a]/80 hover:bg-[#0d274c] active:scale-[0.98] border border-white/10 hover:border-white/20 shadow-[0_4px_24px_rgba(0,0,0,0.3)] transition-all group backdrop-blur-md"
                   >
                     <div className="flex items-center gap-3.5 min-w-0">
-                      {/* Styled High-End Icon Squircle */}
-                      <div
-                        className={`w-11 h-11 rounded-xl ${colors.bg} ${colors.text} border ${colors.border} flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform shadow-inner`}
-                      >
-                        <SocialIcon type={link.icon} className="w-5 h-5" />
+                      {/* Official Logo / Badge */}
+                      <div className="w-11 h-11 rounded-2xl overflow-hidden flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform shadow-md">
+                        <SocialIcon type={link.icon} className="w-11 h-11" />
                       </div>
 
                       {/* Labels */}
@@ -264,7 +261,6 @@ END:VCARD`;
           <div className="w-full pt-3">
             <div className="flex items-center justify-center gap-3.5">
               {bottomSocialLinks.map((sLink, sIdx) => {
-                const colors = iconColorMap[sLink.icon] || iconColorMap.custom;
                 return (
                   <a
                     key={sLink._id || sIdx}
@@ -272,10 +268,10 @@ END:VCARD`;
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => handleLinkClick(sLink._id)}
-                    className={`w-12 h-12 rounded-2xl ${colors.bg} ${colors.text} border ${colors.border} hover:scale-105 active:scale-95 flex items-center justify-center transition-all shadow-md backdrop-blur-md`}
+                    className="w-12 h-12 rounded-2xl overflow-hidden hover:scale-110 active:scale-95 flex items-center justify-center transition-all shadow-lg"
                     title={sLink.title}
                   >
-                    <SocialIcon type={sLink.icon} className="w-5 h-5" />
+                    <SocialIcon type={sLink.icon} className="w-12 h-12" />
                   </a>
                 );
               })}
