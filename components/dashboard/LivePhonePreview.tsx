@@ -55,21 +55,32 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
   };
 
   const handleDownloadVCard = () => {
-    const vCardData = `BEGIN:VCARD
-VERSION:3.0
-FN:${card.name || "Reach World Team"}
-TITLE:${card.jobTitle || ""}
-ORG:Reach World;${card.department || ""}
-TEL;TYPE=CELL:${card.phone || ""}
-EMAIL:${card.email || ""}
-ADR:;;;${card.location || "Amman, Jordan"};;;
-END:VCARD`;
+    const rawName = (card.name || "Reach World Team").trim();
+    const parts = rawName.split(/\s+/);
+    const firstName = parts[0] || "";
+    const lastName = parts.length > 1 ? parts.slice(1).join(" ") : "";
 
-    const blob = new Blob([vCardData], { type: "text/vcard;charset=utf-8;" });
+    const vCardLines = [
+      "BEGIN:VCARD",
+      "VERSION:3.0",
+      `N:${lastName};${firstName};;;`,
+      `FN:${rawName}`,
+      card.jobTitle ? `TITLE:${card.jobTitle}` : "",
+      `ORG:Reach World${card.department ? `;${card.department}` : ""}`,
+      card.phone ? `TEL;TYPE=CELL,VOICE:${card.phone}` : "",
+      card.email ? `EMAIL;TYPE=INTERNET,WORK:${card.email}` : "",
+      `ADR;TYPE=WORK:;;;${card.location || "Amman"};;;Jordan`,
+      typeof window !== "undefined" ? `URL:${window.location.href}` : "",
+      "END:VCARD",
+    ]
+      .filter((line) => line.length > 0)
+      .join("\r\n");
+
+    const blob = new Blob([vCardLines], { type: "text/vcard;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${card.name ? card.name.replace(/\s+/g, "_") : "card"}.vcf`;
+    a.download = `${rawName.replace(/\s+/g, "_")}.vcf`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -151,14 +162,8 @@ END:VCARD`;
               {card.jobTitle || "REACH WORLD"}
             </p>
 
-            {/* Direct Contact Heading */}
-            <div className="w-full flex items-center gap-1.5 mt-5 mb-2.5 text-[#38bdf8] text-[10px] font-bold tracking-wider uppercase">
-              <PhoneCall className="w-3 h-3 stroke-[2.5]" />
-              <span>DIRECT CONTACT</span>
-            </div>
-
             {/* Contact Action List */}
-            <div className="w-full space-y-2">
+            <div className="w-full space-y-2 mt-4">
               {mainListLinks.length > 0 ? (
                 mainListLinks.map((link, idx) => (
                   <div

@@ -103,22 +103,32 @@ export default function BioCardView({ card }: BioCardViewProps) {
       });
     } catch {}
 
-    const vCardData = `BEGIN:VCARD
-VERSION:3.0
-FN:${card.name || "Reach World Team"}
-TITLE:${card.jobTitle || ""}
-ORG:Reach World;${card.department || ""}
-TEL;TYPE=CELL:${card.phone || ""}
-EMAIL:${card.email || ""}
-ADR:;;;${card.location || "Amman, Jordan"};;;
-URL:${typeof window !== "undefined" ? window.location.href : ""}
-END:VCARD`;
+    const rawName = (card.name || "Reach World Team").trim();
+    const parts = rawName.split(/\s+/);
+    const firstName = parts[0] || "";
+    const lastName = parts.length > 1 ? parts.slice(1).join(" ") : "";
 
-    const blob = new Blob([vCardData], { type: "text/vcard;charset=utf-8;" });
+    const vCardLines = [
+      "BEGIN:VCARD",
+      "VERSION:3.0",
+      `N:${lastName};${firstName};;;`,
+      `FN:${rawName}`,
+      card.jobTitle ? `TITLE:${card.jobTitle}` : "",
+      `ORG:Reach World${card.department ? `;${card.department}` : ""}`,
+      card.phone ? `TEL;TYPE=CELL,VOICE:${card.phone}` : "",
+      card.email ? `EMAIL;TYPE=INTERNET,WORK:${card.email}` : "",
+      `ADR;TYPE=WORK:;;;${card.location || "Amman"};;;Jordan`,
+      typeof window !== "undefined" ? `URL:${window.location.href}` : "",
+      "END:VCARD",
+    ]
+      .filter((line) => line.length > 0)
+      .join("\r\n");
+
+    const blob = new Blob([vCardLines], { type: "text/vcard;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${(card.name || "reach-contact").replace(/\s+/g, "_")}.vcf`;
+    a.download = `${rawName.replace(/\s+/g, "_")}.vcf`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -199,14 +209,8 @@ END:VCARD`;
           )}
         </div>
 
-        {/* Direct Contact Links */}
-        <div className="w-full space-y-3 pt-2">
-          <div className="flex items-center gap-2 px-1 text-[#38bdf8] text-[11px] font-bold tracking-widest uppercase">
-            <PhoneCall className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>DIRECT CONTACT</span>
-          </div>
-
-          <div className="w-full space-y-2.5">
+        {/* Direct Contact Links List */}
+        <div className="w-full space-y-2.5 pt-2">
             {mainListLinks.length > 0 ? (
               mainListLinks.map((link, idx) => {
                 return (
@@ -254,7 +258,6 @@ END:VCARD`;
               </div>
             )}
           </div>
-        </div>
 
         {/* Bottom Social Media Squircle Pills */}
         {bottomSocialLinks.length > 0 && (
