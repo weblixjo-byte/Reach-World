@@ -16,7 +16,7 @@ interface CardEditorModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialData?: (CardFormData & { _id?: string }) | null;
-  onSave: (data: CardFormData, id?: string) => Promise<boolean>;
+  onSave: (data: CardFormData, id?: string) => Promise<boolean | { success: boolean; error?: string }>;
   onLiveChange?: (data: CardFormData) => void;
 }
 
@@ -118,11 +118,17 @@ export default function CardEditorModal({
 
     setSaving(true);
     try {
-      const ok = await onSave(formData, initialData?._id);
-      if (ok) {
+      const result = await onSave(formData, initialData?._id);
+      if (result && typeof result === "object" && result.success) {
+        onClose();
+      } else if (result === true) {
         onClose();
       } else {
-        setErrorMsg("Failed to save card. Please try again.");
+        const errorText =
+          result && typeof result === "object" && result.error
+            ? result.error
+            : "Failed to save card. Please try again.";
+        setErrorMsg(errorText);
       }
     } catch (err: any) {
       setErrorMsg(err.message || "An unexpected error occurred.");

@@ -126,16 +126,17 @@ export default function DashboardPage() {
       const res = await updateCard(id, data);
       if (res.success) {
         loadData(page, searchQuery, selectedDept, statusFilter);
-        return true;
+        return { success: true };
       }
+      return { success: false, error: res.error || "Failed to update card" };
     } else {
       const res = await createCard(data);
       if (res.success) {
         loadData(1, searchQuery, selectedDept, statusFilter);
-        return true;
+        return { success: true };
       }
+      return { success: false, error: res.error || "Failed to create card" };
     }
-    return false;
   };
 
   const handleExportCSV = async () => {
