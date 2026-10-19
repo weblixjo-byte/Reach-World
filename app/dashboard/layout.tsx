@@ -84,11 +84,11 @@ export default function DashboardLayout({
             </div>
 
             {/* Bottom Company Official Logo Container */}
-            <div className="pt-6 border-t border-[#1e293b] flex flex-col items-center justify-center">
+            <div className="pt-5 pb-2 border-t border-[#1e293b]/80 flex items-center justify-center">
               <img
                 src="/reach-world-logo.png"
                 alt="Reach World"
-                className="w-40 h-auto object-contain brightness-0 invert opacity-90 hover:opacity-100 transition-opacity"
+                className="w-28 h-auto object-contain brightness-0 invert opacity-80 hover:opacity-100 transition-opacity"
               />
             </div>
           </aside>
