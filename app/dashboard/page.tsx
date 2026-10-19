@@ -5,14 +5,9 @@ import {
   Search,
   Plus,
   Download,
-  Filter,
-  RefreshCw,
-  Sparkles,
-  BarChart3,
   Users,
-  Settings,
-  ShieldCheck,
-  TrendingUp,
+  CreditCard,
+  Sparkles,
 } from "lucide-react";
 import KPICards from "@/components/dashboard/KPICards";
 import CardsTable from "@/components/dashboard/CardsTable";
@@ -42,7 +37,7 @@ export default function DashboardPage() {
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDept, setSelectedDept] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all"); // 'all' | 'active' | 'paused'
+  const [statusFilter, setStatusFilter] = useState("all");
 
   // Analytics
   const [analytics, setAnalytics] = useState<AnalyticsSummary>({
@@ -50,7 +45,7 @@ export default function DashboardPage() {
     totalActive: 0,
     totalTaps: 0,
     topPerformer: null,
-    tapThroughRate: 88.4,
+    tapThroughRate: 0,
   });
 
   // Selected Card for Live Preview (right panel)
@@ -83,6 +78,10 @@ export default function DashboardPage() {
         const updatedSelected = res.cards.find((c) => c._id === selectedCard._id);
         if (updatedSelected) {
           setSelectedCard(updatedSelected);
+        } else if (res.cards.length > 0) {
+          setSelectedCard(res.cards[0]);
+        } else {
+          setSelectedCard(null);
         }
       }
     });
@@ -147,7 +146,7 @@ export default function DashboardPage() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `Reach_World_NFC_Batch_${new Date().toISOString().slice(0, 10)}.csv`);
+      link.setAttribute("download", `Reach_World_NFC_${new Date().toISOString().slice(0, 10)}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -159,67 +158,73 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="max-w-[1600px] mx-auto space-y-8">
-      {/* KPI Row (Always visible or on analytics) */}
+    <div className="max-w-[1600px] mx-auto space-y-7">
+      {/* Top Metric Cards */}
       <KPICards analytics={analytics} />
 
-      {/* Render based on Sidebar Selection */}
+      {/* View switching based on sidebar */}
       {currentView === "analytics" ? (
-        <div className="space-y-6">
-          <div className="apple-card rounded-2xl p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-base font-bold text-[#1D1D1F]">
-                  Edge Analytics & Tap Telemetry
-                </h2>
-                <p className="text-xs text-[#86868B] mt-0.5">
-                  Real-time visitor interactions served directly from Vercel Edge & MongoDB Atlas.
-                </p>
+        <div className="bg-white rounded-3xl p-8 border border-black/[0.06] shadow-[0_4px_30px_rgba(0,0,0,0.02)] space-y-6">
+          <div className="flex items-center justify-between pb-6 border-b border-black/[0.05]">
+            <div>
+              <h2 className="text-lg font-bold text-[#1D1D1F] tracking-tight">
+                Cards Interaction Analytics
+              </h2>
+              <p className="text-xs text-[#86868B] mt-1 font-medium">
+                Real-time performance and NFC engagement metrics across Reach World.
+              </p>
+            </div>
+            <button
+              onClick={() => setCurrentView("cards")}
+              className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#0071E3] text-white hover:bg-[#0077ED] transition-colors"
+            >
+              Back to Registry
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-6 rounded-2xl bg-[#F5F5F7] border border-black/[0.04]">
+              <span className="text-xs text-[#86868B] font-semibold uppercase tracking-wider">
+                Average Taps per Card
+              </span>
+              <div className="text-3xl font-extrabold text-[#1D1D1F] mt-2">
+                {analytics.totalCards > 0
+                  ? Math.round(analytics.totalTaps / analytics.totalCards)
+                  : 0}
               </div>
-              <button
-                onClick={() => setCurrentView("cards")}
-                className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#0071E3] text-white"
-              >
-                Back to Cards
-              </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-5 rounded-2xl bg-[#F5F5F7] border border-black/5">
-                <span className="text-xs text-[#86868B] font-medium">Average Taps per Card</span>
-                <div className="text-2xl font-bold text-[#1D1D1F] mt-1">
-                  {analytics.totalCards > 0
-                    ? Math.round(analytics.totalTaps / analytics.totalCards)
-                    : 0}{" "}
-                  <span className="text-xs font-normal text-[#86868B]">taps/employee</span>
-                </div>
+            <div className="p-6 rounded-2xl bg-[#F5F5F7] border border-black/[0.04]">
+              <span className="text-xs text-[#86868B] font-semibold uppercase tracking-wider">
+                Active NFC Proportion
+              </span>
+              <div className="text-3xl font-extrabold text-[#34C759] mt-2">
+                {analytics.totalCards > 0
+                  ? Math.round((analytics.totalActive / analytics.totalCards) * 100)
+                  : 100}
+                %
               </div>
+            </div>
 
-              <div className="p-5 rounded-2xl bg-[#F5F5F7] border border-black/5">
-                <span className="text-xs text-[#86868B] font-medium">Cache Hit Ratio</span>
-                <div className="text-2xl font-bold text-[#34C759] mt-1">
-                  99.4% <span className="text-xs font-normal text-[#86868B]">Edge ISR Cached</span>
-                </div>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-[#F5F5F7] border border-black/5">
-                <span className="text-xs text-[#86868B] font-medium">vCard Add-to-Contacts Conversion</span>
-                <div className="text-2xl font-bold text-[#0071E3] mt-1">
-                  {analytics.tapThroughRate}% <span className="text-xs font-normal text-[#86868B]">conversion</span>
-                </div>
+            <div className="p-6 rounded-2xl bg-[#F5F5F7] border border-black/[0.04]">
+              <span className="text-xs text-[#86868B] font-semibold uppercase tracking-wider">
+                Contact Saves Conversion
+              </span>
+              <div className="text-3xl font-extrabold text-[#0071E3] mt-2">
+                {analytics.tapThroughRate}%
               </div>
             </div>
           </div>
         </div>
       ) : currentView === "departments" ? (
-        <div className="apple-card rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-6">
+        <div className="bg-white rounded-3xl p-8 border border-black/[0.06] shadow-[0_4px_30px_rgba(0,0,0,0.02)] space-y-6">
+          <div className="flex items-center justify-between pb-6 border-b border-black/[0.05]">
             <div>
-              <h2 className="text-base font-bold text-[#1D1D1F]">
-                Reach World Departments ({departments.length})
+              <h2 className="text-lg font-bold text-[#1D1D1F] tracking-tight">
+                Departments Overview
               </h2>
-              <p className="text-xs text-[#86868B] mt-0.5">
-                Click any department to instantly filter and manage related employee NFC cards.
+              <p className="text-xs text-[#86868B] mt-1 font-medium">
+                Filter and manage employee cards by department division.
               </p>
             </div>
             <button
@@ -227,105 +232,62 @@ export default function DashboardPage() {
                 setSelectedDept("all");
                 setCurrentView("cards");
               }}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#F5F5F7] hover:bg-black/5 text-[#1D1D1F] border border-black/10"
+              className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#F5F5F7] hover:bg-black/5 text-[#1D1D1F] border border-black/10 transition-colors"
             >
               Reset to All
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            {departments.map((dept) => (
-              <div
-                key={dept}
-                onClick={() => {
-                  setSelectedDept(dept);
-                  setCurrentView("cards");
-                }}
-                className="p-5 rounded-2xl bg-[#FBFBFD] border border-black/[0.06] hover:border-[#0071E3]/50 cursor-pointer transition-all hover:shadow-md flex items-center justify-between group"
-              >
-                <div>
-                  <h4 className="font-semibold text-sm text-[#1D1D1F] group-hover:text-[#0071E3] transition-colors">
-                    {dept}
-                  </h4>
-                  <span className="text-xs text-[#86868B]">Corporate Division</span>
+          {departments.length === 0 ? (
+            <div className="py-12 text-center text-xs text-[#86868B]">
+              Departments will automatically appear here once employee cards are created.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              {departments.map((dept) => (
+                <div
+                  key={dept}
+                  onClick={() => {
+                    setSelectedDept(dept);
+                    setCurrentView("cards");
+                  }}
+                  className="p-5 rounded-2xl bg-[#FBFBFD] border border-black/[0.06] hover:border-[#0071E3]/50 cursor-pointer transition-all hover:shadow-md flex items-center justify-between group"
+                >
+                  <div>
+                    <h4 className="font-bold text-sm text-[#1D1D1F] group-hover:text-[#0071E3] transition-colors">
+                      {dept}
+                    </h4>
+                    <span className="text-xs text-[#86868B]">Click to filter</span>
+                  </div>
+                  <Users className="w-5 h-5 text-[#86868B] group-hover:text-[#0071E3] transition-colors" />
                 </div>
-                <Users className="w-5 h-5 text-[#86868B] group-hover:text-[#0071E3] transition-colors" />
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : currentView === "settings" ? (
-        <div className="apple-card rounded-2xl p-6 max-w-2xl">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-base font-bold text-[#1D1D1F]">
-                Reach World NFC Platform Settings
-              </h2>
-              <p className="text-xs text-[#86868B] mt-0.5">
-                Database, Vercel edge caching, and branding configuration.
-              </p>
+              ))}
             </div>
-            <button
-              onClick={() => setCurrentView("cards")}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#0071E3] text-white"
-            >
-              Back
-            </button>
-          </div>
-
-          <div className="space-y-4 text-xs">
-            <div className="p-4 rounded-xl bg-[#F5F5F7] flex items-center justify-between">
-              <div>
-                <span className="font-semibold text-[#1D1D1F]">Database Backend</span>
-                <p className="text-[#86868B]">MongoDB Atlas Cloud (reach-world cluster)</p>
-              </div>
-              <span className="px-2.5 py-1 rounded-full bg-[#34C759]/10 text-[#34C759] font-medium">
-                Connected
-              </span>
-            </div>
-
-            <div className="p-4 rounded-xl bg-[#F5F5F7] flex items-center justify-between">
-              <div>
-                <span className="font-semibold text-[#1D1D1F]">NFC Card Design Template</span>
-                <p className="text-[#86868B]">Reach World Signature Dark Blue Glassmorphism</p>
-              </div>
-              <span className="px-2.5 py-1 rounded-full bg-[#0071E3]/10 text-[#0071E3] font-medium">
-                Active
-              </span>
-            </div>
-
-            <div className="p-4 rounded-xl bg-[#F5F5F7] flex items-center justify-between">
-              <div>
-                <span className="font-semibold text-[#1D1D1F]">ISR Revalidation Lifetime</span>
-                <p className="text-[#86868B]">Edge cache refreshed every 60 seconds</p>
-              </div>
-              <span className="font-mono text-[#86868B]">revalidate = 60</span>
-            </div>
-          </div>
+          )}
         </div>
       ) : (
         /* Default: Cards Registry */
         <>
-          {/* Control Bar: Search + Apple Segmented Control + Actions */}
-          <div className="apple-card rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
-            {/* Search */}
+          {/* Action Control Bar */}
+          <div className="bg-white rounded-2xl p-4 border border-black/[0.06] shadow-[0_2px_16px_rgba(0,0,0,0.02)] flex flex-wrap items-center justify-between gap-4">
+            {/* Search Input */}
             <div className="relative flex-1 min-w-[280px] max-w-md">
               <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#86868B]" />
               <input
                 type="text"
-                placeholder="Search 200+ employees, slugs or departments..."
+                placeholder="Search employees, slugs, or departments..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
+                className="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
               />
             </div>
 
-            {/* Center: Apple Segmented Control & Department Filter */}
+            {/* Apple Segmented Filter */}
             <div className="flex items-center gap-3">
               <div className="bg-[#F5F5F7] p-1 rounded-xl flex items-center border border-black/[0.04]">
                 <button
                   onClick={() => setStatusFilter("all")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                     statusFilter === "all"
                       ? "bg-white text-[#1D1D1F] shadow-xs"
                       : "text-[#86868B] hover:text-[#1D1D1F]"
@@ -335,7 +297,7 @@ export default function DashboardPage() {
                 </button>
                 <button
                   onClick={() => setStatusFilter("active")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                     statusFilter === "active"
                       ? "bg-white text-[#1D1D1F] shadow-xs"
                       : "text-[#86868B] hover:text-[#1D1D1F]"
@@ -345,7 +307,7 @@ export default function DashboardPage() {
                 </button>
                 <button
                   onClick={() => setStatusFilter("paused")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                     statusFilter === "paused"
                       ? "bg-white text-[#1D1D1F] shadow-xs"
                       : "text-[#86868B] hover:text-[#1D1D1F]"
@@ -371,23 +333,23 @@ export default function DashboardPage() {
               )}
             </div>
 
-            {/* Actions: Export CSV + Create Card */}
+            {/* Action Buttons */}
             <div className="flex items-center gap-2.5">
               <button
                 onClick={handleExportCSV}
-                disabled={isExporting}
-                className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#F5F5F7] hover:bg-black/[0.05] text-[#1D1D1F] border border-black/10 flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                disabled={isExporting || cards.length === 0}
+                className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#F5F5F7] hover:bg-black/[0.05] text-[#1D1D1F] border border-black/10 flex items-center gap-1.5 transition-colors disabled:opacity-40"
                 title="Export CSV for NFC Printing Factory"
               >
                 <Download className="w-3.5 h-3.5" />
-                {isExporting ? "Generating..." : "Export CSV"}
+                {isExporting ? "Exporting..." : "Export CSV"}
               </button>
 
               <button
                 onClick={handleOpenCreate}
-                className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#0071E3] hover:bg-[#0077ED] text-white flex items-center gap-1.5 shadow-sm transition-all active:scale-[0.98]"
+                className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#0071E3] hover:bg-[#0077ED] text-white flex items-center gap-1.5 shadow-sm transition-all active:scale-[0.98]"
               >
-                <Plus className="w-3.5 h-3.5" />
+                <Plus className="w-4 h-4 stroke-[2.5]" />
                 Create Card
               </button>
             </div>
@@ -428,8 +390,16 @@ export default function DashboardPage() {
                   }}
                 />
               ) : (
-                <div className="apple-card rounded-3xl p-8 text-center text-[#86868B] text-xs">
-                  Select an employee card from the registry to view live iPhone preview.
+                <div className="w-[340px] bg-white rounded-3xl p-8 border border-black/[0.06] shadow-sm text-center">
+                  <div className="w-12 h-12 rounded-2xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center mx-auto mb-3">
+                    <Sparkles className="w-6 h-6 stroke-[1.8]" />
+                  </div>
+                  <h4 className="text-sm font-bold text-[#1D1D1F]">
+                    Live iPhone Mockup
+                  </h4>
+                  <p className="text-xs text-[#86868B] mt-1 leading-relaxed">
+                    Create or select a card to preview its real-time Reach World mobile experience.
+                  </p>
                 </div>
               )}
             </div>
