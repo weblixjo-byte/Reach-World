@@ -78,42 +78,22 @@ export function SocialIcon({ type, className = "w-4 h-4" }: { type: string; clas
 }
 
 /**
- * Reach World Signature Pinwheel/Star Logo (SVG) matching the official brand
+ * Reach World Signature Logo matching the official brand asset
  */
-export function ReachWorldLogo({ className = "w-36 h-auto" }: { className?: string }) {
+export function ReachWorldLogo({
+  className = "w-48 h-auto",
+  layout = "stacked",
+}: {
+  className?: string;
+  layout?: "stacked" | "horizontal";
+}) {
   return (
-    <div className={`flex flex-col items-center select-none ${className}`}>
-      {/* 8-pointed curved star / pinwheel emblem */}
-      <svg
-        viewBox="0 0 100 100"
-        className="w-16 h-16 text-white"
-        fill="currentColor"
-      >
-        <g transform="translate(50, 50)">
-          {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
-            <path
-              key={deg}
-              d="M 0,-44 C 5,-28 12,-16 0,-4 C -12,-16 -5,-28 0,-44 Z"
-              transform={`rotate(${deg})`}
-              fill="#FFFFFF"
-            />
-          ))}
-        </g>
-      </svg>
-      {/* Reach World Typography */}
-      <div className="flex flex-col items-center mt-2">
-        <div className="flex items-center gap-1.5">
-          <span className="text-white text-xl font-extrabold tracking-widest font-sans">
-            REACH
-          </span>
-          <span className="text-white/60 text-[9px] font-semibold align-super -mt-2">
-            TM
-          </span>
-        </div>
-        <span className="text-white text-lg font-bold tracking-[0.28em] font-sans -mt-1">
-          WORLD
-        </span>
-      </div>
+    <div className={`flex flex-col items-center justify-center select-none ${className}`}>
+      <img
+        src="/reach-world-logo.png"
+        alt="Reach World"
+        className="w-full h-auto object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+      />
     </div>
   );
 }

@@ -139,7 +139,7 @@ END:VCARD`;
           {/* Scrollable Bio Card View inside iPhone */}
           <div className="flex-1 overflow-y-auto px-4 pb-6 pt-2 flex flex-col items-center">
             {/* Logo */}
-            <ReachWorldLogo className="scale-85 -my-2" />
+            <ReachWorldLogo className="w-40 my-2" />
 
             {/* Name */}
             <h3 className="text-base font-bold text-white tracking-tight text-center mt-2 leading-tight">

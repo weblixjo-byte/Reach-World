@@ -157,7 +157,7 @@ END:VCARD`;
       {/* Main Glassmorphism Dark Card Container */}
       <div className="w-full max-w-[420px] flex flex-col items-center px-4 py-8">
         {/* Reach World Brand Logo */}
-        <ReachWorldLogo className="mb-6" />
+        <ReachWorldLogo className="w-56 mb-6" />
 
         {/* Employee Full Name */}
         <h1 className="text-2xl font-bold text-white tracking-tight text-center">
