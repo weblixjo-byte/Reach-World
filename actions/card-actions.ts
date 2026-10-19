@@ -409,8 +409,8 @@ export async function getCardBySlug(slug: string) {
 }
 
 /**
- * Export cards into clean CSV format for NFC Printing Factory.
- * Columns: Name, Job Title, Department, Full Card URL, QR Code Link, Status
+ * Export cards into clean CSV format.
+ * Columns: Name, Job Title, Department, Full Card URL, Status
  */
 export async function exportCardsToCSV(): Promise<string> {
   try {
@@ -421,12 +421,9 @@ export async function exportCardsToCSV(): Promise<string> {
       .sort({ name: 1 })
       .lean();
 
-    const headers = ["Name", "Job Title", "Department", "Full Card URL", "QR Code Link", "Status"];
+    const headers = ["Name", "Job Title", "Department", "Full Card URL", "Status"];
     const rows = cards.map((c: any) => {
       const fullUrl = `${baseUrl}/${c.slug}`;
-      const qrLink = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(
-        fullUrl
-      )}`;
       const status = c.isActive ? "Active" : "Paused";
 
       const escape = (val: string) => `"${(val || "").replace(/"/g, '""')}"`;
@@ -436,7 +433,6 @@ export async function exportCardsToCSV(): Promise<string> {
         escape(c.jobTitle),
         escape(c.department),
         escape(fullUrl),
-        escape(qrLink),
         escape(status),
       ].join(",");
     });

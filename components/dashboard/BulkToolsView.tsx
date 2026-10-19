@@ -197,11 +197,11 @@ export default function BulkToolsView({
           <div className="flex items-center gap-2">
             <FileSpreadsheet className="w-5 h-5 text-[#0F172A]" />
             <h2 className="text-lg font-bold text-[#1D1D1F] tracking-tight">
-              Bulk Data & 200+ Employee Factory Tools
+              Batch Employee & Directory Tools
             </h2>
           </div>
           <p className="text-xs text-[#86868B] mt-1 font-medium">
-            Export corporate records for bulk NFC card manufacturing or import team batches directly via full CSV template.
+            Export company records or import team batches directly via complete CSV spreadsheet template.
           </p>
         </div>
         <button
@@ -220,10 +220,10 @@ export default function BulkToolsView({
               <Download className="w-5 h-5" />
             </div>
             <h3 className="text-sm font-bold text-[#0F172A]">
-              Export Full Registry (NFC Factory Format)
+              Export Full Directory (CSV)
             </h3>
             <p className="text-xs text-[#64748B] leading-relaxed">
-              Downloads complete employee directory including name, role, department, public URLs, and QR links. Ready for batch chip encoding (NTAG213 / NTAG215).
+              Downloads complete employee directory including name, job title, department, card link, and status for administrative records.
             </p>
             <div className="text-xs font-semibold text-[#0F172A]">
               Current Registry Count: <span className="text-[#0071E3]">{cards.length} Cards</span>
@@ -236,7 +236,7 @@ export default function BulkToolsView({
             className="w-full py-3 px-4 rounded-xl bg-[#0F172A] hover:bg-[#1E293B] text-white text-xs font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-40"
           >
             <Download className="w-4 h-4" />
-            {isExporting ? "Generating CSV..." : "Download Production CSV"}
+            {isExporting ? "Generating CSV..." : "Download Directory CSV"}
           </button>
         </div>
 
@@ -247,10 +247,10 @@ export default function BulkToolsView({
               <Upload className="w-5 h-5" />
             </div>
             <h3 className="text-sm font-bold text-[#0F172A]">
-              Batch 200+ Employee Import (Full CSV Template)
+              Batch Employee Import (Full CSV Template)
             </h3>
             <p className="text-xs text-[#64748B] leading-relaxed">
-              Upload an Excel/CSV spreadsheet to batch generate NFC cards for all company employees at once. Supports all channels (Phone, WhatsApp, Email, LinkedIn, Instagram, Maps, Website, Facebook, X). Empty channels are skipped automatically.
+              Upload an Excel/CSV spreadsheet to batch generate digital cards for all company employees at once. Supports all channels (Phone, WhatsApp, Email, LinkedIn, Instagram, Maps, Website, Facebook, X). Empty channels are skipped automatically.
             </p>
 
             <button

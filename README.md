@@ -25,7 +25,7 @@ An ultra-minimalist, production-ready SaaS application for creating, managing, a
    - Debounced real-time search across names, slugs, job titles, and departments.
    - Apple Segmented Control: `[ All | Active | Paused ]` and dynamic department dropdown.
    - Instant iOS green toggle switch (`#34C759`) to pause/activate cards with zero delay.
-   - One-Click **CSV Export** engineered specifically for the NFC Printing Factory (`Name`, `Job Title`, `Department`, `Full Card URL`, `QR Code Link`, `Status`).
+   - One-Click **CSV Export** for corporate records (`Name`, `Job Title`, `Department`, `Full Card URL`, `Status`).
 
 2. **Live iPhone 16 Pro Mockup**:
    - Real-time synchronization while creating or editing cards.

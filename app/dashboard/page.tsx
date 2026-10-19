@@ -26,10 +26,7 @@ import {
   CardFormData,
 } from "@/actions/card-actions";
 
-import QRStudioView from "@/components/dashboard/QRStudioView";
 import BulkToolsView from "@/components/dashboard/BulkToolsView";
-import CompanyProfileView from "@/components/dashboard/CompanyProfileView";
-import CardThemesView from "@/components/dashboard/CardThemesView";
 
 export default function DashboardPage() {
   const { currentView, setCurrentView } = useDashboardNav();
@@ -151,7 +148,7 @@ export default function DashboardPage() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `Reach_World_NFC_${new Date().toISOString().slice(0, 10)}.csv`);
+      link.setAttribute("download", `Reach_World_Cards_${new Date().toISOString().slice(0, 10)}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -168,25 +165,12 @@ export default function DashboardPage() {
       <KPICards analytics={analytics} />
 
       {/* View switching based on sidebar */}
-      {currentView === "qr_studio" ? (
-        <QRStudioView
-          cards={cards}
-          onBackToRegistry={() => setCurrentView("cards")}
-        />
-      ) : currentView === "bulk_tools" ? (
+      {currentView === "bulk_tools" ? (
         <BulkToolsView
           cards={cards}
           onBackToRegistry={() => setCurrentView("cards")}
           onExportCSV={handleExportCSV}
           isExporting={isExporting}
-        />
-      ) : currentView === "company_profile" ? (
-        <CompanyProfileView
-          onBackToRegistry={() => setCurrentView("cards")}
-        />
-      ) : currentView === "templates" ? (
-        <CardThemesView
-          onBackToRegistry={() => setCurrentView("cards")}
         />
       ) : currentView === "analytics" ? (
         <div className="bg-white rounded-3xl p-8 border border-black/[0.06] shadow-[0_4px_30px_rgba(0,0,0,0.02)] space-y-6">
@@ -364,7 +348,7 @@ export default function DashboardPage() {
                 onClick={handleExportCSV}
                 disabled={isExporting || cards.length === 0}
                 className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#F5F5F7] hover:bg-black/[0.05] text-[#1D1D1F] border border-black/10 flex items-center gap-1.5 transition-colors disabled:opacity-40"
-                title="Export CSV for NFC Printing Factory"
+                title="Export Cards to CSV"
               >
                 <Download className="w-3.5 h-3.5" />
                 {isExporting ? "Exporting..." : "Export CSV"}
