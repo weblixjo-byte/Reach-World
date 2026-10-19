@@ -5,15 +5,7 @@ import {
   X,
   Plus,
   Trash2,
-  Check,
-  Building2,
-  Globe,
-  MapPin,
-  Mail,
-  Phone,
-  Layers,
 } from "lucide-react";
-import { LinkIconType } from "@/models/Card";
 import { CardFormData } from "@/actions/card-actions";
 import { formatSlug } from "@/lib/slugify";
 import { SocialIcon } from "@/components/icons/SocialIcons";
@@ -45,11 +37,10 @@ export default function CardEditorModal({
   // Identity state
   const [name, setName] = useState(initialData?.name || "");
   const [slug, setSlug] = useState(initialData?.slug || "");
-  const [jobTitle, setJobTitle] = useState(initialData?.jobTitle || "REACH WORLD");
-  const [department, setDepartment] = useState(initialData?.department || "Corporate");
+  const [jobTitle, setJobTitle] = useState(initialData?.jobTitle || "");
+  const [department, setDepartment] = useState(initialData?.department || "");
 
-  // Fixed Channels values
-  // Find initial values from links or root fields
+  // Fixed Channels values - strictly empty by default if not set
   const getInitialVal = (icon: string) => {
     const l = (initialData?.links || []).find((x) => x.icon === icon);
     if (!l) return "";
@@ -91,14 +82,14 @@ export default function CardEditorModal({
   });
 
   const [waDigits, setWaDigits] = useState(() => {
-    return getInitialVal("whatsapp") || (initialData?.phone || "").replace(/^\+?962/, "").replace(/^0/, "") || "";
+    return getInitialVal("whatsapp") || "";
   });
 
   const [emailVal, setEmailVal] = useState(() => {
     return initialData?.email || getInitialVal("email") || "";
   });
 
-  const [websiteVal, setWebsiteVal] = useState(() => getInitialVal("website") || "reachworld.com");
+  const [websiteVal, setWebsiteVal] = useState(() => getInitialVal("website") || "");
   const [mapsVal, setMapsVal] = useState(() => getInitialVal("maps") || "");
   const [linkedinVal, setLinkedinVal] = useState(() => getInitialVal("linkedin") || "");
   const [instagramVal, setInstagramVal] = useState(() => getInitialVal("instagram") || "");
@@ -111,8 +102,8 @@ export default function CardEditorModal({
       .filter((l) => l.icon === "custom")
       .map((l, i) => ({
         id: `custom-${i}`,
-        title: l.title || "Custom Link",
-        url: l.url || "https://",
+        title: l.title || "",
+        url: l.url || "",
         subtitle: l.subtitle || "",
       }));
   });
@@ -180,7 +171,7 @@ export default function CardEditorModal({
       });
     }
 
-    // 4. Website: paste or default
+    // 4. Website: paste or link
     if (curWeb.trim()) {
       const fullUrl = curWeb.startsWith("http") ? curWeb.trim() : `https://${curWeb.trim()}`;
       links.push({
@@ -306,10 +297,9 @@ export default function CardEditorModal({
   const handleAddCustomLink = () => {
     const updated = [
       ...customLinks,
-      { id: `c-${Date.now()}`, title: "New Resource", url: "https://", subtitle: "" },
+      { id: `c-${Date.now()}`, title: "", url: "", subtitle: "" },
     ];
     setCustomLinks(updated);
-    triggerLive(assembleData(name, slug, jobTitle, department, phoneDigits, waDigits, emailVal, websiteVal, mapsVal, linkedinVal, instagramVal, facebookVal, twitterVal, updated));
   };
 
   const handleRemoveCustomLink = (id: string) => {
@@ -350,365 +340,334 @@ export default function CardEditorModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl w-full max-w-3xl max-h-[92vh] shadow-[0_25px_70px_rgba(0,0,0,0.25)] border border-black/[0.08] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        {/* Modal Header */}
-        <div className="flex items-center justify-between px-7 py-4.5 border-b border-black/[0.06] bg-[#0a192f] text-white">
-          <div className="flex items-center gap-2.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#38bdf8] animate-pulse" />
-            <div>
-              <h2 className="text-sm font-bold tracking-tight">
-                {isEditing ? `Edit Reach Card: ${initialData?.name}` : "Create New Reach World NFC Card"}
-              </h2>
-              <p className="text-[11px] text-[#94a3b8]">
-                Streamlined configuration with automatic link generation
-              </p>
-            </div>
+    <div className="fixed inset-0 z-50 bg-[#061528]/80 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl w-full max-w-2xl max-h-[92vh] shadow-[0_25px_70px_rgba(0,0,0,0.35)] border border-black/10 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        {/* Apple Style Sleek Header */}
+        <div className="flex items-center justify-between px-7 py-5 border-b border-black/[0.06] bg-white">
+          <div>
+            <h2 className="text-base font-extrabold text-[#0F172A] tracking-tight">
+              {isEditing ? `Edit Card: ${initialData?.name}` : "Create Employee Card"}
+            </h2>
+            <p className="text-xs text-[#64748B] mt-0.5 font-medium">
+              Reach World Enterprise NFC Profile
+            </p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center text-white/70 hover:text-white transition-colors"
+            className="w-8 h-8 rounded-full hover:bg-black/5 flex items-center justify-center text-[#64748B] hover:text-[#0F172A] transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Modal Scrollable Form */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-7 space-y-7 bg-[#F8F9FA]">
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-7 py-6 space-y-6 bg-white">
           {errorMsg && (
             <div className="p-3.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-600 font-medium">
               {errorMsg}
             </div>
           )}
 
-          {/* Section: Employee Profile */}
-          <div className="bg-white p-6 rounded-2xl border border-black/[0.06] shadow-xs space-y-4">
-            <div className="flex items-center gap-2 pb-2 border-b border-black/[0.04]">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#0F172A]">
-                1. Employee Identity & Corporate Profile
-              </span>
-            </div>
+          {/* Section: Employee Information */}
+          <div className="space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#0F172A]">
+              Employee Details
+            </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#0F172A] mb-1.5">
+                <label className="block text-xs font-medium text-[#475569] mb-1.5">
                   Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Mohammad Faraj Alseidi"
                   value={name}
                   onChange={(e) => handleNameChange(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] placeholder-[#94A3B8] font-medium rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
+                  className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#0F172A] mb-1.5">
-                  Card URL Slug
+                <label className="block text-xs font-medium text-[#475569] mb-1.5">
+                  URL Slug
                 </label>
                 <div className="flex items-center">
-                  <span className="text-xs text-[#64748B] bg-black/[0.03] px-3 py-2.5 border border-r-0 border-black/10 rounded-l-xl font-mono text-[11px]">
+                  <span className="text-xs text-[#64748B] bg-black/[0.04] px-3 py-2.5 border border-r-0 border-black/15 rounded-l-xl font-mono text-[11px]">
                     reachworld.com/
                   </span>
                   <input
                     type="text"
-                    placeholder="mohammad-alseidi"
                     value={slug}
                     onChange={(e) => {
                       const s = formatSlug(e.target.value);
                       setSlug(s);
                       triggerLive(assembleData(name, s));
                     }}
-                    className="w-full px-3 py-2.5 text-xs text-[#0F172A] placeholder-[#94A3B8] font-medium rounded-r-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
+                    className="w-full px-3 py-2.5 text-xs text-[#0F172A] font-semibold rounded-r-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#0F172A] mb-1.5">
-                  Job Title / Subtitle
+                <label className="block text-xs font-medium text-[#475569] mb-1.5">
+                  Job Title
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Managing Director"
                   value={jobTitle}
                   onChange={(e) => {
                     setJobTitle(e.target.value);
                     triggerLive(assembleData(name, slug, e.target.value));
                   }}
-                  className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] placeholder-[#94A3B8] font-medium rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
+                  className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#0F172A] mb-1.5">
+                <label className="block text-xs font-medium text-[#475569] mb-1.5">
                   Department
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Management, Operations, Sales"
                   value={department}
                   onChange={(e) => {
                     setDepartment(e.target.value);
                     triggerLive(assembleData(name, slug, jobTitle, e.target.value));
                   }}
-                  className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] placeholder-[#94A3B8] font-medium rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
+                  className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
                 />
               </div>
             </div>
           </div>
 
-          {/* Section: Direct Communication Channels (Clean fixed labels, auto URL generation) */}
-          <div className="bg-white p-6 rounded-2xl border border-black/[0.06] shadow-xs space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-black/[0.04]">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#0F172A]">
-                  2. Official Channels (Automatic Link Generation)
-                </span>
-                <p className="text-[11px] text-[#64748B]">
-                  Titles are permanent. Just enter the number, email, username or link.
-                </p>
-              </div>
-            </div>
+          <div className="h-px bg-black/[0.08]" />
 
-            <div className="space-y-3.5">
-              {/* Phone Field */}
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="w-10 h-10 rounded-xl bg-[#0f284b] flex items-center justify-center p-2 shrink-0">
+          {/* Section: Channels */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#0F172A]">
+              Communication Channels
+            </h3>
+
+            <div className="space-y-2.5">
+              {/* Phone */}
+              <div className="flex items-center gap-3 p-2.5 rounded-xl border border-black/10 bg-[#F8FAFC]">
+                <div className="w-8 h-8 rounded-lg bg-[#0f284b] flex items-center justify-center p-1.5 shrink-0">
                   <SocialIcon type="phone" className="w-full h-full" />
                 </div>
-                <div className="w-32 shrink-0 font-bold text-xs text-[#0F172A]">
+                <div className="w-28 shrink-0 text-xs font-semibold text-[#0F172A]">
                   Call Direct
                 </div>
                 <div className="flex-1 flex items-center">
-                  <span className="px-3 py-2 bg-black/[0.05] border border-r-0 border-black/10 rounded-l-xl text-xs font-bold text-[#0F172A]">
+                  <span className="px-2.5 py-1.5 bg-black/[0.05] border border-r-0 border-black/15 rounded-l-lg text-xs font-bold text-[#0F172A]">
                     +962
                   </span>
                   <input
                     type="tel"
-                    placeholder="7 9764 9615 (9 digits)"
                     value={phoneDigits}
                     onChange={(e) => {
                       const val = e.target.value.replace(/\D/g, "");
                       setPhoneDigits(val);
                       triggerLive(assembleData(name, slug, jobTitle, department, val));
                     }}
-                    className="w-full px-3 py-2 text-xs font-semibold text-[#0F172A] placeholder-[#94A3B8] rounded-r-xl border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                    className="w-full px-3 py-1.5 text-xs font-semibold text-[#0F172A] rounded-r-lg border border-black/15 bg-white focus:outline-none focus:border-[#0071E3]"
                   />
                 </div>
               </div>
 
-              {/* WhatsApp Field */}
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="w-10 h-10 rounded-xl bg-[#0f284b] flex items-center justify-center p-2 shrink-0">
+              {/* WhatsApp */}
+              <div className="flex items-center gap-3 p-2.5 rounded-xl border border-black/10 bg-[#F8FAFC]">
+                <div className="w-8 h-8 rounded-lg bg-[#0f284b] flex items-center justify-center p-1.5 shrink-0">
                   <SocialIcon type="whatsapp" className="w-full h-full" />
                 </div>
-                <div className="w-32 shrink-0 font-bold text-xs text-[#0F172A]">
-                  Chat on WhatsApp
+                <div className="w-28 shrink-0 text-xs font-semibold text-[#0F172A]">
+                  WhatsApp
                 </div>
                 <div className="flex-1 flex items-center">
-                  <span className="px-3 py-2 bg-black/[0.05] border border-r-0 border-black/10 rounded-l-xl text-xs font-bold text-[#0F172A]">
+                  <span className="px-2.5 py-1.5 bg-black/[0.05] border border-r-0 border-black/15 rounded-l-lg text-xs font-bold text-[#0F172A]">
                     +962
                   </span>
                   <input
                     type="tel"
-                    placeholder="7 9764 9615 (auto-creates wa.me link)"
                     value={waDigits}
                     onChange={(e) => {
                       const val = e.target.value.replace(/\D/g, "");
                       setWaDigits(val);
                       triggerLive(assembleData(name, slug, jobTitle, department, phoneDigits, val));
                     }}
-                    className="w-full px-3 py-2 text-xs font-semibold text-[#0F172A] placeholder-[#94A3B8] rounded-r-xl border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                    className="w-full px-3 py-1.5 text-xs font-semibold text-[#0F172A] rounded-r-lg border border-black/15 bg-white focus:outline-none focus:border-[#0071E3]"
                   />
                 </div>
               </div>
 
-              {/* Email Field */}
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="w-10 h-10 rounded-xl bg-[#0f284b] flex items-center justify-center p-2 shrink-0">
+              {/* Email */}
+              <div className="flex items-center gap-3 p-2.5 rounded-xl border border-black/10 bg-[#F8FAFC]">
+                <div className="w-8 h-8 rounded-lg bg-[#0f284b] flex items-center justify-center p-1.5 shrink-0">
                   <SocialIcon type="email" className="w-full h-full" />
                 </div>
-                <div className="w-32 shrink-0 font-bold text-xs text-[#0F172A]">
-                  Send Email
+                <div className="w-28 shrink-0 text-xs font-semibold text-[#0F172A]">
+                  Email
                 </div>
                 <input
                   type="email"
-                  placeholder="name@reachworld.com (auto-creates mailto link)"
                   value={emailVal}
                   onChange={(e) => {
                     setEmailVal(e.target.value);
                     triggerLive(assembleData(name, slug, jobTitle, department, phoneDigits, waDigits, e.target.value));
                   }}
-                  className="flex-1 px-3 py-2 text-xs font-semibold text-[#0F172A] placeholder-[#94A3B8] rounded-xl border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                  className="flex-1 px-3 py-1.5 text-xs font-semibold text-[#0F172A] rounded-lg border border-black/15 bg-white focus:outline-none focus:border-[#0071E3]"
                 />
               </div>
 
-              {/* Official Website */}
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="w-10 h-10 rounded-xl bg-[#0f284b] flex items-center justify-center p-2 shrink-0">
+              {/* Website */}
+              <div className="flex items-center gap-3 p-2.5 rounded-xl border border-black/10 bg-[#F8FAFC]">
+                <div className="w-8 h-8 rounded-lg bg-[#0f284b] flex items-center justify-center p-1.5 shrink-0">
                   <SocialIcon type="website" className="w-full h-full" />
                 </div>
-                <div className="w-32 shrink-0 font-bold text-xs text-[#0F172A]">
-                  Official Website
+                <div className="w-28 shrink-0 text-xs font-semibold text-[#0F172A]">
+                  Website
                 </div>
                 <input
                   type="text"
-                  placeholder="reachworld.com (or paste full link)"
                   value={websiteVal}
                   onChange={(e) => {
                     setWebsiteVal(e.target.value);
                     triggerLive(assembleData(name, slug, jobTitle, department, phoneDigits, waDigits, emailVal, e.target.value));
                   }}
-                  className="flex-1 px-3 py-2 text-xs font-semibold text-[#0F172A] placeholder-[#94A3B8] rounded-xl border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                  className="flex-1 px-3 py-1.5 text-xs font-semibold text-[#0F172A] rounded-lg border border-black/15 bg-white focus:outline-none focus:border-[#0071E3]"
                 />
               </div>
 
-              {/* Office / Google Maps */}
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="w-10 h-10 rounded-xl bg-[#0f284b] flex items-center justify-center p-2 shrink-0">
+              {/* Location */}
+              <div className="flex items-center gap-3 p-2.5 rounded-xl border border-black/10 bg-[#F8FAFC]">
+                <div className="w-8 h-8 rounded-lg bg-[#0f284b] flex items-center justify-center p-1.5 shrink-0">
                   <SocialIcon type="maps" className="w-full h-full" />
                 </div>
-                <div className="w-32 shrink-0 font-bold text-xs text-[#0F172A]">
-                  Office Location
+                <div className="w-28 shrink-0 text-xs font-semibold text-[#0F172A]">
+                  Location Pin
                 </div>
                 <input
                   type="text"
-                  placeholder="Paste Google Maps URL or Location pin"
                   value={mapsVal}
                   onChange={(e) => {
                     setMapsVal(e.target.value);
                     triggerLive(assembleData(name, slug, jobTitle, department, phoneDigits, waDigits, emailVal, websiteVal, e.target.value));
                   }}
-                  className="flex-1 px-3 py-2 text-xs font-semibold text-[#0F172A] placeholder-[#94A3B8] rounded-xl border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                  className="flex-1 px-3 py-1.5 text-xs font-semibold text-[#0F172A] rounded-lg border border-black/15 bg-white focus:outline-none focus:border-[#0071E3]"
                 />
               </div>
 
-              {/* LinkedIn (Full Link Required) */}
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="w-10 h-10 rounded-xl bg-[#0f284b] flex items-center justify-center p-2 shrink-0">
+              {/* LinkedIn */}
+              <div className="flex items-center gap-3 p-2.5 rounded-xl border border-black/10 bg-[#F8FAFC]">
+                <div className="w-8 h-8 rounded-lg bg-[#0f284b] flex items-center justify-center p-1.5 shrink-0">
                   <SocialIcon type="linkedin" className="w-full h-full" />
                 </div>
-                <div className="w-32 shrink-0 font-bold text-xs text-[#0F172A]">
-                  LinkedIn
+                <div className="w-28 shrink-0 text-xs font-semibold text-[#0F172A]">
+                  LinkedIn Link
                 </div>
                 <input
                   type="text"
-                  placeholder="Paste full profile URL (e.g. https://linkedin.com/in/...)"
                   value={linkedinVal}
                   onChange={(e) => {
                     setLinkedinVal(e.target.value);
                     triggerLive(assembleData(name, slug, jobTitle, department, phoneDigits, waDigits, emailVal, websiteVal, mapsVal, e.target.value));
                   }}
-                  className="flex-1 px-3 py-2 text-xs font-semibold text-[#0F172A] placeholder-[#94A3B8] rounded-xl border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                  className="flex-1 px-3 py-1.5 text-xs font-semibold text-[#0F172A] rounded-lg border border-black/15 bg-white focus:outline-none focus:border-[#0071E3]"
                 />
               </div>
 
-              {/* Instagram (Username only) */}
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="w-10 h-10 rounded-xl bg-[#0f284b] flex items-center justify-center p-2 shrink-0">
+              {/* Instagram */}
+              <div className="flex items-center gap-3 p-2.5 rounded-xl border border-black/10 bg-[#F8FAFC]">
+                <div className="w-8 h-8 rounded-lg bg-[#0f284b] flex items-center justify-center p-1.5 shrink-0">
                   <SocialIcon type="instagram" className="w-full h-full" />
                 </div>
-                <div className="w-32 shrink-0 font-bold text-xs text-[#0F172A]">
+                <div className="w-28 shrink-0 text-xs font-semibold text-[#0F172A]">
                   Instagram
                 </div>
                 <div className="flex-1 flex items-center">
-                  <span className="px-3 py-2 bg-black/[0.05] border border-r-0 border-black/10 rounded-l-xl text-xs font-bold text-[#64748B]">
+                  <span className="px-2.5 py-1.5 bg-black/[0.05] border border-r-0 border-black/15 rounded-l-lg text-xs font-bold text-[#64748B]">
                     @
                   </span>
                   <input
                     type="text"
-                    placeholder="username only (e.g. mohammad_alseidi)"
                     value={instagramVal}
                     onChange={(e) => {
                       setInstagramVal(e.target.value);
                       triggerLive(assembleData(name, slug, jobTitle, department, phoneDigits, waDigits, emailVal, websiteVal, mapsVal, linkedinVal, e.target.value));
                     }}
-                    className="w-full px-3 py-2 text-xs font-semibold text-[#0F172A] placeholder-[#94A3B8] rounded-r-xl border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                    className="w-full px-3 py-1.5 text-xs font-semibold text-[#0F172A] rounded-r-lg border border-black/15 bg-white focus:outline-none focus:border-[#0071E3]"
                   />
                 </div>
               </div>
 
-              {/* Facebook (Username only) */}
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="w-10 h-10 rounded-xl bg-[#0f284b] flex items-center justify-center p-2 shrink-0">
+              {/* Facebook */}
+              <div className="flex items-center gap-3 p-2.5 rounded-xl border border-black/10 bg-[#F8FAFC]">
+                <div className="w-8 h-8 rounded-lg bg-[#0f284b] flex items-center justify-center p-1.5 shrink-0">
                   <SocialIcon type="facebook" className="w-full h-full" />
                 </div>
-                <div className="w-32 shrink-0 font-bold text-xs text-[#0F172A]">
+                <div className="w-28 shrink-0 text-xs font-semibold text-[#0F172A]">
                   Facebook
                 </div>
                 <input
                   type="text"
-                  placeholder="Username or page name"
                   value={facebookVal}
                   onChange={(e) => {
                     setFacebookVal(e.target.value);
                     triggerLive(assembleData(name, slug, jobTitle, department, phoneDigits, waDigits, emailVal, websiteVal, mapsVal, linkedinVal, instagramVal, e.target.value));
                   }}
-                  className="flex-1 px-3 py-2 text-xs font-semibold text-[#0F172A] placeholder-[#94A3B8] rounded-xl border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                  className="flex-1 px-3 py-1.5 text-xs font-semibold text-[#0F172A] rounded-lg border border-black/15 bg-white focus:outline-none focus:border-[#0071E3]"
                 />
               </div>
 
-              {/* X / Twitter (Username only) */}
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
-                <div className="w-10 h-10 rounded-xl bg-[#0f284b] flex items-center justify-center p-2 shrink-0">
+              {/* X */}
+              <div className="flex items-center gap-3 p-2.5 rounded-xl border border-black/10 bg-[#F8FAFC]">
+                <div className="w-8 h-8 rounded-lg bg-[#0f284b] flex items-center justify-center p-1.5 shrink-0">
                   <SocialIcon type="twitter" className="w-full h-full" />
                 </div>
-                <div className="w-32 shrink-0 font-bold text-xs text-[#0F172A]">
-                  X (Twitter)
+                <div className="w-28 shrink-0 text-xs font-semibold text-[#0F172A]">
+                  X Profile
                 </div>
                 <div className="flex-1 flex items-center">
-                  <span className="px-3 py-2 bg-black/[0.05] border border-r-0 border-black/10 rounded-l-xl text-xs font-bold text-[#64748B]">
+                  <span className="px-2.5 py-1.5 bg-black/[0.05] border border-r-0 border-black/15 rounded-l-lg text-xs font-bold text-[#64748B]">
                     @
                   </span>
                   <input
                     type="text"
-                    placeholder="username only (e.g. m_alseidi)"
                     value={twitterVal}
                     onChange={(e) => {
                       setTwitterVal(e.target.value);
                       triggerLive(assembleData(name, slug, jobTitle, department, phoneDigits, waDigits, emailVal, websiteVal, mapsVal, linkedinVal, instagramVal, facebookVal, e.target.value));
                     }}
-                    className="w-full px-3 py-2 text-xs font-semibold text-[#0F172A] placeholder-[#94A3B8] rounded-r-xl border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                    className="w-full px-3 py-1.5 text-xs font-semibold text-[#0F172A] rounded-r-lg border border-black/15 bg-white focus:outline-none focus:border-[#0071E3]"
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Section: Custom Links (User can freely name these) */}
-          <div className="bg-white p-6 rounded-2xl border border-black/[0.06] shadow-xs space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-black/[0.04]">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#0F172A]">
-                  3. Additional Custom Links ({customLinks.length})
-                </span>
-                <p className="text-[11px] text-[#64748B]">
-                  Optional custom links (e.g. Portfolio, PDF Catalog, Event Form) with custom titles.
-                </p>
-              </div>
+          <div className="h-px bg-black/[0.08]" />
+
+          {/* Section: Custom Links */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#0F172A]">
+                Custom Links ({customLinks.length})
+              </h3>
               <button
                 type="button"
                 onClick={handleAddCustomLink}
-                className="px-3 py-1.5 rounded-xl bg-[#0071E3]/10 hover:bg-[#0071E3]/20 text-[#0071E3] text-xs font-bold flex items-center gap-1.5 transition-colors"
+                className="px-3 py-1.5 rounded-xl bg-black/5 hover:bg-black/10 text-[#0F172A] text-xs font-bold flex items-center gap-1.5 transition-colors"
               >
                 <Plus className="w-3.5 h-3.5 stroke-[2.5]" /> Add Custom Link
               </button>
             </div>
 
-            {customLinks.length === 0 ? (
-              <p className="text-xs text-[#94A3B8] italic">
-                No additional custom links added. Click the button above if you need extra buttons.
-              </p>
-            ) : (
-              <div className="space-y-3">
+            {customLinks.length > 0 && (
+              <div className="space-y-2.5">
                 {customLinks.map((item, idx) => (
-                  <div key={item.id} className="flex items-center gap-3 p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl">
+                  <div key={item.id} className="flex items-center gap-2.5 p-2.5 bg-[#F8FAFC] border border-black/10 rounded-xl">
                     <input
                       type="text"
-                      placeholder="Button Title (e.g. Company Portfolio)"
                       value={item.title}
                       onChange={(e) => {
                         const updated = [...customLinks];
@@ -716,11 +675,10 @@ export default function CardEditorModal({
                         setCustomLinks(updated);
                         triggerLive(assembleData(name, slug, jobTitle, department, phoneDigits, waDigits, emailVal, websiteVal, mapsVal, linkedinVal, instagramVal, facebookVal, twitterVal, updated));
                       }}
-                      className="w-1/3 px-3 py-2 text-xs font-semibold text-[#0F172A] placeholder-[#94A3B8] rounded-lg border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                      className="w-1/3 px-3 py-1.5 text-xs font-semibold text-[#0F172A] rounded-lg border border-black/15 bg-white focus:outline-none focus:border-[#0071E3]"
                     />
                     <input
                       type="text"
-                      placeholder="Destination URL (https://...)"
                       value={item.url}
                       onChange={(e) => {
                         const updated = [...customLinks];
@@ -728,12 +686,12 @@ export default function CardEditorModal({
                         setCustomLinks(updated);
                         triggerLive(assembleData(name, slug, jobTitle, department, phoneDigits, waDigits, emailVal, websiteVal, mapsVal, linkedinVal, instagramVal, facebookVal, twitterVal, updated));
                       }}
-                      className="flex-1 px-3 py-2 text-xs font-semibold text-[#0F172A] placeholder-[#94A3B8] rounded-lg border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                      className="flex-1 px-3 py-1.5 text-xs font-semibold text-[#0F172A] rounded-lg border border-black/15 bg-white focus:outline-none focus:border-[#0071E3]"
                     />
                     <button
                       type="button"
                       onClick={() => handleRemoveCustomLink(item.id)}
-                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -745,7 +703,7 @@ export default function CardEditorModal({
         </form>
 
         {/* Modal Footer */}
-        <div className="px-7 py-4 border-t border-black/[0.06] bg-white flex items-center justify-end gap-3">
+        <div className="px-7 py-4.5 border-t border-black/[0.06] bg-white flex items-center justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
@@ -756,9 +714,9 @@ export default function CardEditorModal({
           <button
             onClick={handleSubmit}
             disabled={saving}
-            className="px-6 py-2.5 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all disabled:opacity-50"
+            className="px-6 py-2.5 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-bold shadow-sm transition-all disabled:opacity-50"
           >
-            {saving ? "Saving..." : isEditing ? "Save Changes" : "Deploy Reach Card"}
+            {saving ? "Saving..." : isEditing ? "Save Changes" : "Deploy Card"}
           </button>
         </div>
       </div>
