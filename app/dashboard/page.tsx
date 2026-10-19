@@ -26,6 +26,11 @@ import {
   CardFormData,
 } from "@/actions/card-actions";
 
+import QRStudioView from "@/components/dashboard/QRStudioView";
+import BulkToolsView from "@/components/dashboard/BulkToolsView";
+import CompanyProfileView from "@/components/dashboard/CompanyProfileView";
+import CardThemesView from "@/components/dashboard/CardThemesView";
+
 export default function DashboardPage() {
   const { currentView, setCurrentView } = useDashboardNav();
   const [cards, setCards] = useState<CardListItem[]>([]);
@@ -163,7 +168,27 @@ export default function DashboardPage() {
       <KPICards analytics={analytics} />
 
       {/* View switching based on sidebar */}
-      {currentView === "analytics" ? (
+      {currentView === "qr_studio" ? (
+        <QRStudioView
+          cards={cards}
+          onBackToRegistry={() => setCurrentView("cards")}
+        />
+      ) : currentView === "bulk_tools" ? (
+        <BulkToolsView
+          cards={cards}
+          onBackToRegistry={() => setCurrentView("cards")}
+          onExportCSV={handleExportCSV}
+          isExporting={isExporting}
+        />
+      ) : currentView === "company_profile" ? (
+        <CompanyProfileView
+          onBackToRegistry={() => setCurrentView("cards")}
+        />
+      ) : currentView === "templates" ? (
+        <CardThemesView
+          onBackToRegistry={() => setCurrentView("cards")}
+        />
+      ) : currentView === "analytics" ? (
         <div className="bg-white rounded-3xl p-8 border border-black/[0.06] shadow-[0_4px_30px_rgba(0,0,0,0.02)] space-y-6">
           <div className="flex items-center justify-between pb-6 border-b border-black/[0.05]">
             <div>
