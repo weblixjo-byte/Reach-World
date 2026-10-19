@@ -180,7 +180,7 @@ export default function CardEditorModal({
                   placeholder="e.g. Mohammad Alseidi"
                   value={formData.name}
                   onChange={(e) => updateField("name", e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
+                  className="w-full px-3.5 py-2 text-sm text-[#0F172A] placeholder-[#94A3B8] rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
                 />
               </div>
 
@@ -197,7 +197,7 @@ export default function CardEditorModal({
                     placeholder="mohammad-alseidi"
                     value={formData.slug}
                     onChange={(e) => updateField("slug", formatSlug(e.target.value))}
-                    className="w-full px-3 py-2 text-sm rounded-r-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
+                    className="w-full px-3 py-2 text-sm text-[#0F172A] placeholder-[#94A3B8] rounded-r-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
                   />
                 </div>
               </div>
@@ -211,7 +211,7 @@ export default function CardEditorModal({
                   placeholder="e.g. REACH WORLD"
                   value={formData.jobTitle}
                   onChange={(e) => updateField("jobTitle", e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
+                  className="w-full px-3.5 py-2 text-sm text-[#0F172A] placeholder-[#94A3B8] rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
                 />
               </div>
 
@@ -224,7 +224,7 @@ export default function CardEditorModal({
                   placeholder="e.g. Management, Sales, Operations"
                   value={formData.department}
                   onChange={(e) => updateField("department", e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
+                  className="w-full px-3.5 py-2 text-sm text-[#0F172A] placeholder-[#94A3B8] rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
                 />
               </div>
 
@@ -237,7 +237,7 @@ export default function CardEditorModal({
                   placeholder="+962 7 9000 0000"
                   value={formData.phone || ""}
                   onChange={(e) => updateField("phone", e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
+                  className="w-full px-3.5 py-2 text-sm text-[#0F172A] placeholder-[#94A3B8] rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
                 />
               </div>
 
@@ -250,7 +250,7 @@ export default function CardEditorModal({
                   placeholder="m.alseidi@reachworld.com"
                   value={formData.email || ""}
                   onChange={(e) => updateField("email", e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
+                  className="w-full px-3.5 py-2 text-sm text-[#0F172A] placeholder-[#94A3B8] rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
                 />
               </div>
             </div>
@@ -283,13 +283,13 @@ export default function CardEditorModal({
                   className="p-3.5 bg-[#FBFBFD] border border-black/[0.06] rounded-2xl flex flex-col md:flex-row items-center gap-3"
                 >
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-black/5 flex items-center justify-center text-[#0071E3]">
-                      <SocialIcon type={link.icon} className="w-4 h-4" />
+                    <div className="w-8 h-8 rounded-lg bg-[#0f284b] border border-black/10 flex items-center justify-center p-1.5 shadow-xs">
+                      <SocialIcon type={link.icon} className="w-full h-full" />
                     </div>
                     <select
                       value={link.icon}
                       onChange={(e) => handleUpdateLink(index, "icon", e.target.value)}
-                      className="text-xs px-2 py-1.5 rounded-lg border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                      className="text-xs px-2 py-2 rounded-xl border border-black/10 bg-white text-[#0F172A] font-medium focus:outline-none focus:border-[#0071E3]"
                     >
                       {ICON_OPTIONS.map((opt) => (
                         <option key={opt.value} value={opt.value}>
@@ -304,7 +304,7 @@ export default function CardEditorModal({
                     placeholder="Title (e.g. Call Mohammad Alseidi)"
                     value={link.title}
                     onChange={(e) => handleUpdateLink(index, "title", e.target.value)}
-                    className="flex-1 text-xs px-3 py-1.5 rounded-lg border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                    className="flex-1 text-xs px-3 py-2 text-[#0F172A] placeholder-[#94A3B8] rounded-xl border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
                   />
 
                   <input
@@ -312,7 +312,7 @@ export default function CardEditorModal({
                     placeholder="Subtitle (e.g. +962 7 9000 0000)"
                     value={link.subtitle || ""}
                     onChange={(e) => handleUpdateLink(index, "subtitle", e.target.value)}
-                    className="flex-1 text-xs px-3 py-1.5 rounded-lg border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                    className="flex-1 text-xs px-3 py-2 text-[#0F172A] placeholder-[#94A3B8] rounded-xl border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
                   />
 
                   <input
@@ -320,7 +320,7 @@ export default function CardEditorModal({
                     placeholder="Action URL (tel:, mailto:, https:)"
                     value={link.url}
                     onChange={(e) => handleUpdateLink(index, "url", e.target.value)}
-                    className="flex-1 text-xs px-3 py-1.5 rounded-lg border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                    className="flex-1 text-xs px-3 py-2 text-[#0F172A] placeholder-[#94A3B8] rounded-xl border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
                   />
 
                   <button
