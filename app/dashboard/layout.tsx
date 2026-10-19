@@ -6,10 +6,7 @@ import {
   CreditCard,
   BarChart3,
   Users,
-  Sparkles,
-  ExternalLink,
 } from "lucide-react";
-import Link from "next/link";
 
 export type DashboardViewType = "cards" | "analytics" | "departments";
 
@@ -35,50 +32,50 @@ export default function DashboardLayout({
   return (
     <DesktopOnlyGuard>
       <DashboardNavContext.Provider value={{ currentView, setCurrentView }}>
-        <div className="min-h-screen bg-[#F5F5F7] flex flex-col font-sans">
-          {/* macOS Top Control Glass Bar */}
-          <header className="h-12 bg-white/80 backdrop-blur-xl border-b border-black/[0.06] px-6 flex items-center justify-between select-none sticky top-0 z-40 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+        <div className="min-h-screen bg-[#F8F9FA] flex flex-col font-sans">
+          {/* Top Header Bar */}
+          <header className="h-14 bg-white border-b border-[#E2E8F0] px-6 flex items-center justify-between select-none sticky top-0 z-40">
             <div className="flex items-center gap-4">
               {/* Traffic Lights */}
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E] shadow-2xs" />
-                <span className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123] shadow-2xs" />
-                <span className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29] shadow-2xs" />
+                <span className="w-3 h-3 rounded-full bg-[#EF4444]" />
+                <span className="w-3 h-3 rounded-full bg-[#F59E0B]" />
+                <span className="w-3 h-3 rounded-full bg-[#10B981]" />
               </div>
 
-              <div className="h-4 w-px bg-black/10 mx-1" />
+              <div className="h-4 w-px bg-[#E2E8F0] mx-1" />
 
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-3">
                 <img
                   src="/reach-world-logo.png"
                   alt="Reach World"
-                  className="h-5 w-auto object-contain brightness-0"
+                  className="h-6 w-auto object-contain brightness-0"
                 />
-                <span className="text-xs font-semibold tracking-tight text-[#1D1D1F]">
-                  NFC Cloud Console
+                <span className="text-xs font-semibold tracking-tight text-[#475569]">
+                  NFC Cards Console
                 </span>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-[#34C759]/10 text-[#34C759]">
-                <span className="w-2 h-2 rounded-full bg-[#34C759] animate-pulse" />
-                Live Active
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#F1F5F9] text-[#0F172A] border border-[#E2E8F0]">
+                <span className="w-2 h-2 rounded-full bg-[#0d274c]" />
+                Reach World Portal
               </span>
             </div>
           </header>
 
           {/* Main Dashboard Layout */}
           <div className="flex-1 flex overflow-hidden">
-            {/* Ultra-Clean Apple Left Sidebar */}
-            <aside className="w-64 bg-white/70 backdrop-blur-xl border-r border-black/[0.06] p-5 flex flex-col justify-between select-none shadow-[2px_0_12px_rgba(0,0,0,0.015)]">
+            {/* Dark Refined Sidebar: #0d274c / Slate Dark */}
+            <aside className="w-64 bg-[#0a192f] border-r border-[#1e293b] p-5 flex flex-col justify-between select-none text-white shadow-lg">
               <div className="space-y-6">
-                {/* Brand Title Pill */}
-                <div className="px-3 py-2 bg-[#F5F5F7] rounded-2xl border border-black/[0.04]">
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-[#86868B]">
-                    Organization
+                {/* Brand Badge */}
+                <div className="px-4 py-3 bg-[#112240] rounded-2xl border border-[#233554]">
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-[#64748B]">
+                    Corporate Workspace
                   </p>
-                  <h3 className="text-sm font-bold text-[#1D1D1F] tracking-tight mt-0.5">
+                  <h3 className="text-sm font-bold text-white tracking-tight mt-0.5">
                     Reach World
                   </h3>
                 </div>
@@ -87,10 +84,10 @@ export default function DashboardLayout({
                 <nav className="space-y-1.5">
                   <button
                     onClick={() => setCurrentView("cards")}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all ${
                       currentView === "cards"
-                        ? "bg-[#0071E3] text-white shadow-sm font-semibold"
-                        : "text-[#86868B] hover:text-[#1D1D1F] hover:bg-black/[0.04]"
+                        ? "bg-[#1E3A8A] text-white font-bold shadow-sm"
+                        : "text-[#94A3B8] hover:text-white hover:bg-[#112240] font-medium"
                     }`}
                   >
                     <CreditCard className="w-4 h-4" />
@@ -99,24 +96,22 @@ export default function DashboardLayout({
 
                   <button
                     onClick={() => setCurrentView("analytics")}
-                    className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all ${
                       currentView === "analytics"
-                        ? "bg-[#0071E3] text-white shadow-sm font-semibold"
-                        : "text-[#86868B] hover:text-[#1D1D1F] hover:bg-black/[0.04]"
+                        ? "bg-[#1E3A8A] text-white font-bold shadow-sm"
+                        : "text-[#94A3B8] hover:text-white hover:bg-[#112240] font-medium"
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <BarChart3 className="w-4 h-4" />
-                      <span>Analytics</span>
-                    </div>
+                    <BarChart3 className="w-4 h-4" />
+                    <span>Analytics</span>
                   </button>
 
                   <button
                     onClick={() => setCurrentView("departments")}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all ${
                       currentView === "departments"
-                        ? "bg-[#0071E3] text-white shadow-sm font-semibold"
-                        : "text-[#86868B] hover:text-[#1D1D1F] hover:bg-black/[0.04]"
+                        ? "bg-[#1E3A8A] text-white font-bold shadow-sm"
+                        : "text-[#94A3B8] hover:text-white hover:bg-[#112240] font-medium"
                     }`}
                   >
                     <Users className="w-4 h-4" />
@@ -126,15 +121,12 @@ export default function DashboardLayout({
               </div>
 
               {/* Bottom Card Summary Pill */}
-              <div className="p-4 bg-gradient-to-br from-[#0d274c] to-[#040e1c] rounded-2xl text-white shadow-md">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] uppercase font-bold tracking-wider text-[#38bdf8]">
-                    Reach Smart Cards
-                  </span>
-                  <span className="w-2 h-2 rounded-full bg-[#34C759]" />
-                </div>
-                <p className="text-xs text-white/80 leading-relaxed font-medium">
-                  Instant NFC & Digital Bio Identity for Reach World team.
+              <div className="p-4 bg-[#112240] rounded-2xl border border-[#233554] text-white">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-[#94A3B8] block mb-1">
+                  Card System
+                </span>
+                <p className="text-xs text-white/90 leading-relaxed font-semibold">
+                  Reach World NFC Cards
                 </p>
               </div>
             </aside>

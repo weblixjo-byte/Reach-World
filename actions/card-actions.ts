@@ -192,7 +192,7 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
     const totalTaps = aggregateResult[0]?.totalViews || 0;
     const totalClicks = aggregateResult[0]?.totalLinkClicks || 0;
     const tapThroughRate =
-      totalTaps > 0 ? Math.min(100, Number(((totalClicks / totalTaps) * 100).toFixed(1))) : 88.4;
+      totalTaps > 0 ? Math.min(100, Number(((totalClicks / totalTaps) * 100).toFixed(1))) : 0;
 
     return {
       totalCards,
@@ -207,7 +207,7 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
             avatarUrl: (topPerformerDoc as any).avatarUrl,
           }
         : null,
-      tapThroughRate: tapThroughRate || 88.4,
+      tapThroughRate: tapThroughRate || 0,
     };
   } catch (error) {
     console.error("Error in getAnalyticsSummary:", error);
@@ -216,7 +216,7 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
       totalActive: 0,
       totalTaps: 0,
       topPerformer: null,
-      tapThroughRate: 88.4,
+      tapThroughRate: 0,
     };
   }
 }

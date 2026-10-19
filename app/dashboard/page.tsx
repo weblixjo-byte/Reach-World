@@ -390,15 +390,15 @@ export default function DashboardPage() {
                   }}
                 />
               ) : (
-                <div className="w-[340px] bg-white rounded-3xl p-8 border border-black/[0.06] shadow-sm text-center">
-                  <div className="w-12 h-12 rounded-2xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center mx-auto mb-3">
-                    <Sparkles className="w-6 h-6 stroke-[1.8]" />
+                <div className="w-[340px] bg-white rounded-3xl p-8 border border-[#E2E8F0] shadow-sm text-center">
+                  <div className="w-12 h-12 rounded-2xl bg-[#F1F5F9] text-[#0F172A] flex items-center justify-center mx-auto mb-3">
+                    <CreditCard className="w-6 h-6 stroke-[1.8]" />
                   </div>
-                  <h4 className="text-sm font-bold text-[#1D1D1F]">
-                    Live iPhone Mockup
+                  <h4 className="text-sm font-bold text-[#0F172A]">
+                    Live Card Preview
                   </h4>
-                  <p className="text-xs text-[#86868B] mt-1 leading-relaxed">
-                    Create or select a card to preview its real-time Reach World mobile experience.
+                  <p className="text-xs text-[#64748B] mt-1 leading-relaxed">
+                    Create or select a card to preview its real-time Reach World mobile view.
                   </p>
                 </div>
               )}
