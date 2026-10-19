@@ -163,10 +163,10 @@ END:VCARD`;
                 mainListLinks.map((link, idx) => (
                   <div
                     key={link._id || idx}
-                    className="w-full flex items-center justify-between p-2.5 rounded-xl bg-[#091b33]/90 border border-[#1e3a63]/70 shadow-sm"
+                    className="w-full flex items-center justify-between p-2.5 rounded-xl bg-[#0a1f3a]/80 border border-white/10 shadow-sm"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-8 h-8 rounded-lg bg-[#0e2c54] border border-[#1e467d] flex items-center justify-center text-[#38bdf8] flex-shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-sky-500/15 text-sky-400 border border-sky-500/25 flex items-center justify-center flex-shrink-0">
                         <SocialIcon type={link.icon} className="w-4 h-4" />
                       </div>
                       <div className="min-w-0 flex flex-col">
@@ -188,7 +188,7 @@ END:VCARD`;
                   </div>
                 ))
               ) : (
-                <div className="p-3 rounded-xl bg-[#091b33]/50 border border-white/5 text-center text-[10px] text-white/40">
+                <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center text-[10px] text-white/40">
                   No links added yet.
                 </div>
               )}
@@ -200,9 +200,9 @@ END:VCARD`;
                 {bottomSocialLinks.map((sLink, sIdx) => (
                   <div
                     key={sLink._id || sIdx}
-                    className="w-9 h-9 rounded-xl bg-[#091b33] border border-[#1e3a63] flex items-center justify-center text-[#38bdf8]"
+                    className="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/25 flex items-center justify-center text-sky-400"
                   >
-                    <SocialIcon type={sLink.icon} className="w-4 h-4 stroke-[2]" />
+                    <SocialIcon type={sLink.icon} className="w-4 h-4" />
                   </div>
                 ))}
               </div>

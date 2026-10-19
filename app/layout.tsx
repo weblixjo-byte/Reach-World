@@ -24,11 +24,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={jakarta.variable}>
+    <html lang="en" className={`${jakarta.variable} bg-[#061528]`}>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+        />
+        <meta name="theme-color" content="#061528" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
-      <body className="min-h-screen bg-[#F8F9FA] text-[#0F172A] font-sans antialiased selection:bg-[#0d274c] selection:text-white">
+      <body className="min-h-screen bg-[#061528] text-white font-sans antialiased selection:bg-[#38bdf8]/30 selection:text-white">
         {children}
       </body>
     </html>
