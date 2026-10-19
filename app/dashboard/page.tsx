@@ -14,12 +14,6 @@ import CardsTable from "@/components/dashboard/CardsTable";
 import LivePhonePreview from "@/components/dashboard/LivePhonePreview";
 import CardEditorModal from "@/components/dashboard/CardEditorModal";
 import { useDashboardNav } from "@/app/dashboard/layout";
-import dynamic from "next/dynamic";
-
-const InteractiveGeoMap = dynamic(
-  () => import("@/components/dashboard/InteractiveGeoMap"),
-  { ssr: false }
-);
 import {
   getCards,
   getAnalyticsSummary,
@@ -219,73 +213,6 @@ export default function DashboardPage() {
               <div className="text-3xl font-extrabold text-[#0F172A] mt-2">
                 {analytics.tapThroughRate}%
               </div>
-            </div>
-          </div>
-
-          {/* Geo-Presence Section */}
-          <div className="mt-8 pt-6 border-t border-[#E2E8F0]">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-sm font-bold text-[#0F172A]">
-                  Field Activity Map & Real-time Location
-                </h3>
-                <p className="text-xs text-[#64748B] mt-0.5">
-                  Interactive geographic presence of Reach World employee card interactions.
-                </p>
-              </div>
-            </div>
-
-            {/* Interactive Leaflet Map */}
-            <div className="mb-6">
-              <InteractiveGeoMap
-                items={cards
-                  .filter((c) => c.lastTapLocation)
-                  .map((c) => ({
-                    id: c._id,
-                    name: c.name,
-                    jobTitle: c.jobTitle,
-                    location: c.lastTapLocation || "Active Location",
-                    lat: c.lastTapLat,
-                    lng: c.lastTapLng,
-                    time: c.lastTapAt
-                      ? new Date(c.lastTapAt).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })
-                      : undefined,
-                  }))}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-              {cards.filter((c) => c.lastTapLocation).length > 0 ? (
-                cards
-                  .filter((c) => c.lastTapLocation)
-                  .slice(0, 6)
-                  .map((c) => (
-                    <div
-                      key={c._id}
-                      className="p-4 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] flex items-center justify-between"
-                    >
-                      <div className="min-w-0">
-                        <span className="font-bold text-xs text-[#0F172A] block truncate">
-                          {c.name}
-                        </span>
-                        <span className="text-[11px] text-[#10B981] font-semibold flex items-center gap-1 mt-0.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
-                          {c.lastTapLocation}
-                        </span>
-                      </div>
-                      <span className="text-[10px] text-[#64748B]">
-                        {c.lastTapAt ? new Date(c.lastTapAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : ""}
-                      </span>
-                    </div>
-                  ))
-              ) : (
-                <div className="col-span-3 p-6 text-center text-xs text-[#64748B] bg-[#F8F9FA] rounded-2xl border border-dashed border-[#E2E8F0]">
-                  No tap locations recorded yet. When a card is scanned via NFC anywhere in the world, the city and country will appear here automatically.
-                </div>
-              )}
             </div>
           </div>
         </div>

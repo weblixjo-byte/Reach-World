@@ -87,7 +87,6 @@ export default function CardsTable({
               <th className="py-3.5 px-4">Public URL</th>
               <th className="py-3.5 px-4 text-center">Status</th>
               <th className="py-3.5 px-4 text-center">Taps</th>
-              <th className="py-3.5 px-4">Last Active Location</th>
               <th className="py-3.5 px-6 text-right">Actions</th>
             </tr>
           </thead>
@@ -192,22 +191,6 @@ export default function CardsTable({
                         <Eye className="w-3.5 h-3.5 text-[#86868B]" />
                         {card.views.toLocaleString()}
                       </span>
-                    </td>
-
-                    {/* Last Active Location (Zero-Permission Geo-IP) */}
-                    <td className="py-4 px-4 whitespace-nowrap">
-                      {card.lastTapLocation ? (
-                        <div className="flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse flex-shrink-0" />
-                          <span className="font-semibold text-xs text-[#0F172A] truncate max-w-[140px]">
-                            {card.lastTapLocation}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="text-xs text-[#94A3B8] font-normal">
-                          No taps yet
-                        </span>
-                      )}
                     </td>
 
                     {/* Actions: Edit, Copy, Delete */}
