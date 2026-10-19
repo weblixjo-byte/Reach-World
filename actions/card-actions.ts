@@ -42,6 +42,8 @@ export interface CardListItem {
   email?: string;
   isActive: boolean;
   views: number;
+  lastTapLocation?: string;
+  lastTapAt?: string;
   linksCount: number;
   links?: ILink[];
   updatedAt: string;
@@ -116,7 +118,7 @@ export async function getCards({
     const [rawCards, total, distinctDepts] = await Promise.all([
       Card.find(query)
         .select(
-          "name slug jobTitle department headline location avatarUrl themeColor isActive views links updatedAt"
+          "name slug jobTitle department headline location avatarUrl themeColor isActive views links lastTapLocation lastTapAt updatedAt"
         )
         .sort({ updatedAt: -1 })
         .skip(skip)
@@ -138,6 +140,8 @@ export async function getCards({
       themeColor: doc.themeColor || "#2594a3",
       isActive: doc.isActive ?? true,
       views: doc.views || 0,
+      lastTapLocation: doc.lastTapLocation || "",
+      lastTapAt: doc.lastTapAt ? new Date(doc.lastTapAt).toISOString() : undefined,
       linksCount: Array.isArray(doc.links) ? doc.links.length : 0,
       links: doc.links || [],
       updatedAt: doc.updatedAt ? new Date(doc.updatedAt).toISOString() : new Date().toISOString(),

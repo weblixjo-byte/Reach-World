@@ -35,6 +35,9 @@ export interface ICard extends Document {
   email?: string;
   isActive: boolean;
   views: number;
+  lastTapLocation?: string;
+  lastTapCountry?: string;
+  lastTapAt?: Date;
   links: ILink[];
   createdAt: Date;
   updatedAt: Date;
@@ -129,6 +132,18 @@ const CardSchema = new Schema<ICard>(
       type: Number,
       default: 0,
       index: true,
+    },
+    lastTapLocation: {
+      type: String,
+      default: "",
+    },
+    lastTapCountry: {
+      type: String,
+      default: "",
+    },
+    lastTapAt: {
+      type: Date,
+      default: null,
     },
     links: {
       type: [LinkSchema],

@@ -198,7 +198,7 @@ export default function DashboardPage() {
               <span className="text-xs text-[#86868B] font-semibold uppercase tracking-wider">
                 Active NFC Proportion
               </span>
-              <div className="text-3xl font-extrabold text-[#34C759] mt-2">
+              <div className="text-3xl font-extrabold text-[#0F172A] mt-2">
                 {analytics.totalCards > 0
                   ? Math.round((analytics.totalActive / analytics.totalCards) * 100)
                   : 100}
@@ -210,9 +210,50 @@ export default function DashboardPage() {
               <span className="text-xs text-[#86868B] font-semibold uppercase tracking-wider">
                 Contact Saves Conversion
               </span>
-              <div className="text-3xl font-extrabold text-[#0071E3] mt-2">
+              <div className="text-3xl font-extrabold text-[#0F172A] mt-2">
                 {analytics.tapThroughRate}%
               </div>
+            </div>
+          </div>
+
+          {/* Geo-Presence Section */}
+          <div className="mt-8 pt-6 border-t border-[#E2E8F0]">
+            <h3 className="text-sm font-bold text-[#0F172A] mb-1">
+              Recent Field Activity & Geo-Presence
+            </h3>
+            <p className="text-xs text-[#64748B] mb-4">
+              Real-time locations where Reach World cards were recently presented and tapped.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {cards.filter((c) => c.lastTapLocation).length > 0 ? (
+                cards
+                  .filter((c) => c.lastTapLocation)
+                  .slice(0, 6)
+                  .map((c) => (
+                    <div
+                      key={c._id}
+                      className="p-4 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] flex items-center justify-between"
+                    >
+                      <div className="min-w-0">
+                        <span className="font-bold text-xs text-[#0F172A] block truncate">
+                          {c.name}
+                        </span>
+                        <span className="text-[11px] text-[#10B981] font-semibold flex items-center gap-1 mt-0.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+                          {c.lastTapLocation}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-[#64748B]">
+                        {c.lastTapAt ? new Date(c.lastTapAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : ""}
+                      </span>
+                    </div>
+                  ))
+              ) : (
+                <div className="col-span-3 p-6 text-center text-xs text-[#64748B] bg-[#F8F9FA] rounded-2xl border border-dashed border-[#E2E8F0]">
+                  No tap locations recorded yet. When a card is scanned via NFC anywhere in the world, the city and country will appear here automatically.
+                </div>
+              )}
             </div>
           </div>
         </div>
