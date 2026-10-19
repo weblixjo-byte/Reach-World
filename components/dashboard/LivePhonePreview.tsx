@@ -166,8 +166,8 @@ END:VCARD`;
                     className="w-full flex items-center justify-between p-2.5 rounded-xl bg-[#0a1f3a]/80 border border-white/10 shadow-sm"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0 shadow-xs">
-                        <SocialIcon type={link.icon} className="w-8 h-8" />
+                      <div className="w-8 h-8 rounded-lg bg-[#0f284b] border border-white/10 flex items-center justify-center flex-shrink-0 shadow-xs p-1.5">
+                        <SocialIcon type={link.icon} className="w-full h-full" />
                       </div>
                       <div className="min-w-0 flex flex-col">
                         <span className="font-semibold text-xs text-white truncate max-w-[170px]">
@@ -200,9 +200,9 @@ END:VCARD`;
                 {bottomSocialLinks.map((sLink, sIdx) => (
                   <div
                     key={sLink._id || sIdx}
-                    className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center shadow-sm"
+                    className="w-8 h-8 rounded-lg bg-[#0f284b] border border-white/10 flex items-center justify-center shadow-sm p-2"
                   >
-                    <SocialIcon type={sLink.icon} className="w-8 h-8" />
+                    <SocialIcon type={sLink.icon} className="w-full h-full" />
                   </div>
                 ))}
               </div>

@@ -219,9 +219,9 @@ END:VCARD`;
                     className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#0a1f3a]/80 hover:bg-[#0d274c] active:scale-[0.98] border border-white/10 hover:border-white/20 shadow-[0_4px_24px_rgba(0,0,0,0.3)] transition-all group backdrop-blur-md"
                   >
                     <div className="flex items-center gap-3.5 min-w-0">
-                      {/* Official Logo / Badge */}
-                      <div className="w-11 h-11 rounded-2xl overflow-hidden flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform shadow-md">
-                        <SocialIcon type={link.icon} className="w-11 h-11" />
+                      {/* White PNG Icon Container */}
+                      <div className="w-11 h-11 rounded-2xl bg-[#0f284b] border border-white/10 flex items-center justify-center flex-shrink-0 group-hover:scale-105 group-hover:bg-[#13325c] transition-all shadow-sm p-2.5">
+                        <SocialIcon type={link.icon} className="w-full h-full" />
                       </div>
 
                       {/* Labels */}
@@ -268,10 +268,10 @@ END:VCARD`;
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => handleLinkClick(sLink._id)}
-                    className="w-12 h-12 rounded-2xl overflow-hidden hover:scale-110 active:scale-95 flex items-center justify-center transition-all shadow-lg"
+                    className="w-12 h-12 rounded-2xl bg-[#0f284b] hover:bg-[#13325c] border border-white/10 hover:border-white/20 hover:scale-110 active:scale-95 flex items-center justify-center transition-all shadow-md p-3"
                     title={sLink.title}
                   >
-                    <SocialIcon type={sLink.icon} className="w-12 h-12" />
+                    <SocialIcon type={sLink.icon} className="w-full h-full" />
                   </a>
                 );
               })}
