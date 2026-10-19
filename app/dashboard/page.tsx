@@ -14,6 +14,12 @@ import CardsTable from "@/components/dashboard/CardsTable";
 import LivePhonePreview from "@/components/dashboard/LivePhonePreview";
 import CardEditorModal from "@/components/dashboard/CardEditorModal";
 import { useDashboardNav } from "@/app/dashboard/layout";
+import dynamic from "next/dynamic";
+
+const InteractiveGeoMap = dynamic(
+  () => import("@/components/dashboard/InteractiveGeoMap"),
+  { ssr: false }
+);
 import {
   getCards,
   getAnalyticsSummary,
@@ -218,12 +224,38 @@ export default function DashboardPage() {
 
           {/* Geo-Presence Section */}
           <div className="mt-8 pt-6 border-t border-[#E2E8F0]">
-            <h3 className="text-sm font-bold text-[#0F172A] mb-1">
-              Recent Field Activity & Geo-Presence
-            </h3>
-            <p className="text-xs text-[#64748B] mb-4">
-              Real-time locations where Reach World cards were recently presented and tapped.
-            </p>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-sm font-bold text-[#0F172A]">
+                  Field Activity Map & Real-time Location
+                </h3>
+                <p className="text-xs text-[#64748B] mt-0.5">
+                  Interactive geographic presence of Reach World employee card interactions.
+                </p>
+              </div>
+            </div>
+
+            {/* Interactive Leaflet Map */}
+            <div className="mb-6">
+              <InteractiveGeoMap
+                items={cards
+                  .filter((c) => c.lastTapLocation)
+                  .map((c) => ({
+                    id: c._id,
+                    name: c.name,
+                    jobTitle: c.jobTitle,
+                    location: c.lastTapLocation || "Active Location",
+                    lat: c.lastTapLat,
+                    lng: c.lastTapLng,
+                    time: c.lastTapAt
+                      ? new Date(c.lastTapAt).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      : undefined,
+                  }))}
+              />
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
               {cards.filter((c) => c.lastTapLocation).length > 0 ? (
