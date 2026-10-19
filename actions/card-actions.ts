@@ -447,3 +447,172 @@ export async function exportCardsToCSV(): Promise<string> {
     return "";
   }
 }
+
+/**
+ * Batch import cards from parsed CSV data.
+ */
+export async function importCardsFromCSV(records: Array<{
+  name: string;
+  jobTitle?: string;
+  department?: string;
+  email?: string;
+  phone?: string;
+  location?: string;
+  website?: string;
+  linkedin?: string;
+  instagram?: string;
+  facebook?: string;
+  twitter?: string;
+}>) {
+  try {
+    await connectToDatabase();
+    let importedCount = 0;
+
+    for (const r of records) {
+      if (!r.name || !r.name.trim()) continue;
+
+      const cleanPhone = (r.phone || "").replace(/[^\d+]/g, "");
+      const phoneFormatted = cleanPhone
+        ? cleanPhone.startsWith("+")
+          ? cleanPhone
+          : cleanPhone.startsWith("00")
+          ? `+${cleanPhone.slice(2)}`
+          : cleanPhone.startsWith("962")
+          ? `+${cleanPhone}`
+          : cleanPhone.startsWith("07")
+          ? `+962${cleanPhone.slice(1)}`
+          : `+962${cleanPhone}`
+        : "";
+
+      const rawPhoneForWa = phoneFormatted.replace("+", "");
+
+      const links: any[] = [];
+
+      if (phoneFormatted) {
+        links.push({
+          title: "Call Direct",
+          subtitle: phoneFormatted,
+          url: `tel:${phoneFormatted}`,
+          icon: "phone",
+          isActive: true,
+          clicks: 0,
+        });
+        links.push({
+          title: "Chat on WhatsApp",
+          subtitle: "Quick Response",
+          url: `https://wa.me/${rawPhoneForWa}`,
+          icon: "whatsapp",
+          isActive: true,
+          clicks: 0,
+        });
+      }
+
+      if (r.email && r.email.trim()) {
+        links.push({
+          title: "Send Email",
+          subtitle: r.email.trim(),
+          url: `mailto:${r.email.trim()}`,
+          icon: "email",
+          isActive: true,
+          clicks: 0,
+        });
+      }
+
+      if (r.website && r.website.trim()) {
+        const webUrl = r.website.startsWith("http") ? r.website.trim() : `https://${r.website.trim()}`;
+        links.push({
+          title: "Official Website",
+          subtitle: r.website.replace(/^https?:\/\//, ""),
+          url: webUrl,
+          icon: "website",
+          isActive: true,
+          clicks: 0,
+        });
+      }
+
+      if (r.location && r.location.trim()) {
+        const locUrl = r.location.startsWith("http") ? r.location.trim() : `https://maps.google.com/?q=${encodeURIComponent(r.location.trim())}`;
+        links.push({
+          title: "Headquarters & Office",
+          subtitle: r.location.trim(),
+          url: locUrl,
+          icon: "maps",
+          isActive: true,
+          clicks: 0,
+        });
+      }
+
+      if (r.linkedin && r.linkedin.trim()) {
+        const lkUrl = r.linkedin.startsWith("http") ? r.linkedin.trim() : `https://linkedin.com/in/${r.linkedin.trim().replace(/^@/, "")}`;
+        links.push({
+          title: "LinkedIn",
+          subtitle: "Professional Profile",
+          url: lkUrl,
+          icon: "linkedin",
+          isActive: true,
+          clicks: 0,
+        });
+      }
+
+      if (r.instagram && r.instagram.trim()) {
+        const igHandle = r.instagram.trim().replace(/^@/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//, "");
+        links.push({
+          title: "Instagram",
+          subtitle: `@${igHandle}`,
+          url: `https://instagram.com/${igHandle}`,
+          icon: "instagram",
+          isActive: true,
+          clicks: 0,
+        });
+      }
+
+      if (r.facebook && r.facebook.trim()) {
+        const fbUrl = r.facebook.startsWith("http") ? r.facebook.trim() : `https://facebook.com/${r.facebook.trim().replace(/^@/, "")}`;
+        links.push({
+          title: "Facebook",
+          subtitle: "Facebook Page",
+          url: fbUrl,
+          icon: "facebook",
+          isActive: true,
+          clicks: 0,
+        });
+      }
+
+      if (r.twitter && r.twitter.trim()) {
+        const twHandle = r.twitter.trim().replace(/^@/, "").replace(/^https?:\/\/(www\.)?(twitter|x)\.com\//, "");
+        links.push({
+          title: "X",
+          subtitle: `@${twHandle}`,
+          url: `https://x.com/${twHandle}`,
+          icon: "twitter",
+          isActive: true,
+          clicks: 0,
+        });
+      }
+
+      const slug = await generateUniqueSlug(r.name);
+
+      await Card.create({
+        name: r.name.trim(),
+        slug,
+        jobTitle: r.jobTitle?.trim() || "REACH WORLD",
+        department: r.department?.trim() || "Corporate",
+        phone: phoneFormatted,
+        email: r.email?.trim() || "",
+        location: r.location?.trim() || "Amman, Jordan",
+        themeColor: "#0a192f",
+        isActive: true,
+        links,
+      });
+
+      importedCount++;
+    }
+
+    revalidatePath("/dashboard");
+    return { success: true, count: importedCount };
+  } catch (error: any) {
+    console.error("Error in importCardsFromCSV:", error);
+    return { success: false, error: error.message };
+  }
+}
+
