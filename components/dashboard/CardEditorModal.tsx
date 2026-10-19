@@ -5,15 +5,12 @@ import {
   X,
   Plus,
   Trash2,
-  Sparkles,
-  Link as LinkIcon,
-  Globe,
-  Upload,
   Check,
 } from "lucide-react";
 import { LinkIconType } from "@/models/Card";
 import { CardFormData } from "@/actions/card-actions";
 import { formatSlug } from "@/lib/slugify";
+import { SocialIcon } from "@/components/icons/SocialIcons";
 
 interface CardEditorModalProps {
   isOpen: boolean;
@@ -24,23 +21,16 @@ interface CardEditorModalProps {
 }
 
 const ICON_OPTIONS: { label: string; value: LinkIconType }[] = [
-  { label: "Website", value: "website" },
+  { label: "Phone Call", value: "phone" },
   { label: "WhatsApp", value: "whatsapp" },
-  { label: "Instagram", value: "instagram" },
-  { label: "Facebook", value: "facebook" },
-  { label: "Google Maps", value: "maps" },
-  { label: "Phone", value: "phone" },
-  { label: "LinkedIn", value: "linkedin" },
+  { label: "Email Address", value: "email" },
+  { label: "Official Website", value: "website" },
+  { label: "Office / Location Map", value: "maps" },
+  { label: "LinkedIn (Social Pill)", value: "linkedin" },
+  { label: "Instagram (Social Pill)", value: "instagram" },
+  { label: "Facebook (Social Pill)", value: "facebook" },
+  { label: "X / Twitter (Social Pill)", value: "twitter" },
   { label: "Custom Link", value: "custom" },
-];
-
-const THEME_COLORS = [
-  { name: "Reach Teal", hex: "#2594a3" },
-  { name: "Apple Blue", hex: "#0071E3" },
-  { name: "Apple Green", hex: "#34C759" },
-  { name: "Indigo Velvet", hex: "#5856D6" },
-  { name: "Sunset Orange", hex: "#FF9500" },
-  { name: "Midnight Onyx", hex: "#1D1D1F" },
 ];
 
 export default function CardEditorModal({
@@ -55,14 +45,26 @@ export default function CardEditorModal({
   const [formData, setFormData] = useState<CardFormData>(() => ({
     name: initialData?.name || "",
     slug: initialData?.slug || "",
-    jobTitle: initialData?.jobTitle || "",
-    department: initialData?.department || "General",
+    jobTitle: initialData?.jobTitle || "REACH WORLD",
+    department: initialData?.department || "Corporate",
     headline: initialData?.headline || "",
-    location: initialData?.location || "Dubai, UAE",
+    location: initialData?.location || "Amman, Jordan",
     avatarUrl: initialData?.avatarUrl || "",
-    themeColor: initialData?.themeColor || "#2594a3",
+    themeColor: initialData?.themeColor || "#0a192f",
+    phone: initialData?.phone || "",
+    email: initialData?.email || "",
     isActive: initialData?.isActive ?? true,
-    links: initialData?.links || [],
+    links: initialData?.links || [
+      { title: "Call Direct", subtitle: "+962 7 9000 0000", url: "tel:+962790000000", icon: "phone", isActive: true, clicks: 0 },
+      { title: "Chat on WhatsApp", subtitle: "Quick Response", url: "https://wa.me/962790000000", icon: "whatsapp", isActive: true, clicks: 0 },
+      { title: "Send Email", subtitle: "info@reachworld.com", url: "mailto:info@reachworld.com", icon: "email", isActive: true, clicks: 0 },
+      { title: "Official Website", subtitle: "reachworld.com", url: "https://reachworld.com", icon: "website", isActive: true, clicks: 0 },
+      { title: "Headquarters & Office", subtitle: "Amman, Jordan", url: "https://maps.google.com", icon: "maps", isActive: true, clicks: 0 },
+      { title: "LinkedIn", subtitle: "Company Profile", url: "https://linkedin.com", icon: "linkedin", isActive: true, clicks: 0 },
+      { title: "Instagram", subtitle: "Instagram Profile", url: "https://instagram.com", icon: "instagram", isActive: true, clicks: 0 },
+      { title: "Facebook", subtitle: "Facebook Page", url: "https://facebook.com", icon: "facebook", isActive: true, clicks: 0 },
+      { title: "X", subtitle: "X Profile", url: "https://x.com", icon: "twitter", isActive: true, clicks: 0 },
+    ],
   }));
 
   const [saving, setSaving] = useState(false);
@@ -72,7 +74,6 @@ export default function CardEditorModal({
 
   const updateField = (key: keyof CardFormData, value: any) => {
     const updated = { ...formData, [key]: value };
-    // Auto sync slug if user is creating a card and changing name
     if (key === "name" && !isEditing && (!formData.slug || formData.slug === formatSlug(formData.name))) {
       updated.slug = formatSlug(value);
     }
@@ -84,8 +85,9 @@ export default function CardEditorModal({
 
   const handleAddLink = () => {
     const newLink = {
-      title: "",
-      url: "",
+      title: "New Link",
+      subtitle: "",
+      url: "https://",
       icon: "website" as LinkIconType,
       isActive: true,
       clicks: 0,
@@ -137,7 +139,7 @@ export default function CardEditorModal({
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#0071E3]" />
             <h2 className="text-base font-semibold text-[#1D1D1F]">
-              {isEditing ? `Edit Card: ${initialData?.name}` : "Create New Reach World Card"}
+              {isEditing ? `Edit Reach Card: ${initialData?.name}` : "Create New Reach World NFC Card"}
             </h2>
           </div>
           <button
@@ -159,7 +161,7 @@ export default function CardEditorModal({
           {/* Section: Basic Info */}
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-[#86868B] mb-3">
-              Employee & Card Details
+              Employee Identity & Branding
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -169,7 +171,7 @@ export default function CardEditorModal({
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Ahmad Khalil"
+                  placeholder="e.g. Mohammad Alseidi"
                   value={formData.name}
                   onChange={(e) => updateField("name", e.target.value)}
                   className="w-full px-3.5 py-2 text-sm rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
@@ -178,7 +180,7 @@ export default function CardEditorModal({
 
               <div>
                 <label className="block text-xs font-medium text-[#1D1D1F] mb-1">
-                  URL Slug <span className="text-xs text-[#86868B]">(English or Arabic)</span>
+                  URL Slug
                 </label>
                 <div className="flex items-center">
                   <span className="text-xs text-[#86868B] bg-black/[0.03] px-2.5 py-2 border border-r-0 border-black/10 rounded-l-xl">
@@ -186,7 +188,7 @@ export default function CardEditorModal({
                   </span>
                   <input
                     type="text"
-                    placeholder="ahmad-khalil"
+                    placeholder="mohammad-alseidi"
                     value={formData.slug}
                     onChange={(e) => updateField("slug", formatSlug(e.target.value))}
                     className="w-full px-3 py-2 text-sm rounded-r-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
@@ -196,11 +198,11 @@ export default function CardEditorModal({
 
               <div>
                 <label className="block text-xs font-medium text-[#1D1D1F] mb-1">
-                  Job Title
+                  Subtitle / Company Badge
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Managing Director"
+                  placeholder="e.g. REACH WORLD"
                   value={formData.jobTitle}
                   onChange={(e) => updateField("jobTitle", e.target.value)}
                   className="w-full px-3.5 py-2 text-sm rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
@@ -213,7 +215,7 @@ export default function CardEditorModal({
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Sales, Operations, HR, Management"
+                  placeholder="e.g. Management, Sales, Operations"
                   value={formData.department}
                   onChange={(e) => updateField("department", e.target.value)}
                   className="w-full px-3.5 py-2 text-sm rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
@@ -222,116 +224,41 @@ export default function CardEditorModal({
 
               <div>
                 <label className="block text-xs font-medium text-[#1D1D1F] mb-1">
-                  Location / City
+                  Direct Phone Number
                 </label>
                 <input
-                  type="text"
-                  placeholder="e.g. Dubai, UAE"
-                  value={formData.location}
-                  onChange={(e) => updateField("location", e.target.value)}
+                  type="tel"
+                  placeholder="+962 7 9000 0000"
+                  value={formData.phone || ""}
+                  onChange={(e) => updateField("phone", e.target.value)}
                   className="w-full px-3.5 py-2 text-sm rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-medium text-[#1D1D1F] mb-1">
-                  Avatar / Photo URL
+                  Corporate Email
                 </label>
                 <input
-                  type="url"
-                  placeholder="https://images.unsplash.com/..."
-                  value={formData.avatarUrl}
-                  onChange={(e) => updateField("avatarUrl", e.target.value)}
+                  type="email"
+                  placeholder="m.alseidi@reachworld.com"
+                  value={formData.email || ""}
+                  onChange={(e) => updateField("email", e.target.value)}
                   className="w-full px-3.5 py-2 text-sm rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
                 />
               </div>
             </div>
-
-            <div className="mt-4">
-              <label className="block text-xs font-medium text-[#1D1D1F] mb-1">
-                Headline / Bio Quote
-              </label>
-              <textarea
-                rows={2}
-                placeholder="Brief professional tagline displayed on card..."
-                value={formData.headline}
-                onChange={(e) => updateField("headline", e.target.value)}
-                className="w-full px-3.5 py-2 text-sm rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#FBFBFD]"
-              />
-            </div>
           </div>
 
-          {/* Section: Theme Color & Active State */}
-          <div className="pt-4 border-t border-black/[0.06]">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#86868B] mb-3">
-              Appearance & Status
-            </h3>
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <span className="block text-xs font-medium text-[#1D1D1F] mb-2">
-                  Theme Accent
-                </span>
-                <div className="flex items-center gap-2">
-                  {THEME_COLORS.map((clr) => (
-                    <button
-                      key={clr.hex}
-                      type="button"
-                      onClick={() => updateField("themeColor", clr.hex)}
-                      className={`w-7 h-7 rounded-full border-2 transition-all flex items-center justify-center ${
-                        formData.themeColor === clr.hex
-                          ? "border-[#1D1D1F] scale-110"
-                          : "border-transparent hover:scale-105"
-                      }`}
-                      style={{ backgroundColor: clr.hex }}
-                      title={clr.name}
-                    >
-                      {formData.themeColor === clr.hex && (
-                        <Check className="w-3.5 h-3.5 text-white" />
-                      )}
-                    </button>
-                  ))}
-                  <input
-                    type="color"
-                    value={formData.themeColor || "#2594a3"}
-                    onChange={(e) => updateField("themeColor", e.target.value)}
-                    className="w-7 h-7 rounded-full border-0 p-0 cursor-pointer overflow-hidden"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-medium text-[#1D1D1F]">
-                  Card Status:
-                </span>
-                <button
-                  type="button"
-                  onClick={() => updateField("isActive", !formData.isActive)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    formData.isActive ? "bg-[#34C759]" : "bg-black/20"
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform ${
-                      formData.isActive ? "translate-x-5.5" : "translate-x-0.5"
-                    }`}
-                  />
-                </button>
-                <span className="text-xs text-[#86868B]">
-                  {formData.isActive ? "Active (Online)" : "Paused"}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Section: Dynamic Bio Links */}
+          {/* Section: Action Links & Social Badges */}
           <div className="pt-4 border-t border-black/[0.06]">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-[#86868B]">
-                  Interactive Action Links ({formData.links?.length || 0})
+                  Direct Contact Buttons & Social Icons ({formData.links?.length || 0})
                 </h3>
                 <p className="text-[11px] text-[#86868B]">
-                  Add WhatsApp, corporate links, maps, and social profiles.
+                  Configured according to the Reach World Dark Blue Template.
                 </p>
               </div>
               <button
@@ -339,7 +266,7 @@ export default function CardEditorModal({
                 onClick={handleAddLink}
                 className="px-3 py-1.5 rounded-xl bg-[#0071E3]/10 hover:bg-[#0071E3]/20 text-[#0071E3] text-xs font-semibold flex items-center gap-1.5 transition-colors"
               >
-                <Plus className="w-3.5 h-3.5" /> Add Link
+                <Plus className="w-3.5 h-3.5" /> Add Action Button
               </button>
             </div>
 
@@ -349,29 +276,42 @@ export default function CardEditorModal({
                   key={index}
                   className="p-3.5 bg-[#FBFBFD] border border-black/[0.06] rounded-2xl flex flex-col md:flex-row items-center gap-3"
                 >
-                  <select
-                    value={link.icon}
-                    onChange={(e) => handleUpdateLink(index, "icon", e.target.value)}
-                    className="text-xs px-2.5 py-1.5 rounded-lg border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
-                  >
-                    {ICON_OPTIONS.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-black/5 flex items-center justify-center text-[#0071E3]">
+                      <SocialIcon type={link.icon} className="w-4 h-4" />
+                    </div>
+                    <select
+                      value={link.icon}
+                      onChange={(e) => handleUpdateLink(index, "icon", e.target.value)}
+                      className="text-xs px-2 py-1.5 rounded-lg border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                    >
+                      {ICON_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
                   <input
                     type="text"
-                    placeholder="Link Label (e.g. WhatsApp Direct)"
+                    placeholder="Title (e.g. Call Mohammad Alseidi)"
                     value={link.title}
                     onChange={(e) => handleUpdateLink(index, "title", e.target.value)}
                     className="flex-1 text-xs px-3 py-1.5 rounded-lg border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
                   />
 
                   <input
-                    type="url"
-                    placeholder="https://..."
+                    type="text"
+                    placeholder="Subtitle (e.g. +962 7 9000 0000)"
+                    value={link.subtitle || ""}
+                    onChange={(e) => handleUpdateLink(index, "subtitle", e.target.value)}
+                    className="flex-1 text-xs px-3 py-1.5 rounded-lg border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="Action URL (tel:, mailto:, https:)"
                     value={link.url}
                     onChange={(e) => handleUpdateLink(index, "url", e.target.value)}
                     className="flex-1 text-xs px-3 py-1.5 rounded-lg border border-black/10 bg-white focus:outline-none focus:border-[#0071E3]"
@@ -381,7 +321,7 @@ export default function CardEditorModal({
                     type="button"
                     onClick={() => handleRemoveLink(index)}
                     className="w-7 h-7 rounded-lg hover:bg-red-50 text-red-500 flex items-center justify-center transition-colors"
-                    title="Remove link"
+                    title="Remove item"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -405,7 +345,7 @@ export default function CardEditorModal({
             disabled={saving}
             className="px-5 py-2 rounded-xl text-xs font-semibold text-white bg-[#0071E3] hover:bg-[#0077ED] transition-all disabled:opacity-50 flex items-center gap-1.5 shadow-sm"
           >
-            {saving ? "Saving to Cloud..." : isEditing ? "Update Card" : "Deploy Card"}
+            {saving ? "Deploying..." : isEditing ? "Save & Update Card" : "Deploy Reach Card"}
           </button>
         </div>
       </div>

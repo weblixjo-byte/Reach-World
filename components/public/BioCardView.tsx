@@ -2,16 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import {
-  Globe,
-  Share2,
+  ChevronRight,
+  PhoneCall,
   Download,
-  Building2,
+  Share2,
   Check,
-  ExternalLink,
-  ShieldCheck,
-  Sparkles,
 } from "lucide-react";
-import { getLinkIcon } from "@/components/dashboard/LivePhonePreview";
+import { SocialIcon, ReachWorldLogo } from "@/components/icons/SocialIcons";
+import { LinkIconType } from "@/models/Card";
 import confetti from "canvas-confetti";
 
 interface BioCardViewProps {
@@ -19,19 +17,22 @@ interface BioCardViewProps {
     _id: string;
     name: string;
     slug: string;
-    jobTitle: string;
-    department: string;
-    headline: string;
-    location: string;
-    avatarUrl: string;
-    themeColor: string;
+    jobTitle?: string;
+    department?: string;
+    headline?: string;
+    location?: string;
+    avatarUrl?: string;
+    themeColor?: string;
+    phone?: string;
+    email?: string;
     isActive: boolean;
     views: number;
     links: {
       _id?: string;
       title: string;
+      subtitle?: string;
       url: string;
-      icon: any;
+      icon: LinkIconType;
       isActive: boolean;
       clicks: number;
     }[];
@@ -40,8 +41,6 @@ interface BioCardViewProps {
 
 export default function BioCardView({ card }: BioCardViewProps) {
   const [copied, setCopied] = useState(false);
-  const theme = card.themeColor || "#2594a3";
-  const activeLinks = (card.links || []).filter((l) => l.isActive);
 
   // Background non-blocking edge view tracking
   useEffect(() => {
@@ -69,8 +68,8 @@ export default function BioCardView({ card }: BioCardViewProps) {
     if (typeof window !== "undefined") {
       if (navigator.share) {
         navigator.share({
-          title: `${card.name} — Reach World Bio`,
-          text: `Reach World Corporate Digital Card: ${card.name} (${card.jobTitle})`,
+          title: `${card.name} — Reach World`,
+          text: `Reach World Corporate Digital Card: ${card.name}`,
           url: window.location.href,
         }).catch(() => {});
       } else {
@@ -82,10 +81,9 @@ export default function BioCardView({ card }: BioCardViewProps) {
   };
 
   const handleDownloadVCard = () => {
-    // Trigger celebration confetti
     try {
       confetti({
-        particleCount: 50,
+        particleCount: 45,
         spread: 60,
         origin: { y: 0.8 },
       });
@@ -96,8 +94,9 @@ VERSION:3.0
 FN:${card.name || "Reach World Team"}
 TITLE:${card.jobTitle || ""}
 ORG:Reach World;${card.department || ""}
-NOTE:${card.headline || ""}
-ADR:;;;${card.location || "Dubai"};;;
+TEL;TYPE=CELL:${card.phone || ""}
+EMAIL:${card.email || ""}
+ADR:;;;${card.location || "Amman, Jordan"};;;
 URL:${typeof window !== "undefined" ? window.location.href : ""}
 END:VCARD`;
 
@@ -111,135 +110,157 @@ END:VCARD`;
     document.body.removeChild(a);
   };
 
-  return (
-    <main className="min-h-screen bg-[#F5F5F7] flex flex-col items-center justify-start p-3 sm:p-6 selection:bg-[#0071E3]/20">
-      {/* Container max-width 440px strictly mobile-first */}
-      <div className="w-full max-w-[420px] bg-white rounded-3xl sm:rounded-[36px] shadow-[0_12px_40px_rgba(0,0,0,0.06)] border border-black/[0.06] overflow-hidden flex flex-col pb-6 my-auto">
-        {/* Banner with smooth dynamic gradient */}
-        <div
-          className="w-full h-36 relative transition-all duration-300"
-          style={{
-            background: `linear-gradient(135deg, ${theme} 0%, #0F172A 100%)`,
-          }}
-        >
-          <div className="absolute inset-0 bg-white/5 backdrop-blur-[1px]" />
-          
-          {/* Top floating utility controls */}
-          <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-black/30 backdrop-blur-md text-white border border-white/10">
-              <ShieldCheck className="w-3 h-3 text-[#34C759]" />
-              Verified Employee
-            </span>
+  // Group main action items from social icons (linkedin, instagram, facebook, twitter)
+  const socialPillTypes = ["linkedin", "instagram", "facebook", "twitter"];
+  const allActiveLinks = (card.links || []).filter((l) => l.isActive);
 
-            <button
-              onClick={handleShare}
-              className="w-8 h-8 rounded-full bg-black/30 backdrop-blur-md text-white flex items-center justify-center hover:bg-black/40 border border-white/10 transition-colors"
-              title="Share Card"
-            >
-              {copied ? <Check className="w-3.5 h-3.5 text-[#34C759]" /> : <Share2 className="w-3.5 h-3.5" />}
-            </button>
-          </div>
+  // If card has default items, use them or fallback
+  const mainListLinks = allActiveLinks.filter(
+    (l) => !socialPillTypes.includes(l.icon)
+  );
+  const bottomSocialLinks = allActiveLinks.filter((l) =>
+    socialPillTypes.includes(l.icon)
+  );
+
+  return (
+    <main
+      className="min-h-screen w-full flex flex-col items-center justify-start p-3 sm:p-6 text-white selection:bg-[#38bdf8]/30 selection:text-white"
+      style={{
+        background: "radial-gradient(circle at 50% 15%, #0d274c 0%, #061528 50%, #030a14 100%)",
+      }}
+    >
+      {/* Floating Action Button (Top Right Share & Save Contact) */}
+      <div className="w-full max-w-[420px] flex items-center justify-between py-2 px-1 mb-2">
+        <button
+          onClick={handleShare}
+          className="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 text-white/80 hover:text-white text-xs flex items-center gap-1.5 transition-colors"
+        >
+          {copied ? (
+            <>
+              <Check className="w-3.5 h-3.5 text-[#34C759]" /> Copied Link
+            </>
+          ) : (
+            <>
+              <Share2 className="w-3.5 h-3.5" /> Share Card
+            </>
+          )}
+        </button>
+
+        <button
+          onClick={handleDownloadVCard}
+          className="px-3.5 py-1.5 rounded-full bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all active:scale-95"
+        >
+          <Download className="w-3.5 h-3.5" /> Save Contact
+        </button>
+      </div>
+
+      {/* Main Glassmorphism Dark Card Container */}
+      <div className="w-full max-w-[420px] flex flex-col items-center px-4 py-8">
+        {/* Reach World Brand Logo */}
+        <ReachWorldLogo className="mb-6" />
+
+        {/* Employee Full Name */}
+        <h1 className="text-2xl font-bold text-white tracking-tight text-center">
+          {card.name}
+        </h1>
+
+        {/* Company Subtitle */}
+        <p className="text-xs font-bold tracking-[0.22em] text-[#38bdf8] uppercase text-center mt-1">
+          {card.jobTitle || "REACH WORLD"}
+        </p>
+
+        {card.headline && (
+          <p className="text-xs text-white/60 text-center mt-2 max-w-xs leading-relaxed">
+            {card.headline}
+          </p>
+        )}
+
+        {/* Section Heading: Direct Contact */}
+        <div className="w-full flex items-center gap-2 mt-8 mb-4 px-1 text-[#38bdf8] text-xs font-bold tracking-wider uppercase">
+          <PhoneCall className="w-3.5 h-3.5 stroke-[2.5]" />
+          <span>DIRECT CONTACT</span>
         </div>
 
-        {/* Content Profile Section */}
-        <div className="px-6 flex flex-col items-center -mt-14 z-10">
-          {/* High-res Avatar Squircle */}
-          <div className="relative w-26 h-26 rounded-3xl bg-white p-1.5 shadow-xl ring-1 ring-black/5 mb-3">
-            {card.avatarUrl ? (
-              <img
-                src={card.avatarUrl}
-                alt={card.name}
-                className="w-full h-full object-cover rounded-[22px]"
-              />
-            ) : (
-              <div
-                className="w-full h-full rounded-[22px] flex items-center justify-center font-bold text-white text-2xl shadow-inner"
-                style={{ backgroundColor: theme }}
-              >
-                {card.name.slice(0, 2).toUpperCase()}
-              </div>
-            )}
-            <span
-              className="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-[#34C759] border-2 border-white shadow-xs"
-              title="Active Profile"
-            />
-          </div>
-
-          {/* Name & Title */}
-          <h1 className="text-xl font-bold tracking-tight text-[#1D1D1F] text-center">
-            {card.name}
-          </h1>
-          <p className="text-xs font-semibold text-[#0071E3] text-center mt-0.5">
-            {card.jobTitle || "Executive"}
-          </p>
-
-          {/* Department & Organization */}
-          <div className="flex items-center gap-1.5 mt-2.5">
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-black/[0.04] text-[#1D1D1F]">
-              <Building2 className="w-3 h-3" />
-              Reach World
-            </span>
-            {card.department && (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#0071E3]/10 text-[#0071E3]">
-                {card.department}
-              </span>
-            )}
-          </div>
-
-          {/* Headline / Bio Tagline */}
-          {card.headline && (
-            <p className="text-xs text-[#86868B] text-center mt-3 leading-relaxed max-w-sm">
-              "{card.headline}"
-            </p>
-          )}
-
-          {/* Save Contact Primary CTA */}
-          <button
-            onClick={handleDownloadVCard}
-            className="w-full mt-5 py-3 px-5 rounded-2xl text-xs font-semibold text-white shadow-sm flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all"
-            style={{ backgroundColor: theme }}
-          >
-            <Download className="w-4 h-4" />
-            Add to Phone Contacts
-          </button>
-
-          {/* Interactive Links */}
-          <div className="w-full mt-5 space-y-2.5">
-            {activeLinks.map((link, idx) => (
+        {/* Main Contact Action Cards */}
+        <div className="w-full space-y-3">
+          {mainListLinks.length > 0 ? (
+            mainListLinks.map((link, idx) => (
               <a
                 key={link._id || idx}
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => handleLinkClick(link._id)}
-                className="w-full flex items-center justify-between p-3.5 bg-[#FBFBFD] hover:bg-white rounded-2xl border border-black/[0.06] shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.05)] hover:border-[#0071E3]/30 transition-all text-xs text-[#1D1D1F] group"
+                className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#091b33]/90 hover:bg-[#0c2444] border border-[#1e3a63]/60 hover:border-[#38bdf8]/50 shadow-[0_4px_20px_rgba(0,0,0,0.25)] transition-all group active:scale-[0.99]"
               >
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-8 h-8 rounded-xl flex items-center justify-center text-white shadow-xs"
-                    style={{ backgroundColor: theme }}
-                  >
-                    {getLinkIcon(link.icon, "w-4 h-4")}
+                <div className="flex items-center gap-3.5 min-w-0">
+                  {/* Circular Icon Container */}
+                  <div className="w-10 h-10 rounded-xl bg-[#0e2c54] border border-[#1e467d] flex items-center justify-center text-[#38bdf8] flex-shrink-0 group-hover:scale-105 transition-transform">
+                    <SocialIcon type={link.icon} className="w-5 h-5 stroke-[1.8]" />
                   </div>
-                  <span className="font-semibold text-sm text-[#1D1D1F] group-hover:text-[#0071E3] transition-colors truncate max-w-[240px]">
-                    {link.title}
-                  </span>
+
+                  {/* Title & Subtitle */}
+                  <div className="min-w-0 flex flex-col">
+                    <span className="font-semibold text-sm text-white group-hover:text-[#38bdf8] transition-colors truncate">
+                      {link.title}
+                    </span>
+                    {link.subtitle ? (
+                      <span className="text-xs text-white/60 truncate">
+                        {link.subtitle}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-white/40 truncate">
+                        {link.url.replace(/^https?:\/\//, "")}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <ExternalLink className="w-4 h-4 text-[#86868B] group-hover:text-[#0071E3] transition-colors" />
+
+                {/* Chevron */}
+                <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-[#38bdf8] group-hover:translate-x-0.5 transition-all flex-shrink-0 ml-2" />
+              </a>
+            ))
+          ) : (
+            /* Fallback demo item */
+            <div className="p-4 rounded-2xl bg-[#091b33]/50 border border-white/5 text-center text-xs text-white/50">
+              No direct contact links configured yet.
+            </div>
+          )}
+        </div>
+
+        {/* Bottom Social Media Squircle Pills (LinkedIn, Instagram, Facebook, X) */}
+        {bottomSocialLinks.length > 0 && (
+          <div className="flex items-center justify-center gap-3 mt-8">
+            {bottomSocialLinks.map((sLink, sIdx) => (
+              <a
+                key={sLink._id || sIdx}
+                href={sLink.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleLinkClick(sLink._id)}
+                className="w-12 h-12 rounded-2xl bg-[#091b33] hover:bg-[#0f2e57] border border-[#1e3a63]/80 hover:border-[#38bdf8] flex items-center justify-center text-[#38bdf8] hover:text-white transition-all shadow-md active:scale-95"
+                title={sLink.title}
+              >
+                <SocialIcon type={sLink.icon} className="w-5 h-5 stroke-[2]" />
               </a>
             ))}
           </div>
+        )}
 
-          {/* Footer Branding */}
-          <div className="mt-8 pt-4 border-t border-black/[0.05] w-full flex flex-col items-center text-center">
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#1D1D1F]">
-              <Sparkles className="w-3.5 h-3.5 text-[#0071E3]" />
-              Reach World Smart NFC Cards
-            </span>
-            <p className="text-[11px] text-[#86868B] mt-0.5">
-              Powered by Apple-Grade Digital Identity
-            </p>
-          </div>
+        {/* Divider */}
+        <div className="w-full h-px bg-white/10 mt-10 mb-4" />
+
+        {/* Powered by weblix-jo Footer */}
+        <div className="text-center text-[11px] text-white/40 font-medium tracking-wide">
+          Powered by{" "}
+          <a
+            href="https://weblix.jo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white/80 hover:text-[#38bdf8] underline decoration-white/30 transition-colors font-semibold"
+          >
+            weblix-jo
+          </a>
         </div>
       </div>
     </main>

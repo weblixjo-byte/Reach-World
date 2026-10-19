@@ -38,6 +38,8 @@ export interface CardListItem {
   location?: string;
   avatarUrl: string;
   themeColor?: string;
+  phone?: string;
+  email?: string;
   isActive: boolean;
   views: number;
   linksCount: number;
@@ -251,6 +253,8 @@ export interface CardFormData {
   location?: string;
   avatarUrl?: string;
   themeColor?: string;
+  phone?: string;
+  email?: string;
   isActive?: boolean;
   links?: ILink[];
 }
@@ -275,6 +279,8 @@ export async function createCard(data: CardFormData) {
       location: data.location?.trim() || "Dubai, UAE",
       avatarUrl: data.avatarUrl?.trim() || "",
       themeColor: data.themeColor || "#2594a3",
+      phone: data.phone?.trim() || "",
+      email: data.email?.trim() || "",
       isActive: data.isActive ?? true,
       links: data.links || [],
     });
@@ -316,6 +322,12 @@ export async function updateCard(cardId: string, data: CardFormData) {
     existing.location = data.location?.trim() || "";
     existing.avatarUrl = data.avatarUrl?.trim() || "";
     existing.themeColor = data.themeColor || "#2594a3";
+    if (typeof data.phone === "string") {
+      existing.phone = data.phone.trim();
+    }
+    if (typeof data.email === "string") {
+      existing.email = data.email.trim();
+    }
     if (typeof data.isActive === "boolean") {
       existing.isActive = data.isActive;
     }

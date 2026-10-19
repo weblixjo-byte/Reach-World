@@ -1,18 +1,21 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 export type LinkIconType =
-  | "website"
+  | "phone"
   | "whatsapp"
+  | "email"
+  | "website"
+  | "maps"
+  | "linkedin"
   | "instagram"
   | "facebook"
-  | "maps"
-  | "phone"
-  | "linkedin"
+  | "twitter"
   | "custom";
 
 export interface ILink {
   _id?: string;
   title: string;
+  subtitle?: string;
   url: string;
   icon: LinkIconType;
   isActive: boolean;
@@ -28,6 +31,8 @@ export interface ICard extends Document {
   location: string;
   avatarUrl: string;
   themeColor: string;
+  phone?: string;
+  email?: string;
   isActive: boolean;
   views: number;
   links: ILink[];
@@ -37,10 +42,22 @@ export interface ICard extends Document {
 
 const LinkSchema = new Schema<ILink>({
   title: { type: String, required: true, trim: true },
+  subtitle: { type: String, trim: true, default: "" },
   url: { type: String, required: true, trim: true },
   icon: {
     type: String,
-    enum: ["website", "whatsapp", "instagram", "facebook", "maps", "phone", "linkedin", "custom"],
+    enum: [
+      "phone",
+      "whatsapp",
+      "email",
+      "website",
+      "maps",
+      "linkedin",
+      "instagram",
+      "facebook",
+      "twitter",
+      "custom",
+    ],
     default: "website",
   },
   isActive: { type: Boolean, default: true },
@@ -71,7 +88,7 @@ const CardSchema = new Schema<ICard>(
     department: {
       type: String,
       trim: true,
-      default: "General",
+      default: "Reach World",
       index: true,
     },
     headline: {
@@ -82,7 +99,7 @@ const CardSchema = new Schema<ICard>(
     location: {
       type: String,
       trim: true,
-      default: "Dubai, UAE",
+      default: "Amman, Jordan",
     },
     avatarUrl: {
       type: String,
@@ -91,7 +108,17 @@ const CardSchema = new Schema<ICard>(
     },
     themeColor: {
       type: String,
-      default: "#2594a3",
+      default: "#0a192f",
+    },
+    phone: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    email: {
+      type: String,
+      trim: true,
+      default: "",
     },
     isActive: {
       type: Boolean,
@@ -113,7 +140,6 @@ const CardSchema = new Schema<ICard>(
   }
 );
 
-// Prevent recompilation in development / hot reload
 const Card: Model<ICard> =
   mongoose.models.Card || mongoose.model<ICard>("Card", CardSchema);
 
