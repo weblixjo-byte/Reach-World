@@ -173,10 +173,10 @@ export default function DashboardPage() {
           isExporting={isExporting}
         />
       ) : currentView === "analytics" ? (
-        <div className="bg-white rounded-3xl p-8 border border-black/[0.06] shadow-[0_4px_30px_rgba(0,0,0,0.02)] space-y-6">
-          <div className="flex items-center justify-between pb-6 border-b border-black/[0.05]">
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-black/[0.06] shadow-[0_4px_30px_rgba(0,0,0,0.02)] space-y-6">
+          <div className="flex flex-wrap items-center justify-between pb-5 sm:pb-6 border-b border-black/[0.05] gap-3">
             <div>
-              <h2 className="text-lg font-bold text-[#1D1D1F] tracking-tight">
+              <h2 className="text-base sm:text-lg font-bold text-[#1D1D1F] tracking-tight">
                 Cards Interaction Analytics
               </h2>
               <p className="text-xs text-[#86868B] mt-1 font-medium">
@@ -185,29 +185,29 @@ export default function DashboardPage() {
             </div>
             <button
               onClick={() => setCurrentView("cards")}
-              className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#0071E3] text-white hover:bg-[#0077ED] transition-colors"
+              className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#0071E3] text-white hover:bg-[#0077ED] transition-colors"
             >
               Back to Registry
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-2xl bg-[#F5F5F7] border border-black/[0.04]">
-              <span className="text-xs text-[#86868B] font-semibold uppercase tracking-wider">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+            <div className="p-5 sm:p-6 rounded-2xl bg-[#F5F5F7] border border-black/[0.04]">
+              <span className="text-[11px] sm:text-xs text-[#86868B] font-semibold uppercase tracking-wider">
                 Average Taps per Card
               </span>
-              <div className="text-3xl font-extrabold text-[#1D1D1F] mt-2">
+              <div className="text-2xl sm:text-3xl font-extrabold text-[#1D1D1F] mt-2">
                 {analytics.totalCards > 0
                   ? Math.round(analytics.totalTaps / analytics.totalCards)
                   : 0}
               </div>
             </div>
 
-            <div className="p-6 rounded-2xl bg-[#F5F5F7] border border-black/[0.04]">
-              <span className="text-xs text-[#86868B] font-semibold uppercase tracking-wider">
+            <div className="p-5 sm:p-6 rounded-2xl bg-[#F5F5F7] border border-black/[0.04]">
+              <span className="text-[11px] sm:text-xs text-[#86868B] font-semibold uppercase tracking-wider">
                 Active NFC Proportion
               </span>
-              <div className="text-3xl font-extrabold text-[#0F172A] mt-2">
+              <div className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] mt-2">
                 {analytics.totalCards > 0
                   ? Math.round((analytics.totalActive / analytics.totalCards) * 100)
                   : 100}
@@ -215,21 +215,21 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="p-6 rounded-2xl bg-[#F5F5F7] border border-black/[0.04]">
-              <span className="text-xs text-[#86868B] font-semibold uppercase tracking-wider">
+            <div className="p-5 sm:p-6 rounded-2xl bg-[#F5F5F7] border border-black/[0.04]">
+              <span className="text-[11px] sm:text-xs text-[#86868B] font-semibold uppercase tracking-wider">
                 Contact Saves Conversion
               </span>
-              <div className="text-3xl font-extrabold text-[#0F172A] mt-2">
+              <div className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] mt-2">
                 {analytics.tapThroughRate}%
               </div>
             </div>
           </div>
         </div>
       ) : currentView === "departments" ? (
-        <div className="bg-white rounded-3xl p-8 border border-black/[0.06] shadow-[0_4px_30px_rgba(0,0,0,0.02)] space-y-6">
-          <div className="flex items-center justify-between pb-6 border-b border-black/[0.05]">
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-black/[0.06] shadow-[0_4px_30px_rgba(0,0,0,0.02)] space-y-6">
+          <div className="flex flex-wrap items-center justify-between pb-5 sm:pb-6 border-b border-black/[0.05] gap-3">
             <div>
-              <h2 className="text-lg font-bold text-[#1D1D1F] tracking-tight">
+              <h2 className="text-base sm:text-lg font-bold text-[#1D1D1F] tracking-tight">
                 Departments Overview
               </h2>
               <p className="text-xs text-[#86868B] mt-1 font-medium">
@@ -241,7 +241,7 @@ export default function DashboardPage() {
                 setSelectedDept("all");
                 setCurrentView("cards");
               }}
-              className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#F5F5F7] hover:bg-black/5 text-[#1D1D1F] border border-black/10 transition-colors"
+              className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#F5F5F7] hover:bg-black/5 text-[#1D1D1F] border border-black/10 transition-colors"
             >
               Reset to All
             </button>
@@ -252,7 +252,7 @@ export default function DashboardPage() {
               Departments will automatically appear here once employee cards are created.
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
               {departments.map((dept) => (
                 <div
                   key={dept}
@@ -260,7 +260,7 @@ export default function DashboardPage() {
                     setSelectedDept(dept);
                     setCurrentView("cards");
                   }}
-                  className="p-5 rounded-2xl bg-[#FBFBFD] border border-black/[0.06] hover:border-[#0071E3]/50 cursor-pointer transition-all hover:shadow-md flex items-center justify-between group"
+                  className="p-4 sm:p-5 rounded-2xl bg-[#FBFBFD] border border-black/[0.06] hover:border-[#0071E3]/50 cursor-pointer transition-all hover:shadow-md flex items-center justify-between group"
                 >
                   <div>
                     <h4 className="font-bold text-sm text-[#1D1D1F] group-hover:text-[#0071E3] transition-colors">
@@ -278,9 +278,9 @@ export default function DashboardPage() {
         /* Default: Cards Registry */
         <>
           {/* Action Control Bar */}
-          <div className="bg-white rounded-2xl p-4 border border-black/[0.06] shadow-[0_2px_16px_rgba(0,0,0,0.02)] flex flex-wrap items-center justify-between gap-4">
+          <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-black/[0.06] shadow-[0_2px_16px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4">
             {/* Search Input */}
-            <div className="relative flex-1 min-w-[280px] max-w-md">
+            <div className="relative w-full md:max-w-xs lg:max-w-sm">
               <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#86868B]" />
               <input
                 type="text"
@@ -291,12 +291,13 @@ export default function DashboardPage() {
               />
             </div>
 
-            {/* Apple Segmented Filter */}
-            <div className="flex items-center gap-3">
+            {/* Filters & Actions Container */}
+            <div className="flex flex-wrap items-center justify-between md:justify-end gap-2.5 sm:gap-3">
+              {/* Apple Segmented Filter */}
               <div className="bg-[#F5F5F7] p-1 rounded-xl flex items-center border border-black/[0.04]">
                 <button
                   onClick={() => setStatusFilter("all")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                     statusFilter === "all"
                       ? "bg-white text-[#1D1D1F] shadow-xs"
                       : "text-[#86868B] hover:text-[#1D1D1F]"
@@ -306,7 +307,7 @@ export default function DashboardPage() {
                 </button>
                 <button
                   onClick={() => setStatusFilter("active")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                     statusFilter === "active"
                       ? "bg-white text-[#1D1D1F] shadow-xs"
                       : "text-[#86868B] hover:text-[#1D1D1F]"
@@ -316,7 +317,7 @@ export default function DashboardPage() {
                 </button>
                 <button
                   onClick={() => setStatusFilter("paused")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                     statusFilter === "paused"
                       ? "bg-white text-[#1D1D1F] shadow-xs"
                       : "text-[#86868B] hover:text-[#1D1D1F]"
@@ -330,7 +331,7 @@ export default function DashboardPage() {
                 <select
                   value={selectedDept}
                   onChange={(e) => setSelectedDept(e.target.value)}
-                  className="text-xs px-3 py-2 rounded-xl border border-black/10 bg-[#FBFBFD] text-[#1D1D1F] focus:outline-none focus:border-[#0071E3]"
+                  className="text-xs px-2.5 sm:px-3 py-2 rounded-xl border border-black/10 bg-[#FBFBFD] text-[#1D1D1F] focus:outline-none focus:border-[#0071E3]"
                 >
                   <option value="all">All Departments</option>
                   {departments.map((dept) => (
@@ -340,33 +341,34 @@ export default function DashboardPage() {
                   ))}
                 </select>
               )}
-            </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center gap-2.5">
-              <button
-                onClick={handleExportCSV}
-                disabled={isExporting || cards.length === 0}
-                className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#F5F5F7] hover:bg-black/[0.05] text-[#1D1D1F] border border-black/10 flex items-center gap-1.5 transition-colors disabled:opacity-40"
-                title="Export Cards to CSV"
-              >
-                <Download className="w-3.5 h-3.5" />
-                {isExporting ? "Exporting..." : "Export CSV"}
-              </button>
+              {/* Action Buttons */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleExportCSV}
+                  disabled={isExporting || cards.length === 0}
+                  className="px-3 sm:px-4 py-2 rounded-xl text-xs font-semibold bg-[#F5F5F7] hover:bg-black/[0.05] text-[#1D1D1F] border border-black/10 flex items-center gap-1.5 transition-colors disabled:opacity-40"
+                  title="Export Cards to CSV"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">{isExporting ? "Exporting..." : "Export CSV"}</span>
+                  <span className="sm:hidden">CSV</span>
+                </button>
 
-              <button
-                onClick={handleOpenCreate}
-                className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#0071E3] hover:bg-[#0077ED] text-white flex items-center gap-1.5 shadow-sm transition-all active:scale-[0.98]"
-              >
-                <Plus className="w-4 h-4 stroke-[2.5]" />
-                Create Card
-              </button>
+                <button
+                  onClick={handleOpenCreate}
+                  className="px-3.5 sm:px-5 py-2.5 rounded-xl text-xs font-bold bg-[#0071E3] hover:bg-[#0077ED] text-white flex items-center gap-1.5 shadow-sm transition-all active:scale-[0.98]"
+                >
+                  <Plus className="w-4 h-4 stroke-[2.5]" />
+                  <span>Create Card</span>
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Main Grid: Cards Table (Left) + iPhone 16 Pro Mockup (Right) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <div className="lg:col-span-8 xl:col-span-8">
+          {/* Main Grid: Cards Table (Left) + iPhone 16 Pro Mockup (Right on Desktop only) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+            <div className="w-full lg:col-span-8 xl:col-span-8">
               <CardsTable
                 cards={cards}
                 total={total}
@@ -380,7 +382,8 @@ export default function DashboardPage() {
               />
             </div>
 
-            <div className="lg:col-span-4 xl:col-span-4 flex justify-center">
+            {/* Desktop Mockup Preview (Hidden on Mobile) */}
+            <div className="hidden lg:flex lg:col-span-4 xl:col-span-4 justify-center sticky top-6">
               {selectedCard ? (
                 <LivePhonePreview
                   card={{

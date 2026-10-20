@@ -18,9 +18,9 @@ An ultra-minimalist, production-ready SaaS application for creating, managing, a
 
 ## 🚀 Key Features
 
-1. **Desktop-Only Executive Dashboard (`/dashboard`)**:
-   - Screen guard (`DesktopOnlyGuard`) for displays `< 1024px` with an Apple-style disclaimer.
-   - macOS Sequoia Window Frame with interactive traffic light controls and frosted pill navigation.
+2. **Responsive Executive Dashboard (`/dashboard`)**:
+   - Seamless responsive experience across desktop, tablet, and mobile browsers.
+   - Dark refined navigation bar and mobile horizontal quick-tabs.
    - 4 Apple-grade KPI metric cards: Total Cards, Total Taps (+18% trend), Top Visited Employee, and CTR.
    - Debounced real-time search across names, slugs, job titles, and departments.
    - Apple Segmented Control: `[ All | Active | Paused ]` and dynamic department dropdown.
