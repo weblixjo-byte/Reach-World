@@ -11,10 +11,9 @@ import {
   Eye,
   CreditCard,
   RotateCcw,
-  Link as LinkIcon,
   UserCheck,
   Globe,
-  MousePointerClick,
+  Smartphone,
 } from "lucide-react";
 import { CardListItem, toggleCardStatus, resetCard } from "@/actions/card-actions";
 
@@ -27,6 +26,7 @@ interface CardsTableProps {
   onSelectForPreview: (card: CardListItem) => void;
   selectedCardId?: string;
   onEditCard: (card: CardListItem) => void;
+  onOpenPreview: (card: CardListItem) => void;
   onResetSuccess?: () => void;
 }
 
@@ -39,6 +39,7 @@ export default function CardsTable({
   onSelectForPreview,
   selectedCardId,
   onEditCard,
+  onOpenPreview,
   onResetSuccess,
 }: CardsTableProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -89,11 +90,11 @@ export default function CardsTable({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col">
+    <div className="w-full bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col">
       {/* Header bar */}
       <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider font-mono">
+          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
             PHYSICAL NFC CARDS
           </h3>
           <span className="text-xs text-slate-400 font-medium">
@@ -108,16 +109,16 @@ export default function CardsTable({
       </div>
 
       {/* Table Records */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto w-full">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold text-slate-500 uppercase tracking-wider font-mono">
-              <th className="py-3 px-6 w-20">Slot</th>
-              <th className="py-3 px-4">Card Assignment</th>
-              <th className="py-3 px-4">Destination Link</th>
-              <th className="py-3 px-4 text-center">Status</th>
-              <th className="py-3 px-4 text-center">Taps</th>
-              <th className="py-3 px-6 text-right">Actions</th>
+            <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              <th className="py-3.5 px-6 w-24">Slot</th>
+              <th className="py-3.5 px-4">Card Assignment</th>
+              <th className="py-3.5 px-4">Destination Link</th>
+              <th className="py-3.5 px-4 text-center">Status</th>
+              <th className="py-3.5 px-4 text-center">Taps</th>
+              <th className="py-3.5 px-6 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-xs">
@@ -151,22 +152,25 @@ export default function CardsTable({
                 return (
                   <tr
                     key={card._id}
-                    onClick={() => onSelectForPreview(card)}
+                    onClick={() => {
+                      onSelectForPreview(card);
+                      onOpenPreview(card);
+                    }}
                     className={`cursor-pointer transition-colors ${
                       isSelected
                         ? "bg-blue-50/50"
                         : "hover:bg-slate-50/70"
                     }`}
                   >
-                    {/* Slot # Badge (Clean, Monospaced) */}
+                    {/* Slot # Badge (Clean, Sans-serif) */}
                     <td className="py-3.5 px-6 whitespace-nowrap">
-                      <span className="font-mono text-xs font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded-md border border-slate-200/70">
+                      <span className="text-xs font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
                         #{paddedSlot}
                       </span>
                     </td>
 
                     {/* Card Assignment (Name & Department) */}
-                    <td className="py-3.5 px-4 min-w-[200px]">
+                    <td className="py-3.5 px-4 min-w-[220px]">
                       <div className="min-w-0">
                         <div className="font-semibold text-xs text-slate-900 truncate flex items-center gap-1.5">
                           {card.name}
@@ -187,14 +191,14 @@ export default function CardsTable({
                     </td>
 
                     {/* Card Link Mode & Target Destination */}
-                    <td className="py-3.5 px-4 min-w-[220px]">
+                    <td className="py-3.5 px-4 min-w-[240px]">
                       {isRedirect ? (
                         <div className="space-y-0.5">
                           <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-100">
                             <Globe className="w-3 h-3 text-blue-500" />
                             <span>Custom Link</span>
                           </div>
-                          <div className="text-[11px] text-slate-500 font-mono truncate max-w-[200px] block" title={card.redirectUrl}>
+                          <div className="text-[11px] text-slate-500 truncate max-w-[220px] block" title={card.redirectUrl}>
                             {card.redirectUrl || "No destination URL"}
                           </div>
                         </div>
@@ -204,7 +208,7 @@ export default function CardsTable({
                             <UserCheck className="w-3 h-3 text-slate-500" />
                             <span>Digital Profile</span>
                           </div>
-                          <div className="text-[11px] text-slate-500 font-mono">
+                          <div className="text-[11px] text-slate-500">
                             reachworld.com/{card.slug}
                           </div>
                         </div>
@@ -233,23 +237,32 @@ export default function CardsTable({
                     {/* Tap / View Counter */}
                     <td className="py-3.5 px-4 text-center whitespace-nowrap">
                       <div className="inline-flex flex-col items-center">
-                        <span className="font-mono text-xs font-semibold text-slate-800">
+                        <span className="text-xs font-semibold text-slate-800">
                           {card.views.toLocaleString()} taps
                         </span>
                         {!isRedirect && totalIconClicks > 0 && (
-                          <span className="text-[10px] font-mono text-blue-600 font-medium">
+                          <span className="text-[10px] text-blue-600 font-medium">
                             {totalIconClicks} clicks
                           </span>
                         )}
                       </div>
                     </td>
 
-                    {/* Actions: Edit, Live Test, Copy URL */}
+                    {/* Actions: Preview Modal, Edit, Live Test, Copy URL */}
                     <td className="py-3.5 px-6 text-right whitespace-nowrap">
                       <div
                         className="inline-flex items-center gap-1.5"
                         onClick={(e) => e.stopPropagation()}
                       >
+                        {/* Preview Mobile Popup Button */}
+                        <button
+                          onClick={() => onOpenPreview(card)}
+                          className="w-7 h-7 rounded-lg hover:bg-blue-50 text-slate-500 hover:text-[#0071E3] flex items-center justify-center transition-colors cursor-pointer"
+                          title="Open Mobile Live Preview"
+                        >
+                          <Smartphone className="w-3.5 h-3.5" />
+                        </button>
+
                         {/* Copy URL */}
                         <button
                           onClick={() => handleCopyLink(card.slug, card._id)}

@@ -11,9 +11,7 @@ import {
 
 export type DashboardViewType =
   | "cards"
-  | "analytics"
-  | "departments"
-  | "bulk_tools";
+  | "departments";
 
 interface DashboardNavContextType {
   currentView: DashboardViewType;
@@ -73,18 +71,6 @@ export default function DashboardLayout({
                 </button>
 
                 <button
-                  onClick={() => setCurrentView("analytics")}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer ${
-                    currentView === "analytics"
-                      ? "bg-[#0071E3] text-white font-bold shadow-md shadow-[#0071E3]/25"
-                      : "text-[#94A3B8] hover:text-white hover:bg-white/5 font-medium"
-                  }`}
-                >
-                  <BarChart3 className="w-4 h-4" />
-                  <span>Telemetry & Taps</span>
-                </button>
-
-                <button
                   onClick={() => setCurrentView("departments")}
                   className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer ${
                     currentView === "departments"
@@ -94,18 +80,6 @@ export default function DashboardLayout({
                 >
                   <Users className="w-4 h-4" />
                   <span>Departments</span>
-                </button>
-
-                <button
-                  onClick={() => setCurrentView("bulk_tools")}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer ${
-                    currentView === "bulk_tools"
-                      ? "bg-[#0071E3] text-white font-bold shadow-md shadow-[#0071E3]/25"
-                      : "text-[#94A3B8] hover:text-white hover:bg-white/5 font-medium"
-                  }`}
-                >
-                  <FileSpreadsheet className="w-4 h-4" />
-                  <span>Batch Excel (CSV)</span>
                 </button>
               </nav>
             </div>
