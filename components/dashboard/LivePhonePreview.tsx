@@ -338,8 +338,16 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
                     <Download className="w-3.5 h-3.5" /> Save Contact to Phone
                   </button>
 
-                  <div className="mt-5 pt-3 border-t border-white/10 w-full text-center text-[9px] text-white/40">
-                    Powered by <span className="text-white/70 font-semibold underline">weblix-jo</span>
+                  <div className="mt-5 pt-3 border-t border-white/10 w-full text-center text-[10px] text-white/40">
+                    powered by{" "}
+                    <a
+                      href="https://weblix-jo.com/en"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white/70 hover:text-[#38bdf8] font-semibold underline decoration-white/30 transition-colors"
+                    >
+                      weblix-jo
+                    </a>
                   </div>
                 </div>
               )}

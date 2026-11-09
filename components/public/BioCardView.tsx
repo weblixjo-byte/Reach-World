@@ -285,10 +285,10 @@ export default function BioCardView({ card }: BioCardViewProps) {
       {/* Modern Clean Footer with Safe Area */}
       <footer className="w-full max-w-[420px] pt-8 pb-2 flex flex-col items-center">
         <div className="w-full h-px bg-white/10 mb-4" />
-        <p className="text-center text-[11px] text-white/40 font-medium tracking-wide">
-          Powered by{" "}
+        <p className="text-center text-[10px] text-white/40 font-medium tracking-wide">
+          powered by{" "}
           <a
-            href="https://weblix.jo"
+            href="https://weblix-jo.com/en"
             target="_blank"
             rel="noopener noreferrer"
             className="text-white/80 hover:text-[#38bdf8] underline decoration-white/30 transition-colors font-semibold"
