@@ -4,7 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { getCardBySlug, recordCardTap } from "@/actions/card-actions";
 import BioCardView from "@/components/public/BioCardView";
-import { PauseCircle, ArrowRight, ShieldAlert, Globe } from "lucide-react";
+import { Pause, ArrowRight } from "lucide-react";
 import { normalizeRedirectUrl } from "@/lib/url-utils";
 import { ReachWorldLogo } from "@/components/icons/SocialIcons";
 
@@ -61,48 +61,40 @@ export default async function PublicCardPage({ params }: PageProps) {
 
   // 2. If card is paused by admin/HR
   if (!card.isActive) {
-    const slotNumber = card.cardNumber < 10 ? `0${card.cardNumber}` : `${card.cardNumber}`;
-
     return (
-      <main className="min-h-[100dvh] w-full flex flex-col items-center justify-between bg-[#061528] text-white selection:bg-[#0284c7]/30 px-4 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(2rem,env(safe-area-inset-bottom))]">
+      <main className="min-h-[100dvh] w-full flex flex-col items-center justify-between bg-[#061528] text-white selection:bg-white/20 px-4 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(2rem,env(safe-area-inset-bottom))]">
         {/* Top Reach World Official Logo */}
-        <div className="pt-2 pb-4">
-          <ReachWorldLogo className="w-40 sm:w-44" />
+        <div className="pt-4 pb-2">
+          <ReachWorldLogo className="w-36 sm:w-40 opacity-90" />
         </div>
 
-        {/* Center Frosted Glass Luxury Card */}
-        <div className="max-w-[420px] w-full bg-[#0a1f3a]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 sm:p-9 shadow-[0_8px_40px_rgba(0,0,0,0.5)] text-center flex flex-col items-center animate-in fade-in zoom-in-95 duration-200">
-          {/* Status Badge */}
-          <div className="w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-500/25 flex items-center justify-center text-amber-400 mb-5 shadow-inner">
-            <PauseCircle className="w-7 h-7 stroke-[1.75]" />
+        {/* Center Minimalist Status Notice (Zero Neon, Clean & Quiet) */}
+        <div className="max-w-sm w-full text-center flex flex-col items-center my-auto px-4 animate-in fade-in duration-300">
+          <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 mb-5 shadow-sm">
+            <Pause className="w-5 h-5 stroke-[1.5]" />
           </div>
 
-          <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-amber-500/10 border border-amber-500/25 text-amber-300 mb-3 inline-flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-            Card Currently Inactive
-          </span>
-
-          <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight mb-2">
-            Card Temporarily Paused
+          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2.5">
+            Card Temporarily Inactive
           </h1>
 
-          <p className="text-xs sm:text-sm text-white/70 leading-relaxed mb-6 font-normal">
-            This card (<span className="font-semibold text-white">{card.name}</span> • Slot #{slotNumber}) is temporarily paused by Reach World corporate management.
+          <p className="text-xs sm:text-sm text-white/60 leading-relaxed max-w-xs mx-auto mb-7 font-normal">
+            This digital card is currently inactive. Please visit our official corporate website for assistance.
           </p>
 
           <a
             href="https://reachworld.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full py-3 px-4 rounded-xl text-xs font-semibold text-white bg-white/10 hover:bg-white/15 border border-white/15 transition-all flex items-center justify-center gap-2 active:scale-95 shadow-sm"
+            className="px-6 py-2.5 rounded-full text-xs font-semibold text-white/90 hover:text-white bg-white/10 hover:bg-white/15 border border-white/15 transition-all inline-flex items-center gap-2 active:scale-95 shadow-sm"
           >
-            <span>Visit Reach World Website</span>
-            <ArrowRight className="w-3.5 h-3.5 text-white/70" />
+            <span>reachworld.com</span>
+            <ArrowRight className="w-3.5 h-3.5 text-white/50" />
           </a>
         </div>
 
-        {/* Clean Official Footer */}
-        <footer className="w-full max-w-[420px] pt-8 pb-2 flex flex-col items-center">
+        {/* Official Clean Footer */}
+        <footer className="w-full max-w-[420px] pt-6 pb-2 flex flex-col items-center">
           <div className="w-full h-px bg-white/10 mb-4" />
           <p className="text-center text-[10px] text-white/40 font-medium tracking-wide">
             powered by{" "}
@@ -110,7 +102,7 @@ export default async function PublicCardPage({ params }: PageProps) {
               href="https://weblix-jo.com/en"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white/80 hover:text-[#38bdf8] underline decoration-white/30 transition-colors font-semibold"
+              className="text-white/70 hover:text-white underline decoration-white/30 transition-colors font-semibold"
             >
               weblix-jo
             </a>
