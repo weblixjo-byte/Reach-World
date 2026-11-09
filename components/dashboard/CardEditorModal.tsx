@@ -161,6 +161,10 @@ export default function CardEditorModal({
     curCustoms = customLinks
   ): CardFormData => {
     const links: any[] = [];
+    const getExistingClicks = (icon: string) => {
+      const match = (initialData?.links || []).find((l: any) => l.icon === icon);
+      return match?.clicks || 0;
+    };
 
     // 1. Phone
     const cleanPhone = curPhone.replace(/\D/g, "");
@@ -172,7 +176,7 @@ export default function CardEditorModal({
         url: `tel:${formattedPhone}`,
         icon: "phone",
         isActive: true,
-        clicks: 0,
+        clicks: getExistingClicks("phone"),
       });
     }
 
@@ -185,7 +189,7 @@ export default function CardEditorModal({
         url: `https://wa.me/962${cleanWa}`,
         icon: "whatsapp",
         isActive: true,
-        clicks: 0,
+        clicks: getExistingClicks("whatsapp"),
       });
     }
 
@@ -197,7 +201,7 @@ export default function CardEditorModal({
         url: `mailto:${curEmail.trim()}`,
         icon: "email",
         isActive: true,
-        clicks: 0,
+        clicks: getExistingClicks("email"),
       });
     }
 
@@ -210,7 +214,7 @@ export default function CardEditorModal({
         url: fullUrl,
         icon: "website",
         isActive: true,
-        clicks: 0,
+        clicks: getExistingClicks("website"),
       });
     }
 
@@ -222,7 +226,7 @@ export default function CardEditorModal({
         url: curMaps.trim(),
         icon: "maps",
         isActive: true,
-        clicks: 0,
+        clicks: getExistingClicks("maps"),
       });
     }
 
@@ -235,7 +239,7 @@ export default function CardEditorModal({
         url: fullLk,
         icon: "linkedin",
         isActive: true,
-        clicks: 0,
+        clicks: getExistingClicks("linkedin"),
       });
     }
 
@@ -248,7 +252,7 @@ export default function CardEditorModal({
         url: `https://instagram.com/${cleanIg}`,
         icon: "instagram",
         isActive: true,
-        clicks: 0,
+        clicks: getExistingClicks("instagram"),
       });
     }
 
@@ -262,7 +266,7 @@ export default function CardEditorModal({
         url: fullFb,
         icon: "facebook",
         isActive: true,
-        clicks: 0,
+        clicks: getExistingClicks("facebook"),
       });
     }
 
@@ -275,7 +279,7 @@ export default function CardEditorModal({
         url: `https://x.com/${cleanTw}`,
         icon: "twitter",
         isActive: true,
-        clicks: 0,
+        clicks: getExistingClicks("twitter"),
       });
     }
 
@@ -283,13 +287,14 @@ export default function CardEditorModal({
     curCustoms.forEach((c) => {
       if (c.title.trim() && c.url.trim()) {
         const fullUrl = c.url.startsWith("http") ? c.url.trim() : `https://${c.url.trim()}`;
+        const matchCust = (initialData?.links || []).find((l: any) => l._id === c.id || l.url === fullUrl);
         links.push({
           title: c.title.trim(),
           subtitle: c.subtitle?.trim() || fullUrl.replace(/^https?:\/\//, ""),
           url: fullUrl,
           icon: "custom",
           isActive: true,
-          clicks: 0,
+          clicks: matchCust?.clicks || 0,
         });
       }
     });

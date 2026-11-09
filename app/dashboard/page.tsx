@@ -641,6 +641,8 @@ export default function DashboardPage() {
                     redirectUrl: selectedCard.redirectUrl,
                     isActive: selectedCard.isActive,
                     slug: selectedCard.slug,
+                    views: selectedCard.views,
+                    vcardClicks: selectedCard.vcardClicks,
                     links: selectedCard.links,
                   }}
                 />

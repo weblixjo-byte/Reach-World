@@ -46,6 +46,7 @@ export interface ICard extends Document {
   redirectUrl?: string;
   isActive: boolean;
   views: number;
+  vcardClicks?: number;
   lastTappedAt?: Date;
   tapsHistory?: ITapLog[];
   links: ILink[];
@@ -161,6 +162,10 @@ const CardSchema = new Schema<ICard>(
       type: Number,
       default: 0,
       index: true,
+    },
+    vcardClicks: {
+      type: Number,
+      default: 0,
     },
     lastTappedAt: {
       type: Date,

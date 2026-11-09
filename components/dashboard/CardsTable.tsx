@@ -15,6 +15,7 @@ import {
   UserCheck,
   Globe,
   Sparkles,
+  MousePointerClick,
 } from "lucide-react";
 import { CardListItem, toggleCardStatus, resetCard } from "@/actions/card-actions";
 
@@ -242,8 +243,19 @@ export default function CardsTable({
                           <Eye className="w-3.5 h-3.5 text-[#86868B]" />
                           {card.views.toLocaleString()}
                         </span>
+                        {!isRedirect && (
+                          <span
+                            className="inline-flex items-center gap-1 text-[10px] font-bold text-[#0071E3] bg-[#0071E3]/8 px-2 py-0.5 rounded-full mt-1"
+                            title="Interactive clicks on contact icons"
+                          >
+                            <MousePointerClick className="w-2.5 h-2.5" />
+                            <span>
+                              {((card.links || []).reduce((acc, l) => acc + (l.clicks || 0), 0) + (card.vcardClicks || 0))} clicks
+                            </span>
+                          </span>
+                        )}
                         {card.lastTappedAt && (
-                          <span className="text-[10px] text-[#86868B]">
+                          <span className="text-[10px] text-[#86868B] mt-0.5">
                             {new Date(card.lastTappedAt).toLocaleDateString([], {
                               month: "short",
                               day: "numeric",

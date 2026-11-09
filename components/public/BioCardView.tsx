@@ -57,13 +57,13 @@ export default function BioCardView({ card }: BioCardViewProps) {
   const [copied, setCopied] = useState(false);
 
   // Link click tracking (views are accurately counted on the server)
-  const handleLinkClick = (linkId?: string) => {
-    if (!linkId) return;
+  const handleLinkClick = (linkId?: string, icon?: string) => {
     try {
       fetch("/api/track", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug: card.slug, type: "click", linkId }),
+        body: JSON.stringify({ slug: card.slug, type: "click", linkId, icon }),
+        keepalive: true,
       }).catch(() => {});
     } catch {}
   };
@@ -85,6 +85,15 @@ export default function BioCardView({ card }: BioCardViewProps) {
   };
 
   const handleDownloadVCard = () => {
+    try {
+      fetch("/api/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: card.slug, type: "vcard" }),
+        keepalive: true,
+      }).catch(() => {});
+    } catch {}
+
     try {
       confetti({
         particleCount: 40,
@@ -209,7 +218,7 @@ export default function BioCardView({ card }: BioCardViewProps) {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={() => handleLinkClick(link._id)}
+                    onClick={() => handleLinkClick(link._id, link.icon)}
                     className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#0a1f3a]/80 hover:bg-[#0d274c] active:scale-[0.98] border border-white/10 hover:border-white/20 shadow-[0_4px_24px_rgba(0,0,0,0.3)] transition-all group backdrop-blur-md"
                   >
                     <div className="flex items-center gap-3.5 min-w-0">
@@ -260,7 +269,7 @@ export default function BioCardView({ card }: BioCardViewProps) {
                     href={sLink.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={() => handleLinkClick(sLink._id)}
+                    onClick={() => handleLinkClick(sLink._id, sLink.icon)}
                     className="w-12 h-12 rounded-2xl bg-[#0f284b] hover:bg-[#13325c] border border-white/10 hover:border-white/20 hover:scale-110 active:scale-95 flex items-center justify-center transition-all shadow-md p-3"
                     title={sLink.title}
                   >

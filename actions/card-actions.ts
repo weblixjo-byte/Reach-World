@@ -23,6 +23,7 @@ export interface CardListItem {
   redirectUrl?: string;
   isActive: boolean;
   views: number;
+  vcardClicks?: number;
   lastTappedAt?: string;
   linksCount: number;
   links?: ILink[];
@@ -134,7 +135,7 @@ export async function getCards({
     const [rawCards, total, distinctDepts] = await Promise.all([
       Card.find(query)
         .select(
-          "cardNumber name slug jobTitle department headline location avatarUrl themeColor phone email mode redirectUrl isActive views lastTappedAt links updatedAt"
+          "cardNumber name slug jobTitle department headline location avatarUrl themeColor phone email mode redirectUrl isActive views vcardClicks lastTappedAt links updatedAt"
         )
         .sort({ cardNumber: 1 })
         .skip(skip)
@@ -161,9 +162,18 @@ export async function getCards({
       redirectUrl: doc.redirectUrl || "",
       isActive: doc.isActive ?? true,
       views: Number(doc.views) || 0,
+      vcardClicks: Number(doc.vcardClicks) || 0,
       lastTappedAt: doc.lastTappedAt ? new Date(doc.lastTappedAt).toISOString() : undefined,
       linksCount: Array.isArray(doc.links) ? doc.links.length : 0,
-      links: doc.links || [],
+      links: (doc.links || []).map((l: any) => ({
+        _id: l._id ? l._id.toString() : undefined,
+        title: l.title || "",
+        subtitle: l.subtitle || "",
+        url: l.url || "",
+        icon: l.icon || "website",
+        isActive: l.isActive !== false,
+        clicks: Number(l.clicks) || 0,
+      })),
       updatedAt: doc.updatedAt ? new Date(doc.updatedAt).toISOString() : new Date().toISOString(),
     }));
 
@@ -348,7 +358,16 @@ export async function updateCard(cardId: string, data: CardFormData) {
     }
 
     if (data.links && Array.isArray(data.links)) {
-      existing.links = data.links as any;
+      const existingLinks = existing.links || [];
+      existing.links = data.links.map((nl: any) => {
+        const found = existingLinks.find(
+          (ex: any) => (nl._id && ex._id?.toString() === nl._id) || ex.icon === nl.icon
+        );
+        return {
+          ...nl,
+          clicks: found ? (found.clicks || 0) : (nl.clicks || 0),
+        };
+      }) as any;
     }
 
     await existing.save();
