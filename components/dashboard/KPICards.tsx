@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { CreditCard, Eye, Users, Activity } from "lucide-react";
+import { CreditCard, Eye, Users, ArrowUpRight, Share2, Layers } from "lucide-react";
 import { AnalyticsSummary } from "@/actions/card-actions";
 
 interface KPICardsProps {
@@ -12,102 +12,120 @@ export default function KPICards({ analytics }: KPICardsProps) {
   const topPerformer = analytics.topPerformer;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
-      {/* 1. Total Cards */}
-      <div className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm hover:shadow-md transition-shadow">
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-xs font-bold text-[#64748B] uppercase tracking-wider">
-            Total Cards
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+      {/* 1. Fixed 50 Cards */}
+      <div className="bg-white rounded-2xl p-5 sm:p-6 border border-black/[0.06] shadow-[0_2px_14px_rgba(0,0,0,0.02)] hover:shadow-md transition-all">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[11px] font-bold text-[#86868B] uppercase tracking-wider">
+            NFC Hardware Cards
           </span>
-          <div className="w-9 h-9 rounded-xl bg-[#F1F5F9] text-[#0F172A] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-xl bg-[#0a192f] text-white flex items-center justify-center shadow-xs">
             <CreditCard className="w-4 h-4 stroke-[2]" />
           </div>
         </div>
-        <div className="flex items-baseline gap-2 mb-2">
-          <span className="text-3xl font-extrabold tracking-tight text-[#0F172A]">
-            {analytics.totalCards}
+        <div className="flex items-baseline gap-2 mb-1.5">
+          <span className="text-3xl font-extrabold tracking-tight text-[#1D1D1F]">
+            50
           </span>
-          <span className="text-xs text-[#64748B] font-medium">Cards</span>
+          <span className="text-xs text-[#86868B] font-semibold">Fixed Slots (1-50)</span>
         </div>
-        <p className="text-xs text-[#64748B] font-medium">
-          {analytics.totalActive} Active Cards
-        </p>
+        <div className="flex items-center gap-2 text-xs">
+          <span className="inline-flex items-center gap-1 font-semibold text-[#34C759]">
+            <span className="w-2 h-2 rounded-full bg-[#34C759] animate-pulse" />
+            {analytics.totalActive} Active
+          </span>
+          <span className="text-[#86868B]">•</span>
+          <span className="text-[#86868B] font-medium">
+            {analytics.totalCards - analytics.totalActive} Paused
+          </span>
+        </div>
       </div>
 
       {/* 2. Total Taps */}
-      <div className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm hover:shadow-md transition-shadow">
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-xs font-bold text-[#64748B] uppercase tracking-wider">
-            Total Taps
+      <div className="bg-white rounded-2xl p-5 sm:p-6 border border-black/[0.06] shadow-[0_2px_14px_rgba(0,0,0,0.02)] hover:shadow-md transition-all">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[11px] font-bold text-[#86868B] uppercase tracking-wider">
+            Total NFC Taps
           </span>
-          <div className="w-9 h-9 rounded-xl bg-[#F1F5F9] text-[#0F172A] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center">
             <Eye className="w-4 h-4 stroke-[2]" />
           </div>
         </div>
-        <div className="flex items-baseline gap-2 mb-2">
-          <span className="text-3xl font-extrabold tracking-tight text-[#0F172A]">
+        <div className="flex items-baseline gap-2 mb-1.5">
+          <span className="text-3xl font-extrabold tracking-tight text-[#1D1D1F]">
             {analytics.totalTaps.toLocaleString()}
           </span>
-          <span className="text-xs text-[#64748B] font-medium">Views</span>
+          <span className="text-xs text-[#86868B] font-semibold">Taps & Scans</span>
         </div>
-        <p className="text-xs text-[#64748B] font-medium">
-          Total Public Views
+        <p className="text-xs text-[#86868B] font-medium flex items-center gap-1">
+          <ArrowUpRight className="w-3.5 h-3.5 text-[#34C759]" />
+          Real-time analytics tracking active
         </p>
       </div>
 
-      {/* 3. Top Performer Card */}
-      <div className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm hover:shadow-md transition-shadow">
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-xs font-bold text-[#64748B] uppercase tracking-wider">
-            Top Visited Card
+      {/* 3. Destination Routing Modes */}
+      <div className="bg-white rounded-2xl p-5 sm:p-6 border border-black/[0.06] shadow-[0_2px_14px_rgba(0,0,0,0.02)] hover:shadow-md transition-all">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[11px] font-bold text-[#86868B] uppercase tracking-wider">
+            Card Destinations
           </span>
-          <div className="w-9 h-9 rounded-xl bg-[#F1F5F9] text-[#0F172A] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-xl bg-[#F5F5F7] text-[#1D1D1F] flex items-center justify-center">
+            <Layers className="w-4 h-4 stroke-[2]" />
+          </div>
+        </div>
+        <div className="flex items-baseline gap-3 mb-1.5">
+          <div>
+            <span className="text-2xl font-extrabold tracking-tight text-[#1D1D1F]">
+              {analytics.totalProfiles}
+            </span>
+            <span className="text-[11px] text-[#86868B] ml-1 font-medium">Bio Cards</span>
+          </div>
+          <span className="text-[#86868B]">/</span>
+          <div>
+            <span className="text-2xl font-extrabold tracking-tight text-[#0071E3]">
+              {analytics.totalRedirects}
+            </span>
+            <span className="text-[11px] text-[#0071E3] ml-1 font-medium">Redirects</span>
+          </div>
+        </div>
+        <p className="text-xs text-[#86868B] font-medium">
+          Instant routing switch supported
+        </p>
+      </div>
+
+      {/* 4. Top Performer Card */}
+      <div className="bg-white rounded-2xl p-5 sm:p-6 border border-black/[0.06] shadow-[0_2px_14px_rgba(0,0,0,0.02)] hover:shadow-md transition-all">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[11px] font-bold text-[#86868B] uppercase tracking-wider">
+            Most Tapped Card
+          </span>
+          <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
             <Users className="w-4 h-4 stroke-[2]" />
           </div>
         </div>
         {topPerformer ? (
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#0F172A] flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
-              {topPerformer.name.slice(0, 2).toUpperCase()}
+            <div className="w-10 h-10 rounded-xl bg-[#0a192f] flex flex-col items-center justify-center text-white shrink-0 shadow-xs">
+              <span className="text-[9px] font-bold text-amber-400">#</span>
+              <span className="text-xs font-extrabold leading-none">
+                {topPerformer.cardNumber < 10 ? `0${topPerformer.cardNumber}` : topPerformer.cardNumber}
+              </span>
             </div>
             <div className="min-w-0 flex-1">
-              <h4 className="text-sm font-bold text-[#0F172A] truncate">
+              <h4 className="text-sm font-bold text-[#1D1D1F] truncate">
                 {topPerformer.name}
               </h4>
-              <p className="text-xs text-[#64748B] truncate font-medium">
-                {topPerformer.views.toLocaleString()} taps
+              <p className="text-xs text-[#86868B] truncate font-medium">
+                <span className="text-[#0071E3] font-bold">{topPerformer.views.toLocaleString()} taps</span> •{" "}
+                {topPerformer.mode === "redirect" ? "Direct URL" : "Bio Card"}
               </p>
             </div>
           </div>
         ) : (
-          <p className="text-xs text-[#64748B] py-2">
-            No visitor taps recorded yet
+          <p className="text-xs text-[#86868B] py-2 font-medium">
+            Tap cards to generate activity
           </p>
         )}
-      </div>
-
-      {/* 4. Tap-Through Rate */}
-      <div className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-sm hover:shadow-md transition-shadow">
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-xs font-bold text-[#64748B] uppercase tracking-wider">
-            Engagement Rate
-          </span>
-          <div className="w-9 h-9 rounded-xl bg-[#F1F5F9] text-[#0F172A] flex items-center justify-center">
-            <Activity className="w-4 h-4 stroke-[2]" />
-          </div>
-        </div>
-        <div className="flex items-baseline gap-2 mb-3">
-          <span className="text-3xl font-extrabold tracking-tight text-[#0F172A]">
-            {analytics.tapThroughRate}%
-          </span>
-          <span className="text-xs text-[#64748B] font-medium">CTR</span>
-        </div>
-        <div className="w-full bg-[#F1F5F9] h-2 rounded-full overflow-hidden">
-          <div
-            className="bg-[#0F172A] h-full rounded-full transition-all duration-700"
-            style={{ width: `${Math.min(100, analytics.tapThroughRate)}%` }}
-          />
-        </div>
       </div>
     </div>
   );

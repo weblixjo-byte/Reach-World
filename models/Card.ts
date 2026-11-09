@@ -22,7 +22,16 @@ export interface ILink {
   clicks: number;
 }
 
+export type CardModeType = "profile" | "redirect";
+
+export interface ITapLog {
+  timestamp: Date;
+  referrer?: string;
+  userAgent?: string;
+}
+
 export interface ICard extends Document {
+  cardNumber: number;
   name: string;
   slug: string;
   jobTitle: string;
@@ -33,8 +42,12 @@ export interface ICard extends Document {
   themeColor: string;
   phone?: string;
   email?: string;
+  mode: CardModeType;
+  redirectUrl?: string;
   isActive: boolean;
   views: number;
+  lastTappedAt?: Date;
+  tapsHistory?: ITapLog[];
   links: ILink[];
   createdAt: Date;
   updatedAt: Date;
@@ -66,6 +79,14 @@ const LinkSchema = new Schema<ILink>({
 
 const CardSchema = new Schema<ICard>(
   {
+    cardNumber: {
+      type: Number,
+      required: [true, "Card Number (1-50) is required"],
+      min: 1,
+      max: 50,
+      unique: true,
+      index: true,
+    },
     name: {
       type: String,
       required: [true, "Name is required"],
@@ -120,6 +141,17 @@ const CardSchema = new Schema<ICard>(
       trim: true,
       default: "",
     },
+    mode: {
+      type: String,
+      enum: ["profile", "redirect"],
+      default: "profile",
+      index: true,
+    },
+    redirectUrl: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     isActive: {
       type: Boolean,
       default: true,
@@ -130,6 +162,17 @@ const CardSchema = new Schema<ICard>(
       default: 0,
       index: true,
     },
+    lastTappedAt: {
+      type: Date,
+      default: null,
+    },
+    tapsHistory: [
+      {
+        timestamp: { type: Date, default: Date.now },
+        referrer: { type: String, default: "" },
+        userAgent: { type: String, default: "" },
+      },
+    ],
     links: {
       type: [LinkSchema],
       default: [],

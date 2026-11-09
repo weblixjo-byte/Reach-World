@@ -23,9 +23,12 @@ export default function BulkToolsView({
   const [isImporting, setIsImporting] = useState(false);
   const [importResult, setImportResult] = useState<string | null>(null);
 
-  // Full comprehensive 200-employee company template with all communication types
+  // Full comprehensive 50-card template with slots 1-50, mode, redirect URL, and contact types
   const handleDownloadSample = () => {
     const headers = [
+      "Card Number",
+      "Mode (profile or redirect)",
+      "Redirect Target URL",
       "Name",
       "Job Title",
       "Department",
@@ -41,6 +44,9 @@ export default function BulkToolsView({
 
     const sampleRows = [
       [
+        "1",
+        "profile",
+        "",
         "Mohammad Faraj Alseidi",
         "Managing Director",
         "Executive Management",
@@ -54,6 +60,9 @@ export default function BulkToolsView({
         "m_alseidi",
       ],
       [
+        "2",
+        "redirect",
+        "https://instagram.com/reachworld",
         "Ahmad Al-Qasim",
         "Operations Specialist",
         "Operations",
@@ -67,6 +76,9 @@ export default function BulkToolsView({
         "",
       ],
       [
+        "3",
+        "profile",
+        "",
         "Rania Al-Khatib",
         "Client Success Lead",
         "Customer Support",
@@ -91,7 +103,7 @@ export default function BulkToolsView({
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "Reach_World_Employees_Import_Template.csv";
+    link.download = "Reach_World_50_NFC_Cards_Template.csv";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -101,7 +113,7 @@ export default function BulkToolsView({
     const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);
     if (lines.length < 2) return [];
 
-    // Parse simple CSV line with quotes support
+    // Parse CSV line with quotes support
     const parseLine = (line: string) => {
       const result: string[] = [];
       let current = "";
@@ -121,7 +133,7 @@ export default function BulkToolsView({
       return result;
     };
 
-    const headers = parseLine(lines[0]).map((h) => h.toLowerCase().replace(/[^a-z]/g, ""));
+    const headers = parseLine(lines[0]).map((h) => h.toLowerCase().replace(/[^a-z0-9]/g, ""));
     const records: any[] = [];
 
     for (let i = 1; i < lines.length; i++) {
@@ -131,20 +143,23 @@ export default function BulkToolsView({
       const obj: any = {};
       headers.forEach((h, idx) => {
         const val = values[idx] || "";
-        if (h.includes("name")) obj.name = val;
+        if (h.includes("card") || h.includes("slot") || h.includes("number")) obj.cardNumber = val;
+        else if (h.includes("mode") || h.includes("routing") || h.includes("type")) obj.mode = val;
+        else if (h.includes("redirect") || h.includes("target") || h.includes("destination")) obj.redirectUrl = val;
+        else if (h.includes("name")) obj.name = val;
         else if (h.includes("title") || h.includes("job") || h.includes("role")) obj.jobTitle = val;
         else if (h.includes("dept") || h.includes("department")) obj.department = val;
         else if (h.includes("phone") || h.includes("mobile") || h.includes("tel")) obj.phone = val;
         else if (h.includes("email") || h.includes("mail")) obj.email = val;
         else if (h.includes("location") || h.includes("office") || h.includes("city")) obj.location = val;
-        else if (h.includes("web") || h.includes("site") || h.includes("url")) obj.website = val;
+        else if (h.includes("web") || h.includes("site")) obj.website = val;
         else if (h.includes("linkedin")) obj.linkedin = val;
         else if (h.includes("instagram") || h.includes("insta")) obj.instagram = val;
         else if (h.includes("facebook")) obj.facebook = val;
         else if (h.includes("twitter") || h === "x") obj.twitter = val;
       });
 
-      if (obj.name && obj.name.trim()) {
+      if (obj.cardNumber || obj.name) {
         records.push(obj);
       }
     }
@@ -163,7 +178,7 @@ export default function BulkToolsView({
       setCsvText(content);
       const rows = parseCSV(content);
       setParsedRows(rows);
-      setParseStatus(`Detected ${rows.length} valid employee rows ready for batch processing.`);
+      setParseStatus(`Detected ${rows.length} valid card rows ready for batch slot update.`);
     };
     reader.readAsText(file);
   };
@@ -176,7 +191,7 @@ export default function BulkToolsView({
     try {
       const res = await importCardsFromCSV(parsedRows);
       if (res.success) {
-        setImportResult(`Successfully generated and imported ${res.count} employee cards into Reach World.`);
+        setImportResult(`Successfully updated ${res.count} cards in the 50-card registry.`);
         setParsedRows([]);
         setParseStatus(null);
       } else {
@@ -197,18 +212,18 @@ export default function BulkToolsView({
           <div className="flex items-center gap-2">
             <FileSpreadsheet className="w-5 h-5 text-[#0F172A]" />
             <h2 className="text-lg font-bold text-[#1D1D1F] tracking-tight">
-              Batch Employee & Directory Tools
+              50 NFC Cards Batch Tools & Spreadsheet Sync
             </h2>
           </div>
           <p className="text-xs text-[#86868B] mt-1 font-medium">
-            Export company records or import team batches directly via complete CSV spreadsheet template.
+            Export complete records for the 50 hardware cards or update slots 1 to 50 in bulk via CSV.
           </p>
         </div>
         <button
           onClick={onBackToRegistry}
-          className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#F5F5F7] hover:bg-black/5 text-[#1D1D1F] border border-black/10 transition-colors"
+          className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#F5F5F7] hover:bg-black/5 text-[#1D1D1F] border border-black/10 transition-colors cursor-pointer"
         >
-          Back to Cards
+          Back to 50 Cards
         </button>
       </div>
 
@@ -220,23 +235,23 @@ export default function BulkToolsView({
               <Download className="w-5 h-5" />
             </div>
             <h3 className="text-sm font-bold text-[#0F172A]">
-              Export Full Directory (CSV)
+              Export 50 Cards Registry (CSV)
             </h3>
             <p className="text-xs text-[#64748B] leading-relaxed">
-              Downloads complete employee directory including name, job title, department, card link, and status for administrative records.
+              Downloads complete directory for cards 1 to 50, including card number, slug, physical URL, routing mode, destination URL, assignee, status, and tap counts.
             </p>
             <div className="text-xs font-semibold text-[#0F172A]">
-              Current Registry Count: <span className="text-[#0071E3]">{cards.length} Cards</span>
+              Current Registry Count: <span className="text-[#0071E3]">50 Fixed Physical NFC Cards</span>
             </div>
           </div>
 
           <button
             onClick={onExportCSV}
             disabled={isExporting || cards.length === 0}
-            className="w-full py-3 px-4 rounded-xl bg-[#0F172A] hover:bg-[#1E293B] text-white text-xs font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-40"
+            className="w-full py-3 px-4 rounded-xl bg-[#0F172A] hover:bg-[#1E293B] text-white text-xs font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-40 cursor-pointer"
           >
             <Download className="w-4 h-4" />
-            {isExporting ? "Generating CSV..." : "Download Directory CSV"}
+            {isExporting ? "Generating CSV..." : "Download 50 Cards CSV"}
           </button>
         </div>
 
@@ -247,17 +262,17 @@ export default function BulkToolsView({
               <Upload className="w-5 h-5" />
             </div>
             <h3 className="text-sm font-bold text-[#0F172A]">
-              Batch Employee Import (Full CSV Template)
+              Batch Update 50 Cards (CSV Spreadsheet)
             </h3>
             <p className="text-xs text-[#64748B] leading-relaxed">
-              Upload an Excel/CSV spreadsheet to batch generate digital cards for all company employees at once. Supports all channels (Phone, WhatsApp, Email, LinkedIn, Instagram, Maps, Website, Facebook, X). Empty channels are skipped automatically.
+              Upload an Excel/CSV spreadsheet to update destinations, employee names, titles, and channels for cards 1 to 50 in bulk.
             </p>
 
             <button
               onClick={handleDownloadSample}
-              className="text-xs text-[#0071E3] font-semibold hover:underline inline-flex items-center gap-1.5"
+              className="text-xs text-[#0071E3] font-semibold hover:underline inline-flex items-center gap-1.5 cursor-pointer"
             >
-              <Download className="w-4 h-4" /> Download Full 200-Employee CSV Template
+              <Download className="w-4 h-4" /> Download 50-Card CSV Template
             </button>
           </div>
 
@@ -282,9 +297,9 @@ export default function BulkToolsView({
                 <button
                   onClick={handleExecuteImport}
                   disabled={isImporting}
-                  className="px-3 py-1.5 rounded-lg bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-bold transition-all disabled:opacity-50"
+                  className="px-3 py-1.5 rounded-lg bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-bold transition-all disabled:opacity-50 cursor-pointer"
                 >
-                  {isImporting ? "Importing..." : "Start Import"}
+                  {isImporting ? "Updating..." : "Start Batch Update"}
                 </button>
               </div>
             )}

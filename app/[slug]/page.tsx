@@ -1,12 +1,14 @@
 import React from "react";
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { getCardBySlug } from "@/actions/card-actions";
+import { notFound, redirect } from "next/navigation";
+import { headers } from "next/headers";
+import { getCardBySlug, recordCardTap } from "@/actions/card-actions";
 import BioCardView from "@/components/public/BioCardView";
-import { ShieldAlert, PauseCircle } from "lucide-react";
+import { PauseCircle } from "lucide-react";
+import { normalizeRedirectUrl } from "@/lib/url-utils";
 
-// ISR: revalidate every 60 seconds on Vercel Edge Cache with zero database overhead
-export const revalidate = 60;
+// Make dynamic to ensure taps are counted and redirects happen instantly in real time
+export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{
@@ -25,11 +27,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  const cardTitle = card.cardNumber
+    ? `Card #${card.cardNumber < 10 ? '0' + card.cardNumber : card.cardNumber} — ${card.name}`
+    : card.name;
+
   return {
-    title: `${card.name} | Reach World NFC`,
+    title: `${cardTitle} | Reach World NFC`,
     description: `${card.jobTitle || "Executive"} — Reach World (${card.department || "Corporate"})`,
     openGraph: {
-      title: `${card.name} — Reach World`,
+      title: `${cardTitle} — Reach World`,
       description: card.headline || `${card.jobTitle} at Reach World`,
       images: card.avatarUrl ? [{ url: card.avatarUrl }] : [],
     },
@@ -44,7 +50,15 @@ export default async function PublicCardPage({ params }: PageProps) {
     notFound();
   }
 
-  // If card is paused by admin/HR
+  // 1. Record the NFC tap in analytics
+  const headersList = await headers();
+  const userAgent = headersList.get("user-agent") || "";
+  const referrer = headersList.get("referer") || "";
+
+  // Background non-blocking tap record
+  await recordCardTap(card._id, { userAgent, referrer });
+
+  // 2. If card is paused by admin/HR
   if (!card.isActive) {
     return (
       <main className="min-h-screen bg-[#F5F5F7] flex items-center justify-center p-6 text-[#1D1D1F]">
@@ -59,7 +73,7 @@ export default async function PublicCardPage({ params }: PageProps) {
             Card Temporarily Inactive
           </h1>
           <p className="text-xs text-[#86868B] leading-relaxed mb-6">
-            This card for <span className="font-semibold text-[#1D1D1F]">{card.name}</span> has been paused by Reach World corporate management.
+            This card (<span className="font-semibold text-[#1D1D1F]">{card.name}</span>) has been temporarily paused by Reach World corporate management.
           </p>
           <div className="text-[11px] text-[#86868B] pt-4 border-t border-black/5 w-full">
             Reach World • Enterprise NFC Infrastructure
@@ -69,5 +83,14 @@ export default async function PublicCardPage({ params }: PageProps) {
     );
   }
 
+  // 3. If in Direct Redirect mode and a destination URL is configured -> Redirect immediately!
+  if (card.mode === "redirect" && card.redirectUrl && card.redirectUrl.trim()) {
+    const destination = normalizeRedirectUrl(card.redirectUrl);
+    if (destination) {
+      redirect(destination);
+    }
+  }
+
+  // 4. Otherwise, display the full Reach World Digital Bio Card Profile
   return <BioCardView card={card as any} />;
 }

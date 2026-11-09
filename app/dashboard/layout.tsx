@@ -39,7 +39,7 @@ export default function DashboardLayout({
       <DashboardNavContext.Provider value={{ currentView, setCurrentView }}>
         <div className="min-h-screen bg-[#F8F9FA] flex font-sans">
           {/* Dark Refined Sidebar: #0a192f with Company Logo at Bottom */}
-          <aside className="w-64 bg-[#0a192f] border-r border-[#1e293b] p-5 flex flex-col justify-between select-none text-white shadow-xl min-h-screen">
+          <aside className="w-64 bg-[#0a192f] border-r border-[#1e293b] p-5 flex flex-col justify-between select-none text-white shadow-xl min-h-screen shrink-0 sticky top-0 h-screen">
             <div className="space-y-6">
               {/* Top Window Control Dots (Clean) */}
               <div className="flex items-center gap-2 px-1">
@@ -52,19 +52,19 @@ export default function DashboardLayout({
               <nav className="space-y-1.5 pt-2">
                 <button
                   onClick={() => setCurrentView("cards")}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all ${
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer ${
                     currentView === "cards"
                       ? "bg-[#1E3A8A] text-white font-bold shadow-sm"
                       : "text-[#94A3B8] hover:text-white hover:bg-[#112240] font-medium"
                   }`}
                 >
                   <CreditCard className="w-4 h-4" />
-                  <span>Cards Registry</span>
+                  <span>50 Cards Registry</span>
                 </button>
 
                 <button
                   onClick={() => setCurrentView("analytics")}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all ${
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer ${
                     currentView === "analytics"
                       ? "bg-[#1E3A8A] text-white font-bold shadow-sm"
                       : "text-[#94A3B8] hover:text-white hover:bg-[#112240] font-medium"
@@ -76,7 +76,7 @@ export default function DashboardLayout({
 
                 <button
                   onClick={() => setCurrentView("departments")}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all ${
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer ${
                     currentView === "departments"
                       ? "bg-[#1E3A8A] text-white font-bold shadow-sm"
                       : "text-[#94A3B8] hover:text-white hover:bg-[#112240] font-medium"
@@ -88,7 +88,7 @@ export default function DashboardLayout({
 
                 <button
                   onClick={() => setCurrentView("bulk_tools")}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all ${
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer ${
                     currentView === "bulk_tools"
                       ? "bg-[#1E3A8A] text-white font-bold shadow-sm"
                       : "text-[#94A3B8] hover:text-white hover:bg-[#112240] font-medium"
