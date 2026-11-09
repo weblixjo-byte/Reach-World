@@ -120,7 +120,7 @@ export default function CardsTable({
             <tr className="border-b border-black/[0.04] bg-[#FBFBFD] text-[11px] font-bold text-[#86868B] uppercase tracking-wider">
               <th className="py-3.5 px-6 w-20">Slot #</th>
               <th className="py-3.5 px-4">Card Assignment / Employee</th>
-              <th className="py-3.5 px-4">Destination Routing</th>
+              <th className="py-3.5 px-4">Card Link & Destination</th>
               <th className="py-3.5 px-4 text-center">Status</th>
               <th className="py-3.5 px-4 text-center">Taps</th>
               <th className="py-3.5 px-6 text-right">Actions</th>
@@ -190,22 +190,22 @@ export default function CardsTable({
                       </div>
                     </td>
 
-                    {/* Destination Routing Mode & Target */}
+                    {/* Card Link Mode & Target Destination */}
                     <td className="py-4 px-4 min-w-[240px]">
                       {isRedirect ? (
                         <div className="space-y-1">
-                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold bg-[#0071E3]/10 text-[#0071E3]">
-                            <LinkIcon className="w-3 h-3" />
-                            <span>Direct Redirect</span>
+                          <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-[#0071E3]/10 text-[#0071E3]">
+                            <Globe className="w-3 h-3" />
+                            <span>Custom Web Link</span>
                           </div>
                           <div className="flex items-center gap-1.5 text-xs text-[#1D1D1F] font-mono truncate max-w-[220px]" title={card.redirectUrl}>
-                            <Globe className="w-3.5 h-3.5 text-[#86868B] shrink-0" />
-                            <span className="truncate">{card.redirectUrl || "No URL Set"}</span>
+                            <LinkIcon className="w-3.5 h-3.5 text-[#86868B] shrink-0" />
+                            <span className="truncate">{card.redirectUrl || "No Link Assigned"}</span>
                           </div>
                         </div>
                       ) : (
                         <div className="space-y-1">
-                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-500/10 text-emerald-700">
+                          <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-emerald-500/10 text-emerald-700">
                             <UserCheck className="w-3 h-3" />
                             <span>Digital Bio Profile</span>
                           </div>

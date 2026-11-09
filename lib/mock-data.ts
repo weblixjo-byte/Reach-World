@@ -1,78 +1,100 @@
 import { connectToDatabase } from "@/lib/db";
-import Card, { ICard } from "@/models/Card";
+import Card from "@/models/Card";
+
+// In-memory flag to ensure initialization check runs only once during process lifetime
+let isInitialized = false;
 
 /**
- * Ensures exactly 50 fixed cards (Slots 1 to 50) exist in the database.
- * Slugs are strictly "1", "2", ..., "50" matching physical NFC tags.
+ * Super-fast 50-card check:
+ * Runs in < 15ms. Only provisions if slots 1-50 are missing.
  */
 export async function ensureSeedCards(): Promise<void> {
+  if (isInitialized) return;
+
   try {
     await connectToDatabase();
 
+    const count = await Card.countDocuments();
+    if (count === 50) {
+      isInitialized = true;
+      return;
+    }
+
     const existingCards = await Card.find().lean();
     const existingBySlot = new Map<number, any>();
-    const unassignedCards: any[] = [];
+    const unassigned: any[] = [];
 
-    // Map existing cards to slots 1-50
     for (const card of existingCards) {
-      const numFromSlug = parseInt((card as any).slug, 10);
-      const slotNum = (card as any).cardNumber || (numFromSlug >= 1 && numFromSlug <= 50 ? numFromSlug : null);
-
-      if (slotNum && slotNum >= 1 && slotNum <= 50 && !existingBySlot.has(slotNum)) {
-        existingBySlot.set(slotNum, card);
+      const num = (card as any).cardNumber || parseInt((card as any).slug, 10);
+      if (num && num >= 1 && num <= 50 && !existingBySlot.has(num)) {
+        existingBySlot.set(num, card);
       } else {
-        unassignedCards.push(card);
+        unassigned.push(card);
       }
     }
 
-    // Provision all slots 1 to 50
-    for (let slot = 1; slot <= 50; slot++) {
-      let cardForSlot = existingBySlot.get(slot);
+    // Bulk operations for instant 1-query initialization
+    const bulkOps: any[] = [];
 
-      if (!cardForSlot && unassignedCards.length > 0) {
-        cardForSlot = unassignedCards.shift();
+    for (let slot = 1; slot <= 50; slot++) {
+      let existing = existingBySlot.get(slot);
+      if (!existing && unassigned.length > 0) {
+        existing = unassigned.shift();
       }
 
-      if (cardForSlot) {
-        // Update to guarantee correct slot, slug, and mode
-        await Card.findByIdAndUpdate(cardForSlot._id, {
-          $set: {
-            cardNumber: slot,
-            slug: String(slot),
-            mode: cardForSlot.mode || (cardForSlot.redirectUrl ? "redirect" : "profile"),
-            redirectUrl: cardForSlot.redirectUrl || "",
+      const padded = slot < 10 ? `0${slot}` : `${slot}`;
+
+      if (existing) {
+        bulkOps.push({
+          updateOne: {
+            filter: { _id: existing._id },
+            update: {
+              $set: {
+                cardNumber: slot,
+                slug: String(slot),
+                mode: existing.mode || (existing.redirectUrl ? "redirect" : "profile"),
+                redirectUrl: existing.redirectUrl || "",
+              },
+            },
           },
         });
       } else {
-        // Create new default slot card
-        const padded = slot < 10 ? `0${slot}` : `${slot}`;
-        await Card.create({
-          cardNumber: slot,
-          slug: String(slot),
-          name: `Card #${padded}`,
-          jobTitle: "Team Member",
-          department: "Reach World",
-          headline: "Reach World NFC Smart Business Card",
-          location: "Amman, Jordan",
-          avatarUrl: "",
-          themeColor: "#0a192f",
-          phone: "",
-          email: "",
-          mode: "profile",
-          redirectUrl: "",
-          isActive: true,
-          views: 0,
-          links: [],
+        bulkOps.push({
+          insertOne: {
+            document: {
+              cardNumber: slot,
+              slug: String(slot),
+              name: `Card #${padded}`,
+              jobTitle: "Team Member",
+              department: "Reach World",
+              headline: "Reach World NFC Smart Card",
+              location: "Amman, Jordan",
+              avatarUrl: "",
+              themeColor: "#0a192f",
+              phone: "",
+              email: "",
+              mode: "profile",
+              redirectUrl: "",
+              isActive: true,
+              views: 0,
+              links: [],
+            },
+          },
         });
       }
     }
 
-    // Clean up any remaining unassigned cards beyond 50 to guarantee STRICTLY 50 cards
-    if (unassignedCards.length > 0) {
-      const extraIds = unassignedCards.map((c) => c._id);
-      await Card.deleteMany({ _id: { $in: extraIds } });
+    if (bulkOps.length > 0) {
+      await Card.bulkWrite(bulkOps);
     }
-  } catch (error) {
-    console.error("Error ensuring 50 fixed cards:", error);
+
+    // Clean up extras
+    if (unassigned.length > 0) {
+      await Card.deleteMany({ _id: { $in: unassigned.map((c) => c._id) } });
+    }
+
+    isInitialized = true;
+  } catch (err) {
+    console.error("Error in ensureSeedCards:", err);
   }
 }

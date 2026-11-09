@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { CreditCard, Eye, Users, ArrowUpRight, Share2, Layers } from "lucide-react";
+import { CreditCard, Eye, Users, ArrowUpRight, Globe, Layers } from "lucide-react";
 import { AnalyticsSummary } from "@/actions/card-actions";
 
 interface KPICardsProps {
@@ -13,11 +13,11 @@ export default function KPICards({ analytics }: KPICardsProps) {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-      {/* 1. Fixed 50 Cards */}
+      {/* 1. 50 Hardware Cards */}
       <div className="bg-white rounded-2xl p-5 sm:p-6 border border-black/[0.06] shadow-[0_2px_14px_rgba(0,0,0,0.02)] hover:shadow-md transition-all">
         <div className="flex items-center justify-between mb-3">
           <span className="text-[11px] font-bold text-[#86868B] uppercase tracking-wider">
-            NFC Hardware Cards
+            NFC Physical Cards
           </span>
           <div className="w-8 h-8 rounded-xl bg-[#0a192f] text-white flex items-center justify-center shadow-xs">
             <CreditCard className="w-4 h-4 stroke-[2]" />
@@ -27,7 +27,7 @@ export default function KPICards({ analytics }: KPICardsProps) {
           <span className="text-3xl font-extrabold tracking-tight text-[#1D1D1F]">
             50
           </span>
-          <span className="text-xs text-[#86868B] font-semibold">Fixed Slots (1-50)</span>
+          <span className="text-xs text-[#86868B] font-semibold">Cards (Slots 01 - 50)</span>
         </div>
         <div className="flex items-center gap-2 text-xs">
           <span className="inline-flex items-center gap-1 font-semibold text-[#34C759]">
@@ -45,7 +45,7 @@ export default function KPICards({ analytics }: KPICardsProps) {
       <div className="bg-white rounded-2xl p-5 sm:p-6 border border-black/[0.06] shadow-[0_2px_14px_rgba(0,0,0,0.02)] hover:shadow-md transition-all">
         <div className="flex items-center justify-between mb-3">
           <span className="text-[11px] font-bold text-[#86868B] uppercase tracking-wider">
-            Total NFC Taps
+            Verified Card Taps
           </span>
           <div className="w-8 h-8 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center">
             <Eye className="w-4 h-4 stroke-[2]" />
@@ -55,19 +55,19 @@ export default function KPICards({ analytics }: KPICardsProps) {
           <span className="text-3xl font-extrabold tracking-tight text-[#1D1D1F]">
             {analytics.totalTaps.toLocaleString()}
           </span>
-          <span className="text-xs text-[#86868B] font-semibold">Taps & Scans</span>
+          <span className="text-xs text-[#86868B] font-semibold">Total Scans</span>
         </div>
         <p className="text-xs text-[#86868B] font-medium flex items-center gap-1">
           <ArrowUpRight className="w-3.5 h-3.5 text-[#34C759]" />
-          Real-time analytics tracking active
+          Real-time verified tap metrics
         </p>
       </div>
 
-      {/* 3. Destination Routing Modes */}
+      {/* 3. Card Link Types */}
       <div className="bg-white rounded-2xl p-5 sm:p-6 border border-black/[0.06] shadow-[0_2px_14px_rgba(0,0,0,0.02)] hover:shadow-md transition-all">
         <div className="flex items-center justify-between mb-3">
           <span className="text-[11px] font-bold text-[#86868B] uppercase tracking-wider">
-            Card Destinations
+            Card Link Types
           </span>
           <div className="w-8 h-8 rounded-xl bg-[#F5F5F7] text-[#1D1D1F] flex items-center justify-center">
             <Layers className="w-4 h-4 stroke-[2]" />
@@ -78,18 +78,18 @@ export default function KPICards({ analytics }: KPICardsProps) {
             <span className="text-2xl font-extrabold tracking-tight text-[#1D1D1F]">
               {analytics.totalProfiles}
             </span>
-            <span className="text-[11px] text-[#86868B] ml-1 font-medium">Bio Cards</span>
+            <span className="text-[11px] text-[#86868B] ml-1 font-medium">Digital Bio</span>
           </div>
           <span className="text-[#86868B]">/</span>
           <div>
             <span className="text-2xl font-extrabold tracking-tight text-[#0071E3]">
-              {analytics.totalRedirects}
+              {analytics.totalCustomLinks}
             </span>
-            <span className="text-[11px] text-[#0071E3] ml-1 font-medium">Redirects</span>
+            <span className="text-[11px] text-[#0071E3] ml-1 font-medium">Custom Links</span>
           </div>
         </div>
         <p className="text-xs text-[#86868B] font-medium">
-          Instant routing switch supported
+          Instant link customization supported
         </p>
       </div>
 
@@ -97,7 +97,7 @@ export default function KPICards({ analytics }: KPICardsProps) {
       <div className="bg-white rounded-2xl p-5 sm:p-6 border border-black/[0.06] shadow-[0_2px_14px_rgba(0,0,0,0.02)] hover:shadow-md transition-all">
         <div className="flex items-center justify-between mb-3">
           <span className="text-[11px] font-bold text-[#86868B] uppercase tracking-wider">
-            Most Tapped Card
+            Most Visited Card
           </span>
           <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
             <Users className="w-4 h-4 stroke-[2]" />
@@ -106,7 +106,7 @@ export default function KPICards({ analytics }: KPICardsProps) {
         {topPerformer ? (
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#0a192f] flex flex-col items-center justify-center text-white shrink-0 shadow-xs">
-              <span className="text-[9px] font-bold text-amber-400">#</span>
+              <span className="text-[9px] text-amber-400">#</span>
               <span className="text-xs font-extrabold leading-none">
                 {topPerformer.cardNumber < 10 ? `0${topPerformer.cardNumber}` : topPerformer.cardNumber}
               </span>
@@ -117,7 +117,7 @@ export default function KPICards({ analytics }: KPICardsProps) {
               </h4>
               <p className="text-xs text-[#86868B] truncate font-medium">
                 <span className="text-[#0071E3] font-bold">{topPerformer.views.toLocaleString()} taps</span> •{" "}
-                {topPerformer.mode === "redirect" ? "Direct URL" : "Bio Card"}
+                {topPerformer.mode === "redirect" ? "Custom Link" : "Digital Profile"}
               </p>
             </div>
           </div>

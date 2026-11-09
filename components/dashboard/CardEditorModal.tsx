@@ -349,7 +349,7 @@ export default function CardEditorModal({
     const payload = assembleData();
 
     if (payload.mode === "redirect" && !payload.redirectUrl) {
-      setErrorMsg("Please enter a target URL for the direct redirect.");
+      setErrorMsg("Please enter the web link for this card.");
       return;
     }
 
@@ -413,7 +413,7 @@ export default function CardEditorModal({
           {/* DESTINATION ROUTING MODE SWITCHER */}
           <div className="space-y-3">
             <label className="block text-xs font-bold uppercase tracking-wider text-[#0F172A]">
-              Destination Routing Mode
+              Card Destination Mode
             </label>
             <div className="grid grid-cols-2 gap-3 p-1.5 bg-[#F5F5F7] rounded-2xl border border-black/[0.05]">
               <button
@@ -426,7 +426,7 @@ export default function CardEditorModal({
                 }`}
               >
                 <UserCheck className="w-4 h-4 text-emerald-600" />
-                <span>Digital Bio Card Profile</span>
+                <span>Digital Bio Profile</span>
               </button>
 
               <button
@@ -438,23 +438,23 @@ export default function CardEditorModal({
                     : "text-[#64748B] hover:text-[#0F172A]"
                 }`}
               >
-                <LinkIcon className="w-4 h-4" />
-                <span>Direct URL Redirect</span>
+                <Globe className="w-4 h-4" />
+                <span>Custom Web Link</span>
               </button>
             </div>
             <p className="text-[11px] text-[#64748B] px-1 font-medium">
               {mode === "redirect"
-                ? `When someone taps physical Card #${paddedSlot}, they will be forwarded directly to your target link.`
+                ? `When someone taps physical Card #${paddedSlot}, it will immediately open your assigned web link.`
                 : `Displays the complete Reach World digital employee business card.`}
             </p>
           </div>
 
-          {/* IF DIRECT REDIRECT MODE */}
+          {/* IF CUSTOM WEB LINK MODE */}
           {mode === "redirect" ? (
             <div className="space-y-5 p-5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0]">
               <div>
                 <label className="block text-xs font-bold text-[#0F172A] mb-1.5 flex items-center justify-between">
-                  <span>Target Destination URL <span className="text-red-500">*</span></span>
+                  <span>Assigned Web Link <span className="text-red-500">*</span></span>
                   {redirectUrl && (
                     <a
                       href={normalizeRedirectUrl(redirectUrl)}
@@ -478,7 +478,7 @@ export default function CardEditorModal({
                   />
                 </div>
                 <p className="text-[11px] text-[#64748B] mt-1.5">
-                  Protocols like <span className="font-mono">https://</span> are auto-formatted. No redirect loops or errors.
+                  Protocols like <span className="font-mono">https://</span> are auto-formatted. Works instantly on all phones.
                 </p>
               </div>
 

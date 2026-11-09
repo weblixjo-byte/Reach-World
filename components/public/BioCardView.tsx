@@ -56,17 +56,7 @@ const iconColorMap: Record<string, { bg: string; text: string; border: string }>
 export default function BioCardView({ card }: BioCardViewProps) {
   const [copied, setCopied] = useState(false);
 
-  // Background non-blocking edge view tracking
-  useEffect(() => {
-    try {
-      fetch("/api/track", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug: card.slug, type: "view" }),
-      }).catch(() => {});
-    } catch {}
-  }, [card.slug]);
-
+  // Link click tracking (views are accurately counted on the server)
   const handleLinkClick = (linkId?: string) => {
     if (!linkId) return;
     try {

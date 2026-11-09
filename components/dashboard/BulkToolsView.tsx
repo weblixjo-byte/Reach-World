@@ -23,12 +23,12 @@ export default function BulkToolsView({
   const [isImporting, setIsImporting] = useState(false);
   const [importResult, setImportResult] = useState<string | null>(null);
 
-  // Full comprehensive 50-card template with slots 1-50, mode, redirect URL, and contact types
+  // Full comprehensive 50-card template with slots 1-50, mode, custom link, and contact types
   const handleDownloadSample = () => {
     const headers = [
       "Card Number",
-      "Mode (profile or redirect)",
-      "Redirect Target URL",
+      "Card Mode (profile or link)",
+      "Custom Web Link",
       "Name",
       "Job Title",
       "Department",
@@ -61,7 +61,7 @@ export default function BulkToolsView({
       ],
       [
         "2",
-        "redirect",
+        "link",
         "https://instagram.com/reachworld",
         "Ahmad Al-Qasim",
         "Operations Specialist",
@@ -144,8 +144,11 @@ export default function BulkToolsView({
       headers.forEach((h, idx) => {
         const val = values[idx] || "";
         if (h.includes("card") || h.includes("slot") || h.includes("number")) obj.cardNumber = val;
-        else if (h.includes("mode") || h.includes("routing") || h.includes("type")) obj.mode = val;
-        else if (h.includes("redirect") || h.includes("target") || h.includes("destination")) obj.redirectUrl = val;
+        else if (h.includes("mode") || h.includes("routing") || h.includes("type")) {
+          const v = val.toLowerCase().trim();
+          obj.mode = (v === "link" || v === "custom" || v === "redirect") ? "redirect" : "profile";
+        }
+        else if (h.includes("redirect") || h.includes("target") || h.includes("destination") || h.includes("custom") || h.includes("url")) obj.redirectUrl = val;
         else if (h.includes("name")) obj.name = val;
         else if (h.includes("title") || h.includes("job") || h.includes("role")) obj.jobTitle = val;
         else if (h.includes("dept") || h.includes("department")) obj.department = val;

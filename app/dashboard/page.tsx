@@ -16,6 +16,7 @@ import {
   Radio,
   Pencil,
   RotateCcw,
+  Globe,
 } from "lucide-react";
 import KPICards from "@/components/dashboard/KPICards";
 import CardsTable from "@/components/dashboard/CardsTable";
@@ -54,7 +55,7 @@ export default function DashboardPage() {
     totalCards: 50,
     totalActive: 50,
     totalTaps: 0,
-    totalRedirects: 0,
+    totalCustomLinks: 0,
     totalProfiles: 50,
     topPerformer: null,
     tapThroughRate: 0,
@@ -223,15 +224,15 @@ export default function DashboardPage() {
 
             <div className="p-6 rounded-2xl bg-[#F5F5F7] border border-black/[0.04]">
               <span className="text-xs text-[#86868B] font-semibold uppercase tracking-wider">
-                Direct Redirect Share
+                Custom Web Links
               </span>
               <div className="text-3xl font-extrabold text-[#0071E3] mt-2">
                 {analytics.totalCards > 0
-                  ? Math.round((analytics.totalRedirects / analytics.totalCards) * 100)
+                  ? Math.round((analytics.totalCustomLinks / analytics.totalCards) * 100)
                   : 0}
                 %
               </div>
-              <p className="text-[11px] text-[#86868B] mt-1">{analytics.totalRedirects} cards route directly</p>
+              <p className="text-[11px] text-[#86868B] mt-1">{analytics.totalCustomLinks} cards linked directly</p>
             </div>
           </div>
 
@@ -263,7 +264,7 @@ export default function DashboardPage() {
                             {tap.cardName}
                           </div>
                           <div className="text-[10px] text-[#86868B] font-medium">
-                            {tap.mode === "redirect" ? "Direct URL Forward" : "Bio Profile View"}
+                            {tap.mode === "redirect" ? "Custom Link Opened" : "Bio Profile View"}
                           </div>
                         </div>
                       </div>
@@ -310,7 +311,7 @@ export default function DashboardPage() {
                         <div>
                           <div className="font-bold text-xs text-[#1D1D1F]">{c.name}</div>
                           <div className="text-[10px] text-[#86868B]">
-                            {c.mode === "redirect" ? `URL: ${c.redirectUrl || "None"}` : c.department}
+                            {c.mode === "redirect" ? `Link: ${c.redirectUrl || "None"}` : c.department}
                           </div>
                         </div>
                       </div>
@@ -432,8 +433,8 @@ export default function DashboardPage() {
                       : "text-[#86868B] hover:text-[#1D1D1F]"
                   }`}
                 >
-                  <LinkIcon className="w-3.5 h-3.5" />
-                  <span>Direct Redirects</span>
+                  <Globe className="w-3.5 h-3.5" />
+                  <span>Custom Links</span>
                 </button>
               </div>
 
@@ -594,7 +595,7 @@ export default function DashboardPage() {
                               {card.name}
                             </h4>
                             <p className="text-[10px] text-[#86868B] truncate">
-                              {isRedirect ? "Direct Redirect" : card.jobTitle || "Bio Card"}
+                              {isRedirect ? "Custom Link" : card.jobTitle || "Bio Card"}
                             </p>
                           </div>
 
@@ -652,7 +653,7 @@ export default function DashboardPage() {
                     Live Card Preview
                   </h4>
                   <p className="text-xs text-[#64748B] mt-1 leading-relaxed">
-                    Select any of the 50 cards to preview its real-time mobile view or redirect behavior.
+                    Select any of the 50 cards to preview its real-time mobile card or custom destination link.
                   </p>
                 </div>
               )}
