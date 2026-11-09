@@ -14,7 +14,6 @@ import {
   Link as LinkIcon,
   UserCheck,
   Globe,
-  Sparkles,
   MousePointerClick,
 } from "lucide-react";
 import { CardListItem, toggleCardStatus, resetCard } from "@/actions/card-actions";
@@ -47,11 +46,11 @@ export default function CardsTable({
   const [resettingId, setResettingId] = useState<string | null>(null);
 
   const handleCopyLink = (slug: string, id: string) => {
-    const origin =
+    const url =
       typeof window !== "undefined"
-        ? window.location.origin
-        : "https://reachworld.com";
-    navigator.clipboard.writeText(`${origin}/${slug}`);
+        ? `${window.location.origin}/${slug}`
+        : `https://reachworld.com/${slug}`;
+    navigator.clipboard.writeText(url);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
@@ -71,9 +70,8 @@ export default function CardsTable({
 
   const handleResetCard = async (card: CardListItem, e: React.MouseEvent) => {
     e.stopPropagation();
-    const padded = card.cardNumber < 10 ? `0${card.cardNumber}` : `${card.cardNumber}`;
     const confirmed = window.confirm(
-      `Reset Card #${padded} (${card.name}) back to default template?\n\nThe fixed physical link (/${card.slug}) will be kept intact.`
+      `Reset Slot #${card.cardNumber}? This clears custom fields and resets to default clean state.`
     );
     if (!confirmed) return;
 
@@ -91,26 +89,21 @@ export default function CardsTable({
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-black/[0.06] shadow-[0_4px_30px_rgba(0,0,0,0.02)] overflow-hidden flex flex-col">
+    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col">
       {/* Header bar */}
-      <div className="px-6 py-4.5 border-b border-black/[0.05] flex items-center justify-between">
+      <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <h3 className="text-sm font-bold text-[#1D1D1F] tracking-tight">
-              50 Fixed Physical NFC Cards
-            </h3>
-            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#0a192f] text-white">
-              Slots 1 - 50
-            </span>
-          </div>
-          <span className="text-xs text-[#86868B] font-medium hidden sm:inline">
+          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider font-mono">
+            PHYSICAL NFC CARDS
+          </h3>
+          <span className="text-xs text-slate-400 font-medium">
             Showing {cards.length} of {total} slots
           </span>
         </div>
 
-        <div className="text-xs text-[#86868B] flex items-center gap-2 font-medium">
-          <span className="w-2 h-2 rounded-full bg-[#34C759]" />
-          <span>Permanent Hardware Paths</span>
+        <div className="text-xs text-slate-500 flex items-center gap-2 font-medium">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+          <span>Active Registry</span>
         </div>
       </div>
 
@@ -118,28 +111,28 @@ export default function CardsTable({
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-black/[0.04] bg-[#FBFBFD] text-[11px] font-bold text-[#86868B] uppercase tracking-wider">
-              <th className="py-3.5 px-6 w-20">Slot #</th>
-              <th className="py-3.5 px-4">Card Assignment / Employee</th>
-              <th className="py-3.5 px-4">Card Link & Destination</th>
-              <th className="py-3.5 px-4 text-center">Status</th>
-              <th className="py-3.5 px-4 text-center">Taps</th>
-              <th className="py-3.5 px-6 text-right">Actions</th>
+            <tr className="border-b border-slate-100 bg-slate-50/70 text-[11px] font-bold text-slate-500 uppercase tracking-wider font-mono">
+              <th className="py-3 px-6 w-20">Slot</th>
+              <th className="py-3 px-4">Card Assignment</th>
+              <th className="py-3 px-4">Destination Link</th>
+              <th className="py-3 px-4 text-center">Status</th>
+              <th className="py-3 px-4 text-center">Taps</th>
+              <th className="py-3 px-6 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-black/[0.03] text-xs">
+          <tbody className="divide-y divide-slate-100 text-xs">
             {cards.length === 0 ? (
               <tr>
                 <td colSpan={6} className="text-center py-16">
                   <div className="flex flex-col items-center justify-center">
-                    <div className="w-12 h-12 rounded-2xl bg-[#F5F5F7] flex items-center justify-center text-[#86868B] mb-3">
-                      <CreditCard className="w-6 h-6 stroke-[1.5]" />
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 mb-2">
+                      <CreditCard className="w-5 h-5 stroke-[1.5]" />
                     </div>
-                    <p className="text-sm font-semibold text-[#1D1D1F]">
-                      No Cards Match Your Filter
+                    <p className="text-xs font-semibold text-slate-700">
+                      No cards match your query
                     </p>
-                    <p className="text-xs text-[#86868B] mt-1">
-                      Try clearing search queries or switching filters.
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      Clear search query or switch filter to view slots.
                     </p>
                   </div>
                 </td>
@@ -150,158 +143,144 @@ export default function CardsTable({
                 const paddedSlot =
                   card.cardNumber < 10 ? `0${card.cardNumber}` : `${card.cardNumber}`;
                 const isRedirect = card.mode === "redirect";
+                const isDefaultName = card.name.startsWith("Card #");
+                const totalIconClicks =
+                  (card.links || []).reduce((acc, l) => acc + (l.clicks || 0), 0) +
+                  (card.vcardClicks || 0);
 
                 return (
                   <tr
                     key={card._id}
                     onClick={() => onSelectForPreview(card)}
-                    className={`cursor-pointer transition-all duration-150 ${
+                    className={`cursor-pointer transition-colors ${
                       isSelected
-                        ? "bg-[#0071E3]/[0.06]"
-                        : "hover:bg-[#F5F5F7]/80"
+                        ? "bg-blue-50/50"
+                        : "hover:bg-slate-50/70"
                     }`}
                   >
-                    {/* Slot # Badge */}
-                    <td className="py-4 px-6 whitespace-nowrap">
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#0a192f] text-white font-mono font-bold text-xs shadow-xs">
-                        <span className="text-[10px] text-amber-400">#</span>
-                        <span>{paddedSlot}</span>
-                      </div>
+                    {/* Slot # Badge (Clean, Monospaced) */}
+                    <td className="py-3.5 px-6 whitespace-nowrap">
+                      <span className="font-mono text-xs font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded-md border border-slate-200/70">
+                        #{paddedSlot}
+                      </span>
                     </td>
 
                     {/* Card Assignment (Name & Department) */}
-                    <td className="py-4 px-4 min-w-[220px]">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-[#0a192f]/5 border border-black/5 flex items-center justify-center font-bold text-[#0a192f] text-xs shrink-0">
-                          {card.name.slice(0, 2).toUpperCase()}
+                    <td className="py-3.5 px-4 min-w-[200px]">
+                      <div className="min-w-0">
+                        <div className="font-semibold text-xs text-slate-900 truncate flex items-center gap-1.5">
+                          {card.name}
+                          {isSelected && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#0071E3]" />
+                          )}
                         </div>
-                        <div className="min-w-0">
-                          <div className="font-bold text-sm text-[#1D1D1F] truncate flex items-center gap-1.5">
-                            {card.name}
-                            {isSelected && (
-                              <span className="w-1.5 h-1.5 rounded-full bg-[#0071E3]" />
-                            )}
-                          </div>
-                          <div className="text-[#86868B] text-[11px] truncate font-medium flex items-center gap-1.5">
-                            <span>{card.jobTitle || "Executive"}</span>
-                            <span>•</span>
-                            <span>{card.department || "Reach World"}</span>
-                          </div>
+                        <div className="text-[11px] text-slate-500 truncate mt-0.5 font-medium">
+                          {isDefaultName ? (
+                            <span className="text-slate-400 font-normal">Unassigned Slot • Click to edit</span>
+                          ) : (
+                            <span>
+                              {card.jobTitle || "Executive"} {card.department ? `• ${card.department}` : ""}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </td>
 
                     {/* Card Link Mode & Target Destination */}
-                    <td className="py-4 px-4 min-w-[240px]">
+                    <td className="py-3.5 px-4 min-w-[220px]">
                       {isRedirect ? (
-                        <div className="space-y-1">
-                          <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-[#0071E3]/10 text-[#0071E3]">
-                            <Globe className="w-3 h-3" />
-                            <span>Custom Web Link</span>
+                        <div className="space-y-0.5">
+                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                            <Globe className="w-3 h-3 text-blue-500" />
+                            <span>Custom Link</span>
                           </div>
-                          <div className="flex items-center gap-1.5 text-xs text-[#1D1D1F] font-mono truncate max-w-[220px]" title={card.redirectUrl}>
-                            <LinkIcon className="w-3.5 h-3.5 text-[#86868B] shrink-0" />
-                            <span className="truncate">{card.redirectUrl || "No Link Assigned"}</span>
+                          <div className="text-[11px] text-slate-500 font-mono truncate max-w-[200px] block" title={card.redirectUrl}>
+                            {card.redirectUrl || "No destination URL"}
                           </div>
                         </div>
                       ) : (
-                        <div className="space-y-1">
-                          <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-emerald-500/10 text-emerald-700">
-                            <UserCheck className="w-3 h-3" />
-                            <span>Digital Bio Profile</span>
+                        <div className="space-y-0.5">
+                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200/80">
+                            <UserCheck className="w-3 h-3 text-slate-500" />
+                            <span>Digital Profile</span>
                           </div>
-                          <div className="text-[11px] text-[#86868B] font-mono">
-                            Path: /{card.slug} ({card.linksCount} links)
+                          <div className="text-[11px] text-slate-500 font-mono">
+                            reachworld.com/{card.slug}
                           </div>
                         </div>
                       )}
                     </td>
 
                     {/* Status Toggle Switch */}
-                    <td className="py-4 px-4 text-center whitespace-nowrap">
+                    <td className="py-3.5 px-4 text-center whitespace-nowrap">
                       <button
                         type="button"
                         onClick={(e) => handleToggle(card, e)}
                         disabled={togglingId === card._id}
-                        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer disabled:opacity-50 ${
-                          card.isActive ? "bg-[#34C759]" : "bg-black/20"
+                        className={`relative inline-flex h-4.5 w-8 items-center rounded-full transition-colors cursor-pointer disabled:opacity-50 ${
+                          card.isActive ? "bg-emerald-500" : "bg-slate-300"
                         }`}
                         title={card.isActive ? "Active (Click to Pause)" : "Paused (Click to Activate)"}
                       >
                         <span
-                          className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-xs transition-transform ${
-                            card.isActive ? "translate-x-4.5" : "translate-x-0.5"
+                          className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-xs transition-transform ${
+                            card.isActive ? "translate-x-4" : "translate-x-0.5"
                           }`}
                         />
                       </button>
                     </td>
 
                     {/* Tap / View Counter */}
-                    <td className="py-4 px-4 text-center whitespace-nowrap">
+                    <td className="py-3.5 px-4 text-center whitespace-nowrap">
                       <div className="inline-flex flex-col items-center">
-                        <span className="inline-flex items-center gap-1 text-xs font-bold text-[#1D1D1F]">
-                          <Eye className="w-3.5 h-3.5 text-[#86868B]" />
-                          {card.views.toLocaleString()}
+                        <span className="font-mono text-xs font-semibold text-slate-800">
+                          {card.views.toLocaleString()} taps
                         </span>
-                        {!isRedirect && (
-                          <span
-                            className="inline-flex items-center gap-1 text-[10px] font-bold text-[#0071E3] bg-[#0071E3]/8 px-2 py-0.5 rounded-full mt-1"
-                            title="Interactive clicks on contact icons"
-                          >
-                            <MousePointerClick className="w-2.5 h-2.5" />
-                            <span>
-                              {((card.links || []).reduce((acc, l) => acc + (l.clicks || 0), 0) + (card.vcardClicks || 0))} clicks
-                            </span>
-                          </span>
-                        )}
-                        {card.lastTappedAt && (
-                          <span className="text-[10px] text-[#86868B] mt-0.5">
-                            {new Date(card.lastTappedAt).toLocaleDateString([], {
-                              month: "short",
-                              day: "numeric",
-                            })}
+                        {!isRedirect && totalIconClicks > 0 && (
+                          <span className="text-[10px] font-mono text-blue-600 font-medium">
+                            {totalIconClicks} clicks
                           </span>
                         )}
                       </div>
                     </td>
 
-                    {/* Actions: Edit Destination, Test NFC, Copy URL, Reset */}
-                    <td className="py-4 px-6 text-right whitespace-nowrap">
+                    {/* Actions: Edit, Live Test, Copy URL */}
+                    <td className="py-3.5 px-6 text-right whitespace-nowrap">
                       <div
-                        className="inline-flex items-center gap-1"
+                        className="inline-flex items-center gap-1.5"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        {/* Copy NFC URL */}
+                        {/* Copy URL */}
                         <button
                           onClick={() => handleCopyLink(card.slug, card._id)}
-                          className="w-8 h-8 rounded-xl hover:bg-black/5 text-[#86868B] hover:text-[#0071E3] flex items-center justify-center transition-colors"
-                          title={`Copy NFC URL (/${card.slug})`}
+                          className="w-7 h-7 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
+                          title={`Copy URL (reachworld.com/${card.slug})`}
                         >
                           {copiedId === card._id ? (
-                            <Check className="w-4 h-4 text-[#34C759]" />
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
                           ) : (
-                            <Copy className="w-4 h-4" />
+                            <Copy className="w-3.5 h-3.5" />
                           )}
                         </button>
 
-                        {/* Test NFC Link Live */}
+                        {/* Open Test in New Tab */}
                         <a
                           href={`/${card.slug}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-8 h-8 rounded-xl hover:bg-black/5 text-[#86868B] hover:text-[#0071E3] flex items-center justify-center transition-colors"
-                          title="Test NFC Link in New Tab"
+                          className="w-7 h-7 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors"
+                          title="Open card link"
                         >
-                          <ExternalLink className="w-4 h-4" />
+                          <ExternalLink className="w-3.5 h-3.5" />
                         </a>
 
-                        {/* Edit Card Profile & Destination */}
+                        {/* Edit Button */}
                         <button
                           onClick={() => onEditCard(card)}
-                          className="px-2.5 py-1.5 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white flex items-center gap-1.5 font-bold text-xs transition-colors shadow-xs"
-                          title="Configure Destination & Profile"
+                          className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 hover:border-slate-300 font-semibold text-xs transition-all shadow-2xs cursor-pointer flex items-center gap-1"
+                          title="Edit Card"
                         >
-                          <Pencil className="w-3 h-3 stroke-[2.5]" />
+                          <Pencil className="w-3 h-3 text-slate-500" />
                           <span>Edit</span>
                         </button>
 
@@ -309,10 +288,10 @@ export default function CardsTable({
                         <button
                           onClick={(e) => handleResetCard(card, e)}
                           disabled={resettingId === card._id}
-                          className="w-8 h-8 rounded-xl hover:bg-red-50 text-[#86868B] hover:text-red-600 flex items-center justify-center transition-colors disabled:opacity-40"
-                          title="Reset Slot to Default (Keeps Link #)"
+                          className="w-7 h-7 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-600 flex items-center justify-center transition-colors disabled:opacity-40 cursor-pointer"
+                          title="Reset Slot"
                         >
-                          <RotateCcw className="w-3.5 h-3.5" />
+                          <RotateCcw className="w-3 h-3" />
                         </button>
                       </div>
                     </td>
@@ -326,24 +305,24 @@ export default function CardsTable({
 
       {/* Pagination Footer */}
       {totalPages > 1 && (
-        <div className="px-6 py-4 border-t border-black/[0.04] bg-[#FBFBFD] flex items-center justify-between text-xs text-[#86868B]">
+        <div className="px-6 py-3.5 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between text-xs text-slate-500">
           <span>
-            Page {currentPage} of {totalPages} (50 Fixed Physical NFC Slots)
+            Page {currentPage} of {totalPages} (50 Enterprise Slots)
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <button
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage <= 1}
-              className="px-3 py-1.5 rounded-xl border border-black/10 hover:bg-white disabled:opacity-30 disabled:pointer-events-none transition-colors flex items-center gap-1 font-semibold text-[#1D1D1F]"
+              className="px-2.5 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:pointer-events-none transition-colors text-slate-700 font-medium text-xs"
             >
-              <ChevronLeft className="w-3.5 h-3.5" /> Prev
+              Prev
             </button>
             <button
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage >= totalPages}
-              className="px-3 py-1.5 rounded-xl border border-black/10 hover:bg-white disabled:opacity-30 disabled:pointer-events-none transition-colors flex items-center gap-1 font-semibold text-[#1D1D1F]"
+              className="px-2.5 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:pointer-events-none transition-colors text-slate-700 font-medium text-xs"
             >
-              Next <ChevronRight className="w-3.5 h-3.5" />
+              Next
             </button>
           </div>
         </div>
