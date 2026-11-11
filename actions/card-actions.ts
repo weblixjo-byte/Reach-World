@@ -536,10 +536,11 @@ export async function getCardBySlug(slugOrNumber: string) {
 
 /**
  * Accurately records an NFC tap in real-time, filtering crawler preview bots.
+ * Only increments the view counter and updates lastTappedAt without saving any user device data or logs.
  */
-export async function recordCardTap(cardId: string, metadata?: { userAgent?: string; referrer?: string }) {
+export async function recordCardTap(cardId: string, userAgent?: string) {
   try {
-    const ua = (metadata?.userAgent || "").toLowerCase();
+    const ua = (userAgent || "").toLowerCase();
 
     // Ignore social bot crawlers generating link previews
     const isBot =
@@ -560,18 +561,6 @@ export async function recordCardTap(cardId: string, metadata?: { userAgent?: str
     await Card.findByIdAndUpdate(cardId, {
       $inc: { views: 1 },
       $set: { lastTappedAt: new Date() },
-      $push: {
-        tapsHistory: {
-          $each: [
-            {
-              timestamp: new Date(),
-              userAgent: metadata?.userAgent || "",
-              referrer: metadata?.referrer || "",
-            },
-          ],
-          $slice: -30,
-        },
-      },
     });
   } catch (err) {
     console.error("Error recording card tap:", err);

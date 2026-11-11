@@ -24,12 +24,6 @@ export interface ILink {
 
 export type CardModeType = "profile" | "redirect";
 
-export interface ITapLog {
-  timestamp: Date;
-  referrer?: string;
-  userAgent?: string;
-}
-
 export interface ICard extends Document {
   cardNumber: number;
   name: string;
@@ -48,7 +42,6 @@ export interface ICard extends Document {
   views: number;
   vcardClicks?: number;
   lastTappedAt?: Date;
-  tapsHistory?: ITapLog[];
   links: ILink[];
   createdAt: Date;
   updatedAt: Date;
@@ -171,13 +164,6 @@ const CardSchema = new Schema<ICard>(
       type: Date,
       default: null,
     },
-    tapsHistory: [
-      {
-        timestamp: { type: Date, default: Date.now },
-        referrer: { type: String, default: "" },
-        userAgent: { type: String, default: "" },
-      },
-    ],
     links: {
       type: [LinkSchema],
       default: [],

@@ -54,10 +54,9 @@ export default async function PublicCardPage({ params }: PageProps) {
   // 1. Record the NFC tap in analytics
   const headersList = await headers();
   const userAgent = headersList.get("user-agent") || "";
-  const referrer = headersList.get("referer") || "";
 
   // Background non-blocking tap record
-  await recordCardTap(card._id, { userAgent, referrer });
+  await recordCardTap(card._id, userAgent);
 
   // 2. If card is paused by admin/HR
   if (!card.isActive) {
