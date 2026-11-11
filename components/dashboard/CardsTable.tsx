@@ -22,6 +22,7 @@ interface CardsTableProps {
   total: number;
   currentPage: number;
   totalPages: number;
+  isLoading?: boolean;
   onPageChange: (page: number) => void;
   onSelectForPreview: (card: CardListItem) => void;
   selectedCardId?: string;
@@ -35,6 +36,7 @@ export default function CardsTable({
   total,
   currentPage,
   totalPages,
+  isLoading = false,
   onPageChange,
   onSelectForPreview,
   selectedCardId,
@@ -122,7 +124,32 @@ export default function CardsTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-xs">
-            {cards.length === 0 ? (
+            {isLoading ? (
+              // Fast loading skeleton placeholder rows
+              Array.from({ length: 8 }).map((_, idx) => (
+                <tr key={idx} className="animate-pulse">
+                  <td className="py-4 px-6">
+                    <div className="h-5 w-10 bg-slate-200/80 rounded-md" />
+                  </td>
+                  <td className="py-4 px-4">
+                    <div className="h-4 w-32 bg-slate-200/80 rounded mb-1" />
+                    <div className="h-3 w-20 bg-slate-100 rounded" />
+                  </td>
+                  <td className="py-4 px-4">
+                    <div className="h-4 w-28 bg-slate-200/80 rounded" />
+                  </td>
+                  <td className="py-4 px-4 text-center">
+                    <div className="h-5 w-10 bg-slate-200/80 rounded-full mx-auto" />
+                  </td>
+                  <td className="py-4 px-4 text-center">
+                    <div className="h-4 w-12 bg-slate-200/80 rounded mx-auto" />
+                  </td>
+                  <td className="py-4 px-6 text-right">
+                    <div className="h-7 w-20 bg-slate-200/80 rounded-lg ml-auto" />
+                  </td>
+                </tr>
+              ))
+            ) : cards.length === 0 ? (
               <tr>
                 <td colSpan={6} className="text-center py-16">
                   <div className="flex flex-col items-center justify-center">

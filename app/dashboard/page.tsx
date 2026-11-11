@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useTransition } from "react";
+import React, { useState, useEffect, useMemo, useTransition } from "react";
 import {
   Search,
   Download,
@@ -19,8 +19,7 @@ import CardPreviewModal from "@/components/dashboard/CardPreviewModal";
 import CardEditorModal from "@/components/dashboard/CardEditorModal";
 import { useDashboardNav } from "@/app/dashboard/layout";
 import {
-  getCards,
-  getAnalyticsSummary,
+  getDashboardData,
   updateCard,
   exportCardsToCSV,
   CardListItem,
@@ -30,10 +29,8 @@ import {
 
 export default function DashboardPage() {
   const { currentView, setCurrentView } = useDashboardNav();
-  const [cards, setCards] = useState<CardListItem[]>([]);
-  const [total, setTotal] = useState(50);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [allCards, setAllCards] = useState<CardListItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [departments, setDepartments] = useState<string[]>([]);
 
   // Search & Filter state
@@ -63,59 +60,60 @@ export default function DashboardPage() {
   const [editingCard, setEditingCard] = useState<CardListItem | null>(null);
   const [isExporting, setIsExporting] = useState(false);
 
-  // Transition hook for non-blocking search
-  const [isPending, startTransition] = useTransition();
-
-  // Load cards and analytics
-  const loadData = async (
-    targetPage = page,
-    search = searchQuery,
-    dept = selectedDept,
-    status = statusFilter,
-    mode = modeFilter
-  ) => {
+  // Load cards and analytics in 1 lightning-fast query
+  const loadData = async () => {
     try {
-      const [cardsRes, analyticsRes] = await Promise.all([
-        getCards({
-          page: targetPage,
-          limit: 50,
-          search,
-          department: dept,
-          status,
-          mode,
-        }),
-        getAnalyticsSummary(),
-      ]);
-
-      setCards(cardsRes.cards);
-      setTotal(cardsRes.total);
-      setTotalPages(cardsRes.totalPages);
-      setDepartments(cardsRes.departments);
-      setAnalytics(analyticsRes);
+      const res = await getDashboardData();
+      setAllCards(res.cards);
+      setDepartments(res.departments);
+      setAnalytics(res.analytics);
     } catch (err) {
       console.error("Error loading dashboard data:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    loadData(1, searchQuery, selectedDept, statusFilter, modeFilter);
-  }, [selectedDept, statusFilter, modeFilter]);
+    loadData();
+  }, []);
 
-  // Handle search typing with debouncing
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      startTransition(() => {
-        loadData(1, searchQuery, selectedDept, statusFilter, modeFilter);
-        setPage(1);
+  // INSTANT in-memory filtering (0 milliseconds response time on every click)
+  const filteredCards = useMemo(() => {
+    let result = allCards;
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      const cleanNum = q.replace(/^[#\s]+/, "");
+      result = result.filter((c) => {
+        if (cleanNum && String(c.cardNumber) === cleanNum) return true;
+        if (cleanNum && c.slug.toLowerCase() === cleanNum) return true;
+        if (c.name.toLowerCase().includes(q)) return true;
+        if (c.jobTitle?.toLowerCase().includes(q)) return true;
+        if (c.department?.toLowerCase().includes(q)) return true;
+        if (c.redirectUrl?.toLowerCase().includes(q)) return true;
+        return false;
       });
-    }, 200);
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
+    }
 
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-    loadData(newPage, searchQuery, selectedDept, statusFilter, modeFilter);
-  };
+    if (selectedDept !== "all") {
+      result = result.filter((c) => c.department === selectedDept);
+    }
+
+    if (statusFilter === "active") {
+      result = result.filter((c) => c.isActive);
+    } else if (statusFilter === "paused") {
+      result = result.filter((c) => !c.isActive);
+    }
+
+    if (modeFilter === "profile") {
+      result = result.filter((c) => c.mode !== "redirect");
+    } else if (modeFilter === "redirect") {
+      result = result.filter((c) => c.mode === "redirect");
+    }
+
+    return result;
+  }, [allCards, searchQuery, selectedDept, statusFilter, modeFilter]);
 
   const handleEdit = (card: CardListItem) => {
     setEditingCard(card);
@@ -126,7 +124,7 @@ export default function DashboardPage() {
     if (!id) return false;
     const res = await updateCard(id, data);
     if (res.success) {
-      await loadData(page, searchQuery, selectedDept, statusFilter, modeFilter);
+      await loadData();
       return true;
     }
     return false;
@@ -185,7 +183,7 @@ export default function DashboardPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {departments.map((dept) => {
-              const countInDept = cards.filter((c) => c.department === dept).length;
+              const countInDept = allCards.filter((c) => c.department === dept).length;
               return (
                 <div
                   key={dept}
@@ -254,7 +252,7 @@ export default function DashboardPage() {
                 {/* Export Button */}
                 <button
                   onClick={handleExportCSV}
-                  disabled={isExporting || cards.length === 0}
+                  disabled={isExporting || allCards.length === 0}
                   className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 flex items-center gap-2 transition-all shadow-xs cursor-pointer disabled:opacity-40"
                   title="Export 50 cards to CSV"
                 >
@@ -346,16 +344,17 @@ export default function DashboardPage() {
             {viewMode === "table" ? (
               /* Full-Width Table View */
               <CardsTable
-                cards={cards}
-                total={total}
-                currentPage={page}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
+                cards={filteredCards}
+                total={allCards.length || 50}
+                currentPage={1}
+                totalPages={1}
+                isLoading={isLoading}
+                onPageChange={() => {}}
                 onSelectForPreview={(card) => setPreviewCard(card)}
                 selectedCardId={previewCard?._id}
                 onEditCard={handleEdit}
                 onOpenPreview={(card) => setPreviewCard(card)}
-                onResetSuccess={() => loadData(page, searchQuery, selectedDept, statusFilter, modeFilter)}
+                onResetSuccess={() => loadData()}
               />
             ) : (
               /* Visual 50-Card Hardware Rack View (Full Width) */
@@ -375,7 +374,7 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3">
-                  {cards.map((card) => {
+                  {filteredCards.map((card) => {
                     const isSelected = previewCard?._id === card._id;
                     const isRedirect = card.mode === "redirect";
                     const padded = card.cardNumber < 10 ? `0${card.cardNumber}` : `${card.cardNumber}`;

@@ -67,6 +67,146 @@ export interface AnalyticsSummary {
   recentTaps: RecentTapActivity[];
 }
 
+export interface DashboardDataResponse {
+  cards: CardListItem[];
+  departments: string[];
+  analytics: AnalyticsSummary;
+}
+
+/**
+ * Super-fast unified fetch: 1 single lean query that computes cards and analytics simultaneously.
+ */
+export async function getDashboardData(): Promise<DashboardDataResponse> {
+  try {
+    await requireAuth();
+    await connectToDatabase();
+    await ensureSeedCards();
+    await ensureDefaultAdmin();
+
+    const rawCards = await Card.find()
+      .select(
+        "cardNumber name slug jobTitle department headline location avatarUrl themeColor phone email mode redirectUrl isActive views vcardClicks lastTappedAt links updatedAt"
+      )
+      .sort({ cardNumber: 1 })
+      .lean();
+
+    let totalTaps = 0;
+    let totalClicks = 0;
+    let totalActive = 0;
+    let totalCustomLinks = 0;
+    let totalProfiles = 0;
+    const deptSet = new Set<string>();
+
+    const cards: CardListItem[] = rawCards.map((doc: any) => {
+      const v = Number(doc.views) || 0;
+      totalTaps += v;
+      if (doc.isActive) totalActive++;
+      if (doc.mode === "redirect") totalCustomLinks++;
+      else totalProfiles++;
+
+      if (doc.department) deptSet.add(doc.department);
+
+      const links = (doc.links || []).map((l: any) => {
+        const c = Number(l.clicks) || 0;
+        totalClicks += c;
+        return {
+          _id: l._id ? l._id.toString() : undefined,
+          title: l.title || "",
+          subtitle: l.subtitle || "",
+          url: l.url || "",
+          icon: l.icon || "website",
+          isActive: l.isActive !== false,
+          clicks: c,
+        };
+      });
+
+      return {
+        _id: doc._id.toString(),
+        cardNumber: doc.cardNumber || parseInt(doc.slug, 10) || 1,
+        name: doc.name,
+        slug: doc.slug,
+        jobTitle: doc.jobTitle || "",
+        department: doc.department || "Reach World",
+        headline: doc.headline || "",
+        location: doc.location || "",
+        avatarUrl: doc.avatarUrl || "",
+        themeColor: doc.themeColor || "#0a192f",
+        phone: doc.phone || "",
+        email: doc.email || "",
+        mode: doc.mode === "redirect" ? "redirect" : "profile",
+        redirectUrl: doc.redirectUrl || "",
+        isActive: doc.isActive ?? true,
+        views: v,
+        vcardClicks: Number(doc.vcardClicks) || 0,
+        lastTappedAt: doc.lastTappedAt ? new Date(doc.lastTappedAt).toISOString() : undefined,
+        linksCount: links.length,
+        links,
+        updatedAt: doc.updatedAt ? new Date(doc.updatedAt).toISOString() : new Date().toISOString(),
+      };
+    });
+
+    const sortedByViews = [...cards].sort((a, b) => b.views - a.views);
+    const topDoc = sortedByViews[0] || null;
+
+    const recentTapped = [...cards]
+      .filter((c) => c.lastTappedAt)
+      .sort((a, b) => new Date(b.lastTappedAt!).getTime() - new Date(a.lastTappedAt!).getTime())
+      .slice(0, 8);
+
+    const tapThroughRate =
+      totalTaps > 0 ? Math.min(100, Number(((totalClicks / totalTaps) * 100).toFixed(1))) : 0;
+
+    return {
+      cards,
+      departments: Array.from(deptSet).filter(Boolean),
+      analytics: {
+        totalCards: cards.length || 50,
+        totalActive,
+        totalTaps,
+        totalCustomLinks,
+        totalProfiles,
+        topPerformer:
+          topDoc && topDoc.views > 0
+            ? {
+                cardNumber: topDoc.cardNumber,
+                name: topDoc.name,
+                jobTitle: topDoc.jobTitle,
+                views: topDoc.views,
+                slug: topDoc.slug,
+                avatarUrl: topDoc.avatarUrl,
+                mode: topDoc.mode,
+              }
+            : null,
+        tapThroughRate: tapThroughRate || 0,
+        recentTaps: recentTapped.map((c) => ({
+          cardNumber: c.cardNumber,
+          slug: c.slug,
+          cardName: c.name,
+          mode: c.mode,
+          redirectUrl: c.redirectUrl,
+          timestamp: c.lastTappedAt!,
+        })),
+      },
+    };
+  } catch (error) {
+    console.error("Error in getDashboardData:", error);
+    return {
+      cards: [],
+      departments: [],
+      analytics: {
+        totalCards: 50,
+        totalActive: 0,
+        totalTaps: 0,
+        totalCustomLinks: 0,
+        totalProfiles: 0,
+        topPerformer: null,
+        tapThroughRate: 0,
+        recentTaps: [],
+      },
+    };
+  }
+}
+
 /**
  * Super-fast fetch of cards with indexes and lean query.
  */

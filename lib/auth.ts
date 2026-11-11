@@ -16,12 +16,15 @@ export interface SessionPayload {
   role: string;
 }
 
+let isAdminInitialized = false;
+
 /**
  * Ensures the default admin account exists.
  * Username: admin@reachworld.com
  * Password: Hussein
  */
 export async function ensureDefaultAdmin(): Promise<void> {
+  if (isAdminInitialized) return;
   await connectToDatabase();
   const existingCount = await User.countDocuments();
   if (existingCount === 0) {
@@ -35,6 +38,7 @@ export async function ensureDefaultAdmin(): Promise<void> {
     });
     console.log("[Auth] Default admin initialized: admin@reachworld.com / Hussein");
   }
+  isAdminInitialized = true;
 }
 
 /**
