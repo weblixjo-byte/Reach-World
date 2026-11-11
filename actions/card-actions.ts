@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { connectToDatabase } from "@/lib/db";
 import Card, { ICard, ILink, CardModeType } from "@/models/Card";
 import { ensureSeedCards } from "@/lib/mock-data";
-import { normalizeRedirectUrl } from "@/lib/url-utils";
+import { normalizeRedirectUrl, sanitizeLinkUrl } from "@/lib/url-utils";
+import { requireAuth, ensureDefaultAdmin } from "@/lib/auth";
 
 export interface CardListItem {
   _id: string;
@@ -85,8 +86,10 @@ export async function getCards({
   mode?: string;
 }): Promise<GetCardsResponse> {
   try {
+    await requireAuth();
     await connectToDatabase();
     await ensureSeedCards();
+    await ensureDefaultAdmin();
 
     const query: Record<string, unknown> = {};
 
@@ -201,6 +204,7 @@ export async function getCards({
  */
 export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
   try {
+    await requireAuth();
     await connectToDatabase();
     await ensureSeedCards();
 
@@ -292,6 +296,7 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
  */
 export async function toggleCardStatus(cardId: string, isActive: boolean) {
   try {
+    await requireAuth();
     await connectToDatabase();
     const updated = await Card.findByIdAndUpdate(
       cardId,
@@ -332,6 +337,7 @@ export interface CardFormData {
  */
 export async function updateCard(cardId: string, data: CardFormData) {
   try {
+    await requireAuth();
     await connectToDatabase();
 
     const existing = await Card.findById(cardId);
@@ -341,15 +347,15 @@ export async function updateCard(cardId: string, data: CardFormData) {
 
     const cleanUrl = normalizeRedirectUrl(data.redirectUrl);
 
-    existing.name = (data.name || "").trim() || `Card #${existing.cardNumber < 10 ? '0' + existing.cardNumber : existing.cardNumber}`;
-    existing.jobTitle = data.jobTitle?.trim() || "";
-    existing.department = data.department?.trim() || "Reach World";
-    existing.headline = data.headline?.trim() || "";
-    existing.location = data.location?.trim() || "Amman, Jordan";
-    existing.avatarUrl = data.avatarUrl?.trim() || "";
-    existing.themeColor = data.themeColor || "#0a192f";
-    existing.phone = data.phone?.trim() || "";
-    existing.email = data.email?.trim() || "";
+    existing.name = (data.name || "").trim().slice(0, 100) || `Card #${existing.cardNumber < 10 ? '0' + existing.cardNumber : existing.cardNumber}`;
+    existing.jobTitle = (data.jobTitle || "").trim().slice(0, 100);
+    existing.department = (data.department || "").trim().slice(0, 80) || "Reach World";
+    existing.headline = (data.headline || "").trim().slice(0, 200);
+    existing.location = (data.location || "").trim().slice(0, 100) || "Amman, Jordan";
+    existing.avatarUrl = (data.avatarUrl || "").trim().slice(0, 500);
+    existing.themeColor = (data.themeColor || "#0a192f").slice(0, 30);
+    existing.phone = (data.phone || "").trim().slice(0, 50);
+    existing.email = (data.email || "").trim().slice(0, 100);
     existing.mode = data.mode === "redirect" ? "redirect" : "profile";
     existing.redirectUrl = cleanUrl;
 
@@ -359,12 +365,15 @@ export async function updateCard(cardId: string, data: CardFormData) {
 
     if (data.links && Array.isArray(data.links)) {
       const existingLinks = existing.links || [];
-      existing.links = data.links.map((nl: any) => {
+      existing.links = data.links.slice(0, 30).map((nl: any) => {
         const found = existingLinks.find(
           (ex: any) => (nl._id && ex._id?.toString() === nl._id) || ex.icon === nl.icon
         );
         return {
           ...nl,
+          title: (nl.title || "").trim().slice(0, 80),
+          subtitle: (nl.subtitle || "").trim().slice(0, 100),
+          url: sanitizeLinkUrl(nl.url || "", nl.icon),
           clicks: found ? (found.clicks || 0) : (nl.clicks || 0),
         };
       }) as any;
@@ -391,6 +400,7 @@ export async function updateCardDestination(
   redirectUrl: string
 ) {
   try {
+    await requireAuth();
     await connectToDatabase();
 
     const cleanUrl = normalizeRedirectUrl(redirectUrl);
@@ -439,6 +449,7 @@ export async function deleteCard(_cardId: string) {
  */
 export async function resetCard(cardId: string) {
   try {
+    await requireAuth();
     await connectToDatabase();
 
     const card = await Card.findById(cardId);
@@ -572,6 +583,7 @@ export async function recordCardTap(cardId: string, metadata?: { userAgent?: str
  */
 export async function exportCardsToCSV(): Promise<string> {
   try {
+    await requireAuth();
     await connectToDatabase();
     await ensureSeedCards();
 

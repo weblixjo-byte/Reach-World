@@ -209,12 +209,15 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
 
             {/* Screen Frame */}
             <div
-              className="relative w-full h-full rounded-[44px] overflow-hidden flex flex-col text-white"
-              style={{
-                background:
-                  "radial-gradient(circle at 50% 15%, #0d274c 0%, #061528 50%, #030a14 100%)",
-              }}
+              className="relative w-full h-full rounded-[44px] overflow-hidden flex flex-col text-white bg-[#020b18]"
             >
+              {/* Authentic Feather Texture Background */}
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-luminosity pointer-events-none"
+                style={{ backgroundImage: `url('/branding/card-bg-feathers.jpg')` }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/85 via-[#03132b]/90 to-[#020b18] pointer-events-none" />
+
               {/* iOS Top Status Bar */}
               <div className="pt-3 px-6 pb-2 flex justify-between items-center text-white/70 text-[10px] z-30">
                 <span className="font-semibold">9:41</span>
@@ -229,12 +232,12 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
               {/* CARD CONTENT */}
               {isCustomLink ? (
                 /* Custom Web Link View */
-                <div className="flex-1 flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-200">
-                  <div className="w-16 h-16 rounded-3xl bg-[#0071E3]/20 border border-[#0071E3]/40 flex items-center justify-center text-[#38bdf8] mb-4 shadow-lg">
+                <div className="relative z-10 flex-1 flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-200">
+                  <div className="w-16 h-16 rounded-3xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-sky-400 mb-4 shadow-lg">
                     <Globe className="w-8 h-8 animate-pulse" />
                   </div>
 
-                  <span className="px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-[#0071E3]/20 border border-[#0071E3]/30 text-[#38bdf8] mb-3">
+                  <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-blue-500/20 border border-blue-500/30 text-sky-300 mb-3">
                     Card #{slotPadded} • Custom Web Link
                   </span>
 
@@ -246,10 +249,10 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
                   </p>
 
                   <div className="w-full p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md mb-6 max-w-[260px]">
-                    <span className="text-[10px] font-mono font-medium text-white/40 block mb-1">
+                    <span className="text-[10px] font-medium text-white/40 block mb-1">
                       ASSIGNED URL
                     </span>
-                    <p className="text-xs font-mono font-bold text-[#38bdf8] truncate" title={card.redirectUrl}>
+                    <p className="text-xs font-bold text-sky-300 truncate" title={card.redirectUrl}>
                       {card.redirectUrl || "https://reachworld.com"}
                     </p>
                   </div>
@@ -258,7 +261,7 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
                     href={card.redirectUrl || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-3 px-4 rounded-xl text-xs font-semibold text-white bg-[#0071E3] hover:bg-[#0077ED] flex items-center justify-center gap-2 shadow-lg transition-transform active:scale-95"
+                    className="w-full py-3 px-4 rounded-xl text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 flex items-center justify-center gap-2 shadow-lg transition-transform active:scale-95"
                   >
                     <span>Open Web Link</span>
                     <ArrowRight className="w-4 h-4" />
@@ -266,10 +269,16 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
                 </div>
               ) : (
                 /* Digital Bio Profile View */
-                <div className="flex-1 overflow-y-auto px-5 py-2 flex flex-col items-center text-center no-scrollbar">
-                  <ReachWorldLogo className="w-36 my-2" />
+                <div className="relative z-10 flex-1 overflow-y-auto px-5 py-2 flex flex-col items-center text-center no-scrollbar">
+                  <div className="p-1.5 rounded-xl bg-white/5 border border-white/10 my-2 shadow-md">
+                    <img
+                      src="/branding/reach-world-white.jpg"
+                      alt="Reach World"
+                      className="h-7 w-auto object-contain brightness-110"
+                    />
+                  </div>
 
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#0071E3]/20 border border-[#0071E3]/30 text-[#38bdf8] mt-1">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 border border-blue-500/30 text-sky-300 mt-1">
                     Card #{slotPadded}
                   </span>
 
