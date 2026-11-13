@@ -213,12 +213,15 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
             >
               {/* Background Feather Image */}
               <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-                <img
-                  src="/card-bg.webp"
-                  alt="Background"
-                  className="w-full h-full object-cover opacity-50 mix-blend-screen scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/70 via-[#031126]/60 to-[#020b18]/90" />
+                <picture className="w-full h-full">
+                  <source srcSet="/card-bg.webp" type="image/webp" />
+                  <img
+                    src="/card-bg.jpg"
+                    alt="Background"
+                    className="w-full h-full object-cover object-center"
+                  />
+                </picture>
+                <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/60 via-black/25 to-[#020b18]/80" />
               </div>
 
               {/* iOS Top Status Bar */}

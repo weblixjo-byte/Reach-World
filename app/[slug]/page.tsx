@@ -69,13 +69,13 @@ export default async function PublicCardPage({ params }: PageProps) {
             <img
               src="/card-bg.jpg"
               alt="Reach World Background"
-              className="w-full h-full object-cover opacity-50 mix-blend-screen scale-105"
+              className="w-full h-full object-cover object-center"
               loading="eager"
               fetchPriority="high"
               decoding="async"
             />
           </picture>
-          <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/70 via-[#031126]/60 to-[#020b18]/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/60 via-black/25 to-[#020b18]/80" />
         </div>
 
         {/* Top Reach World Official Logo */}
