@@ -152,7 +152,7 @@ export default function BioCardView({ card }: BioCardViewProps) {
       <div className="relative z-10 w-full max-w-[420px] flex items-center justify-between pt-2 pb-6">
         <button
           onClick={handleShare}
-          className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 active:scale-95 backdrop-blur-xl border border-white/15 text-white/90 hover:text-white text-xs font-medium flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
+          className="px-4 py-2 rounded-full bg-white/[0.08] hover:bg-white/[0.14] active:scale-95 backdrop-blur-2xl border border-white/[0.14] text-white/90 hover:text-white text-xs font-medium flex items-center gap-1.5 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.3)] cursor-pointer"
         >
           {copied ? (
             <>
@@ -169,7 +169,7 @@ export default function BioCardView({ card }: BioCardViewProps) {
 
         <button
           onClick={handleDownloadVCard}
-          className="px-4 py-2 rounded-full bg-gradient-to-r from-[#0062cc] to-[#0084ff] hover:from-[#0052b3] hover:to-[#0077f2] active:scale-95 text-white text-xs font-semibold flex items-center gap-1.5 shadow-[0_4px_18px_rgba(0,98,204,0.35)] transition-all cursor-pointer"
+          className="px-4 py-2 rounded-full bg-gradient-to-r from-[#0062E0] via-[#0077F2] to-[#0091FF] hover:brightness-110 active:scale-95 text-white text-xs font-semibold flex items-center gap-1.5 shadow-[0_0_24px_rgba(0,119,242,0.45)] border border-sky-300/35 transition-all cursor-pointer"
         >
           <Download className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>Save Contact</span>
@@ -178,25 +178,28 @@ export default function BioCardView({ card }: BioCardViewProps) {
 
       {/* Main Content Body */}
       <div className="relative z-10 w-full max-w-[420px] flex-1 flex flex-col items-center justify-start space-y-6">
+        {/* Subtle Ambient Radial Backlight behind identity */}
+        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-72 h-72 bg-sky-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
+
         {/* Reach World Brand Logo */}
         <div className="pt-1 pb-2 flex flex-col items-center">
-          <ReachWorldLogo className="w-40 sm:w-44 drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]" />
+          <ReachWorldLogo className="w-40 sm:w-44 drop-shadow-[0_6px_24px_rgba(0,0,0,0.8)]" />
         </div>
 
         {/* Employee Identity Header */}
-        <div className="text-center space-y-1.5 px-2">
-          <h1 className="text-2xl sm:text-[27px] font-extrabold text-white tracking-tight leading-snug drop-shadow-sm">
+        <div className="text-center space-y-2 px-2">
+          <h1 className="text-2xl sm:text-[28px] font-extrabold text-white tracking-tight leading-snug drop-shadow-md">
             {card.name}
           </h1>
 
-          <div className="inline-flex items-center gap-2">
-            <span className="text-[11px] font-bold tracking-[0.25em] text-[#38bdf8] uppercase">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 backdrop-blur-md shadow-sm">
+            <span className="text-[11px] font-bold tracking-[0.2em] text-[#38bdf8] uppercase">
               {card.jobTitle || "REACH WORLD"}
             </span>
             {card.department && (
               <>
-                <span className="w-1 h-1 rounded-full bg-white/30" />
-                <span className="text-[11px] font-medium tracking-wider text-white/60 uppercase">
+                <span className="w-1 h-1 rounded-full bg-white/40" />
+                <span className="text-[11px] font-medium tracking-wider text-white/70 uppercase">
                   {card.department}
                 </span>
               </>
@@ -204,13 +207,13 @@ export default function BioCardView({ card }: BioCardViewProps) {
           </div>
 
           {card.headline && (
-            <p className="text-xs text-white/75 max-w-xs mx-auto leading-relaxed pt-1 font-normal">
+            <p className="text-xs text-slate-300/85 max-w-xs mx-auto leading-relaxed pt-1 font-normal">
               {card.headline}
             </p>
           )}
         </div>
 
-        {/* Direct Contact Links List */}
+        {/* Direct Contact Links List - Premium Glassmorphism */}
         <div className="w-full space-y-2.5 pt-2">
           {mainListLinks.length > 0 ? (
             mainListLinks.map((link, idx) => {
@@ -221,21 +224,24 @@ export default function BioCardView({ card }: BioCardViewProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => handleLinkClick(link._id, link.icon)}
-                  className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-[#07172e]/75 hover:bg-[#0a2040]/90 active:scale-[0.98] border border-white/10 hover:border-sky-500/40 shadow-[0_8px_30px_rgba(0,0,0,0.35)] transition-all group backdrop-blur-md"
+                  className="relative overflow-hidden w-full flex items-center justify-between p-3.5 rounded-2xl bg-white/[0.05] hover:bg-white/[0.09] active:scale-[0.98] border border-white/[0.12] hover:border-sky-400/40 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:shadow-[0_12px_40px_0_rgba(0,113,227,0.22)] transition-all group backdrop-blur-2xl"
                 >
+                  {/* Glass Top Rim Reflection */}
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent pointer-events-none" />
+
                   <div className="flex items-center gap-3.5 min-w-0">
-                    {/* Icon Container */}
-                    <div className="w-11 h-11 rounded-2xl bg-[#0c2242] border border-white/10 flex items-center justify-center flex-shrink-0 group-hover:scale-105 group-hover:bg-[#102b54] transition-all shadow-sm p-2.5">
+                    {/* Glass Icon Container */}
+                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-white/12 to-white/[0.03] border border-white/20 flex items-center justify-center flex-shrink-0 group-hover:scale-105 group-hover:border-sky-400/50 transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] p-2.5">
                       <SocialIcon type={link.icon} className="w-full h-full" />
                     </div>
 
                     {/* Labels */}
                     <div className="min-w-0 flex flex-col justify-center">
-                      <span className="font-semibold text-sm text-white group-hover:text-[#38bdf8] transition-colors truncate">
+                      <span className="font-semibold text-[14px] text-white group-hover:text-[#38bdf8] transition-colors truncate">
                         {link.title}
                       </span>
                       {link.subtitle ? (
-                        <span className="text-[11px] text-white/60 truncate mt-0.5 font-medium">
+                        <span className="text-[11px] text-slate-300/75 truncate mt-0.5 font-normal">
                           {link.subtitle}
                         </span>
                       ) : (
@@ -246,21 +252,21 @@ export default function BioCardView({ card }: BioCardViewProps) {
                     </div>
                   </div>
 
-                  {/* Chevron Indicator */}
-                  <div className="w-7 h-7 rounded-full bg-white/5 group-hover:bg-white/10 flex items-center justify-center flex-shrink-0 ml-2 transition-colors">
-                    <ChevronRight className="w-4 h-4 text-white/40 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+                  {/* Glass Chevron Indicator */}
+                  <div className="w-7 h-7 rounded-full bg-white/[0.06] border border-white/10 group-hover:bg-sky-500/20 group-hover:border-sky-400/40 flex items-center justify-center flex-shrink-0 ml-2 transition-all">
+                    <ChevronRight className="w-4 h-4 text-white/50 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
                   </div>
                 </a>
               );
             })
           ) : (
-            <div className="p-6 rounded-2xl bg-[#07172e]/50 border border-white/10 text-center text-xs text-white/50 backdrop-blur-sm">
+            <div className="p-6 rounded-2xl bg-white/[0.04] border border-white/10 text-center text-xs text-white/50 backdrop-blur-xl">
               No direct contact details registered yet.
             </div>
           )}
         </div>
 
-        {/* Bottom Social Media Pills */}
+        {/* Bottom Social Media Pills - Glassmorphism */}
         {bottomSocialLinks.length > 0 && (
           <div className="w-full pt-3">
             <div className="flex items-center justify-center gap-3.5">
@@ -272,9 +278,10 @@ export default function BioCardView({ card }: BioCardViewProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => handleLinkClick(sLink._id, sLink.icon)}
-                    className="w-12 h-12 rounded-2xl bg-[#07172e]/80 hover:bg-[#0c2242] border border-white/10 hover:border-white/25 hover:scale-105 active:scale-95 flex items-center justify-center transition-all shadow-md p-3 backdrop-blur-md"
+                    className="relative overflow-hidden w-12 h-12 rounded-2xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.12] hover:border-sky-400/40 hover:scale-105 active:scale-95 flex items-center justify-center transition-all shadow-[0_8px_24px_rgba(0,0,0,0.3)] p-3 backdrop-blur-2xl"
                     title={sLink.title}
                   >
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent pointer-events-none" />
                     <SocialIcon type={sLink.icon} className="w-full h-full" />
                   </a>
                 );

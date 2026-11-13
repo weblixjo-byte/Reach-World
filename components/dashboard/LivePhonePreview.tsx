@@ -290,16 +290,17 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
                     {card.jobTitle || "REACH WORLD"}
                   </p>
 
-                  {/* Contact Action List */}
+                  {/* Contact Action List - Glassmorphic Style */}
                   <div className="w-full space-y-2 mt-4">
                     {mainListLinks.length > 0 ? (
                       mainListLinks.map((link, idx) => (
                         <div
                           key={link._id || idx}
-                          className="w-full flex items-center justify-between p-2.5 rounded-xl bg-[#07172e]/75 border border-white/10 shadow-sm"
+                          className="relative overflow-hidden w-full flex items-center justify-between p-2.5 rounded-xl bg-white/[0.05] border border-white/[0.12] shadow-sm backdrop-blur-md"
                         >
+                          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
                           <div className="flex items-center gap-2.5 min-w-0">
-                            <div className="w-8 h-8 rounded-lg bg-[#0c2242] border border-white/10 flex items-center justify-center flex-shrink-0 shadow-xs p-1.5">
+                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-white/12 to-white/[0.03] border border-white/20 flex items-center justify-center flex-shrink-0 shadow-inner p-1.5">
                               <SocialIcon type={link.icon} className="w-full h-full" />
                             </div>
                             <div className="min-w-0 flex flex-col text-left">
@@ -307,7 +308,7 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
                                 {link.title}
                               </span>
                               {link.subtitle ? (
-                                <span className="text-[10px] text-white/60 truncate max-w-[170px]">
+                                <span className="text-[10px] text-slate-300/75 truncate max-w-[170px]">
                                   {link.subtitle}
                                 </span>
                               ) : (
@@ -332,7 +333,7 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
                       {bottomSocialLinks.map((sLink, sIdx) => (
                         <div
                           key={sLink._id || sIdx}
-                          className="w-8 h-8 rounded-lg bg-[#0f284b] border border-white/10 flex items-center justify-center shadow-sm p-2"
+                          className="w-8 h-8 rounded-lg bg-white/[0.06] border border-white/[0.12] flex items-center justify-center shadow-sm p-1.5 backdrop-blur-md"
                         >
                           <SocialIcon type={sLink.icon} className="w-full h-full" />
                         </div>
@@ -342,7 +343,7 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
 
                   <button
                     onClick={handleDownloadVCard}
-                    className="w-full mt-4 py-2 px-3 rounded-xl text-xs font-semibold text-white bg-[#0071E3] hover:bg-[#0077ED] flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
+                    className="w-full mt-4 py-2 px-3 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-[#0062E0] via-[#0077F2] to-[#0091FF] flex items-center justify-center gap-1.5 shadow-[0_0_16px_rgba(0,119,242,0.4)] border border-sky-300/30 cursor-pointer"
                   >
                     <Download className="w-3.5 h-3.5" /> Save Contact to Phone
                   </button>

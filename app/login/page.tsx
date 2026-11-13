@@ -27,35 +27,54 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 bg-[#07101e] text-white font-sans">
-      <div className="w-full max-w-sm">
-        {/* Brand Card Container - Formal Executive Style */}
-        <div className="bg-[#0c182b] border border-slate-800 rounded-2xl p-8 shadow-xl">
-          {/* Old Original Brand Logo */}
-          <div className="text-center mb-6">
+    <div className="relative min-h-[100dvh] w-full flex items-center justify-center p-4 bg-[#020b18] text-white font-sans overflow-hidden">
+      {/* Optimized Brand Feather Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#020b18]">
+        <picture>
+          <source srcSet="/card-bg.webp" type="image/webp" />
+          <img
+            src="/card-bg.jpg"
+            alt="Reach World Background"
+            className="w-full h-full object-cover object-center"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+          />
+        </picture>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/60 via-black/25 to-[#020b18]/80" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-sm">
+        {/* Brand Card Container - Executive Frosted Glassmorphism */}
+        <div className="relative overflow-hidden rounded-3xl bg-white/[0.05] border border-white/[0.14] p-8 sm:p-9 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] backdrop-blur-2xl">
+          {/* Glass Top Rim Reflection */}
+          <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-sky-400/40 to-transparent pointer-events-none" />
+
+          {/* Brand Logo */}
+          <div className="text-center mb-7">
             <div className="flex justify-center mb-4">
               <img
                 src="/reach-world-logo.png"
                 alt="Reach World"
-                className="h-9 w-auto object-contain brightness-0 invert"
+                className="h-10 w-auto object-contain brightness-0 invert drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]"
               />
             </div>
-            <h1 className="text-lg font-semibold tracking-tight text-white">
+            <h1 className="text-lg font-bold tracking-tight text-white">
               NFC Management Console
             </h1>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-300/70 mt-1 font-medium">
               Authorized Corporate Access
             </p>
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-rose-950/40 border border-rose-900/60 text-rose-300 text-xs text-center">
+            <div className="mb-4 p-3 rounded-xl bg-rose-950/60 border border-rose-900/80 text-rose-300 text-xs text-center backdrop-blur-md">
               {error}
             </div>
           )}
 
-          {/* Login Form - Zero Icons, Formal Style */}
+          {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1.5">
@@ -67,7 +86,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@reachworld.com"
-                className="w-full px-3.5 py-2.5 bg-[#07101e] border border-slate-700/80 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 transition-colors"
+                className="w-full px-3.5 py-2.5 bg-white/[0.04] border border-white/[0.12] rounded-xl text-sm text-white placeholder-slate-400/60 focus:outline-none focus:border-sky-400 focus:bg-white/[0.08] focus:ring-2 focus:ring-sky-500/20 transition-all backdrop-blur-sm"
               />
             </div>
 
@@ -81,34 +100,34 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-3.5 py-2.5 bg-[#07101e] border border-slate-700/80 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 transition-colors"
+                className="w-full px-3.5 py-2.5 bg-white/[0.04] border border-white/[0.12] rounded-xl text-sm text-white placeholder-slate-400/60 focus:outline-none focus:border-sky-400 focus:bg-white/[0.08] focus:ring-2 focus:ring-sky-500/20 transition-all backdrop-blur-sm"
               />
             </div>
 
             <button
               type="submit"
               disabled={isPending}
-              className="w-full mt-2 py-2.5 px-4 bg-slate-800 hover:bg-slate-700 border border-slate-600/60 text-white font-medium rounded-lg text-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-center"
+              className="w-full mt-2 py-2.5 px-4 bg-gradient-to-r from-[#0062E0] via-[#0077F2] to-[#0091FF] hover:brightness-110 active:scale-[0.99] border border-sky-300/30 text-white font-semibold rounded-xl text-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-center shadow-[0_4px_20px_rgba(0,119,242,0.4)]"
             >
               {isPending ? "Verifying Credentials..." : "Sign In to Dashboard"}
             </button>
           </form>
 
           {/* Security Notice */}
-          <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+          <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
             <span>256-bit Encrypted Session</span>
             <span>Reach World Corp</span>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-6 text-xs text-slate-500">
+        <div className="text-center mt-6 text-xs text-slate-400/70">
           powered by{" "}
           <a
             href="https://weblix-jo.com/en"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-slate-400 hover:text-white transition-colors underline underline-offset-2"
+            className="text-slate-300 hover:text-white transition-colors underline underline-offset-2 font-medium"
           >
             weblix-jo
           </a>

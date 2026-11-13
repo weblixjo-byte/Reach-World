@@ -83,17 +83,19 @@ export default async function PublicCardPage({ params }: PageProps) {
           <ReachWorldLogo className="w-36 sm:w-40 opacity-90 drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]" />
         </div>
 
-        {/* Center Minimalist Status Notice */}
-        <div className="relative z-10 max-w-sm w-full text-center flex flex-col items-center my-auto px-4 animate-in fade-in duration-300">
-          <div className="w-14 h-14 rounded-2xl bg-[#07172e]/80 border border-white/10 flex items-center justify-center text-white/70 mb-5 shadow-lg backdrop-blur-md">
-            <Pause className="w-6 h-6 stroke-[1.5] text-amber-400/90" />
+        {/* Center Minimalist Status Notice - Frosted Glass Container */}
+        <div className="relative z-10 max-w-sm w-full text-center flex flex-col items-center my-auto px-6 py-8 rounded-3xl bg-white/[0.05] border border-white/[0.12] shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-2xl animate-in fade-in duration-300">
+          <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent pointer-events-none" />
+
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/12 to-white/[0.03] border border-white/20 flex items-center justify-center text-white/70 mb-5 shadow-inner backdrop-blur-md">
+            <Pause className="w-6 h-6 stroke-[1.5] text-amber-400" />
           </div>
 
           <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2.5">
             Card Temporarily Inactive
           </h1>
 
-          <p className="text-xs sm:text-sm text-white/60 leading-relaxed max-w-xs mx-auto mb-7 font-normal">
+          <p className="text-xs sm:text-sm text-slate-300/80 leading-relaxed max-w-xs mx-auto mb-7 font-normal">
             This digital card is currently inactive. Please visit our official corporate website for assistance.
           </p>
 
@@ -101,10 +103,10 @@ export default async function PublicCardPage({ params }: PageProps) {
             href="https://reachworld.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-2.5 rounded-full text-xs font-semibold text-white/90 hover:text-white bg-white/10 hover:bg-white/15 border border-white/15 transition-all inline-flex items-center gap-2 active:scale-95 shadow-sm cursor-pointer backdrop-blur-sm"
+            className="px-6 py-2.5 rounded-full text-xs font-semibold text-white bg-white/[0.08] hover:bg-white/[0.15] border border-white/[0.15] hover:border-sky-400/40 transition-all inline-flex items-center gap-2 active:scale-95 shadow-[0_4px_20px_rgba(0,0,0,0.3)] cursor-pointer backdrop-blur-md"
           >
             <span>reachworld.com</span>
-            <ArrowRight className="w-3.5 h-3.5 text-white/50" />
+            <ArrowRight className="w-3.5 h-3.5 text-white/60" />
           </a>
         </div>
 

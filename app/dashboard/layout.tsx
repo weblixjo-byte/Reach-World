@@ -49,34 +49,44 @@ export default function DashboardLayout({
         }}
       >
         <div className="min-h-screen bg-[#F8F9FA] flex font-sans">
-          {/* Executive Corporate Sidebar - Muted, formal, zero neon */}
-          <aside className="w-64 bg-[#0a192f] border-r border-slate-800 p-6 flex flex-col justify-between select-none text-white shadow-lg min-h-screen shrink-0 sticky top-0 h-screen">
-            <div className="space-y-6">
-              {/* Old Original Brand Logo */}
-              <div className="space-y-3 pb-2 border-b border-white/10">
+          {/* Executive Corporate Sidebar - Royal Feather Glassmorphism */}
+          <aside className="relative w-64 bg-[#020b18] border-r border-white/[0.08] p-6 flex flex-col justify-between select-none text-white shadow-2xl min-h-screen shrink-0 sticky top-0 h-screen overflow-hidden">
+            {/* Ambient Feather Background */}
+            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-35">
+              <img
+                src="/card-bg.webp"
+                alt=""
+                className="w-full h-full object-cover object-left scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/70 via-[#020b18]/85 to-[#020b18]/95" />
+            </div>
+
+            <div className="relative z-10 space-y-6">
+              {/* Brand Logo & Console Tag */}
+              <div className="space-y-3 pb-3 border-b border-white/10">
                 <div className="flex items-center">
                   <img
                     src="/reach-world-logo.png"
                     alt="Reach World"
-                    className="h-8 w-auto object-contain brightness-0 invert"
+                    className="h-8 w-auto object-contain brightness-0 invert drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]"
                   />
                 </div>
-                <div className="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+                <div className="flex items-center justify-between text-[11px] text-slate-300 font-medium">
                   <span>Fleet Console</span>
-                  <span className="text-[10px] text-slate-300 font-medium bg-white/5 px-2 py-0.5 rounded-md border border-white/10">
+                  <span className="text-[10px] text-sky-300 font-semibold bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-400/25 backdrop-blur-sm">
                     50 NFC Cards
                   </span>
                 </div>
               </div>
 
-              {/* Navigation Items - Pure Clean Typography, Zero Icons */}
-              <nav className="space-y-1">
+              {/* Navigation Items - Glassmorphic Badges */}
+              <nav className="space-y-1.5">
                 <button
                   onClick={() => setCurrentView("cards")}
-                  className={`w-full text-left px-3.5 py-2.5 rounded-lg text-xs transition-all cursor-pointer ${
+                  className={`relative overflow-hidden w-full text-left px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer ${
                     currentView === "cards"
-                      ? "bg-white/10 text-white font-semibold border border-white/10"
-                      : "text-slate-400 hover:text-white hover:bg-white/5 font-medium"
+                      ? "bg-white/[0.10] text-white font-semibold border border-white/[0.15] shadow-[0_4px_16px_rgba(0,0,0,0.3)] backdrop-blur-xl before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-sky-400 before:rounded-r"
+                      : "text-slate-300/80 hover:text-white hover:bg-white/[0.06] border border-transparent hover:border-white/[0.08] font-medium backdrop-blur-sm"
                   }`}
                 >
                   50 Cards Registry
@@ -84,22 +94,22 @@ export default function DashboardLayout({
 
                 <button
                   onClick={() => setCurrentView("departments")}
-                  className={`w-full text-left px-3.5 py-2.5 rounded-lg text-xs transition-all cursor-pointer ${
+                  className={`relative overflow-hidden w-full text-left px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer ${
                     currentView === "departments"
-                      ? "bg-white/10 text-white font-semibold border border-white/10"
-                      : "text-slate-400 hover:text-white hover:bg-white/5 font-medium"
+                      ? "bg-white/[0.10] text-white font-semibold border border-white/[0.15] shadow-[0_4px_16px_rgba(0,0,0,0.3)] backdrop-blur-xl before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-sky-400 before:rounded-r"
+                      : "text-slate-300/80 hover:text-white hover:bg-white/[0.06] border border-transparent hover:border-white/[0.08] font-medium backdrop-blur-sm"
                   }`}
                 >
                   Departments
                 </button>
 
                 <div className="pt-4 pb-1">
-                  <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 px-3.5 mb-1.5">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400/70 px-3.5 mb-2">
                     Security & Admin
                   </div>
                   <button
                     onClick={() => setSecurityModalOpen(true)}
-                    className="w-full text-left px-3.5 py-2.5 rounded-lg text-xs text-slate-400 hover:text-white hover:bg-white/5 font-medium transition-all cursor-pointer"
+                    className="w-full text-left px-3.5 py-2.5 rounded-xl text-xs text-slate-300/80 hover:text-white hover:bg-white/[0.06] border border-transparent hover:border-white/[0.08] font-medium transition-all cursor-pointer backdrop-blur-sm"
                   >
                     Security & Account
                   </button>
@@ -107,27 +117,33 @@ export default function DashboardLayout({
               </nav>
             </div>
 
-            {/* Bottom Section - Formal, Zero Icons, Zero Neon */}
-            <div className="space-y-2 pt-4 border-t border-white/10">
+            {/* Bottom Section - Glassmorphic Actions */}
+            <div className="relative z-10 space-y-2 pt-4 border-t border-white/10">
               <a
                 href="https://reachworld.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full block px-3.5 py-2 rounded-lg text-[11px] text-slate-400 hover:text-white hover:bg-white/5 transition-all"
+                className="w-full block px-3.5 py-2 rounded-xl text-[11px] text-slate-300/75 hover:text-white hover:bg-white/[0.06] border border-transparent hover:border-white/[0.08] transition-all font-medium"
               >
                 reachworld.com
               </a>
 
               <button
                 onClick={handleLogout}
-                className="w-full text-left px-3.5 py-2 rounded-lg text-[11px] text-slate-400 hover:text-rose-300 hover:bg-rose-500/10 transition-all cursor-pointer font-medium"
+                className="w-full text-left px-3.5 py-2 rounded-xl text-[11px] text-slate-300/75 hover:text-rose-300 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all cursor-pointer font-medium"
               >
                 Sign Out
               </button>
 
-              <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-white/5">
-                <span className="font-medium text-slate-400">Fleet Active</span>
-                <span className="text-[10px] text-slate-400">Slots 01-50</span>
+              <div className="flex items-center justify-between text-[11px] p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md">
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                  </span>
+                  <span className="font-semibold text-slate-200">Fleet Active</span>
+                </div>
+                <span className="text-[10px] text-slate-400 font-mono">Slots 01-50</span>
               </div>
             </div>
           </aside>
