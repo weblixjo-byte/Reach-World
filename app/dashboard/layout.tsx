@@ -139,11 +139,6 @@ export default function DashboardLayout({
           <AdminSecurityModal
             isOpen={securityModalOpen}
             onClose={() => setSecurityModalOpen(false)}
-            onAnalyticsReset={() => {
-              if (typeof window !== "undefined") {
-                window.location.reload();
-              }
-            }}
           />
         </div>
       </DashboardNavContext.Provider>
