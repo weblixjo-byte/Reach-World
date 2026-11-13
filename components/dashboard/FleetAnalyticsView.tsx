@@ -516,15 +516,15 @@ export default function FleetAnalyticsView({
           )}
         </div>
 
-        {/* Right Column (1 span): Funnel & Scope Summary - Dark Navy with Crisp White Typography */}
-        <div className="rounded-2xl bg-[#0A192F] text-white border border-slate-800/80 p-6 sm:p-7 shadow-sm flex flex-col justify-between space-y-6">
+        {/* Right Column (1 span): Funnel & Scope Summary */}
+        <div className="rounded-2xl bg-white border border-slate-200/80 p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col justify-between space-y-6">
           <div className="space-y-4">
-            <div className="flex items-center gap-2.5 pb-4 border-b border-white/10">
-              <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white shadow-2xs">
+            <div className="flex items-center gap-2.5 pb-4 border-b border-slate-100">
+              <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-[#0A192F]">
                 <Layers className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-white tracking-tight">
+                <h3 className="text-sm font-bold text-[#0F172A] tracking-tight">
                   Engagement Funnel
                 </h3>
               </div>
@@ -532,42 +532,42 @@ export default function FleetAnalyticsView({
 
             {/* Funnel Steps */}
             <div className="space-y-2.5 pt-1">
-              <div className="p-3.5 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-between">
+              <div className="p-3.5 rounded-xl bg-slate-50/70 border border-slate-200/70 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-sky-400" />
-                  <span className="text-xs text-slate-200 font-medium">1. Physical NFC Tap</span>
+                  <div className="w-2 h-2 rounded-full bg-[#0A192F]" />
+                  <span className="text-xs text-slate-700 font-medium">1. Physical NFC Tap</span>
                 </div>
-                <span className="text-xs font-bold text-white font-mono">
+                <span className="text-xs font-bold text-[#0F172A] font-mono">
                   {stats.totalTaps} (100%)
                 </span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-between">
+              <div className="p-3.5 rounded-xl bg-slate-50/70 border border-slate-200/70 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-sky-300" />
-                  <span className="text-xs text-slate-200 font-medium">2. Profile Impression</span>
+                  <div className="w-2 h-2 rounded-full bg-slate-500" />
+                  <span className="text-xs text-slate-700 font-medium">2. Profile Impression</span>
                 </div>
-                <span className="text-xs font-bold text-white font-mono">
+                <span className="text-xs font-bold text-[#0F172A] font-mono">
                   {stats.totalTaps} ({stats.totalTaps > 0 ? "100%" : "0%"})
                 </span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-between">
+              <div className="p-3.5 rounded-xl bg-slate-50/70 border border-slate-200/70 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                  <span className="text-xs text-slate-200 font-medium">3. Contact Action Click</span>
+                  <div className="w-2 h-2 rounded-full bg-slate-700" />
+                  <span className="text-xs text-slate-700 font-medium">3. Contact Action Click</span>
                 </div>
-                <span className="text-xs font-bold text-white font-mono">
+                <span className="text-xs font-bold text-[#0F172A] font-mono">
                   {stats.totalClicks} ({stats.ctr}%)
                 </span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-between">
+              <div className="p-3.5 rounded-xl bg-slate-50/70 border border-slate-200/70 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-teal-300" />
-                  <span className="text-xs text-slate-200 font-medium">4. Contact Saved (vCard)</span>
+                  <div className="w-2 h-2 rounded-full bg-slate-900" />
+                  <span className="text-xs text-slate-700 font-medium">4. Contact Saved (vCard)</span>
                 </div>
-                <span className="text-xs font-bold text-white font-mono">
+                <span className="text-xs font-bold text-[#0F172A] font-mono">
                   {stats.vcardClicks}
                 </span>
               </div>
