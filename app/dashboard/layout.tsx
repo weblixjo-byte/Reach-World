@@ -95,17 +95,17 @@ function DashboardNavContent({ children }: { children: React.ReactNode }) {
       <div className="relative min-h-screen bg-[#F8F9FA] text-[#0F172A] flex font-sans">
         {/* Executive Corporate Sidebar - Royal Feather Glassmorphism */}
         <aside className="relative z-10 w-64 bg-[#020b18] border-r border-slate-900/10 p-6 flex flex-col justify-between select-none text-white shadow-2xl min-h-screen shrink-0 sticky top-0 h-screen overflow-hidden">
-          {/* Ambient Feather Background */}
-          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-35">
-            <picture>
+          {/* Ambient Feather Background - Clear & Vibrant */}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+            <picture className="w-full h-full">
               <source srcSet="/card-bg.webp" type="image/webp" />
               <img
                 src="/card-bg.jpg"
                 alt=""
-                className="w-full h-full object-cover object-left scale-110"
+                className="w-full h-full object-cover object-left"
               />
             </picture>
-            <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/70 via-[#020b18]/85 to-[#020b18]/95" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/45 via-black/35 to-[#020b18]/70" />
           </div>
 
           <div className="relative z-10 space-y-6">

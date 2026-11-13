@@ -255,119 +255,119 @@ export default function FleetAnalyticsView({
       {/* KPI Highlight Matrix - Approved Royal Feather Background */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Metric 1: Verified Scans */}
-        <div className="relative overflow-hidden rounded-2xl bg-[#020b18] text-white border border-white/15 p-5 shadow-sm group">
-          {/* Ambient Feather Background */}
-          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-45">
-            <picture>
+        <div className="relative overflow-hidden rounded-2xl bg-[#020b18] text-white border border-white/20 p-5 shadow-sm group">
+          {/* Ambient Feather Background - Clear & Rich */}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+            <picture className="w-full h-full">
               <source srcSet="/card-bg.webp" type="image/webp" />
               <img
                 src="/card-bg.jpg"
                 alt=""
-                className="w-full h-full object-cover object-left scale-110 group-hover:scale-115 transition-transform duration-700"
+                className="w-full h-full object-cover object-left group-hover:scale-105 transition-transform duration-700"
               />
             </picture>
-            <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/60 via-[#020b18]/75 to-[#020b18]/90" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-[#020b18]/35 to-[#020b18]/60" />
           </div>
-          <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-sky-400/35 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-sky-400/40 to-transparent pointer-events-none" />
 
           <div className="relative z-10 flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold tracking-wider text-slate-300 uppercase">
+            <span className="text-[11px] font-bold tracking-wider text-slate-200 uppercase drop-shadow-sm">
               VERIFIED NFC SCANS
             </span>
             <Eye className="w-4 h-4 text-white drop-shadow" />
           </div>
           <div className="relative z-10 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-white tracking-tight drop-shadow-sm">
+            <span className="text-3xl font-extrabold text-white tracking-tight drop-shadow-md">
               {stats.totalTaps.toLocaleString()}
             </span>
-            <span className="text-xs text-slate-300 font-medium">Physical Taps</span>
+            <span className="text-xs text-slate-200 font-medium drop-shadow-sm">Physical Taps</span>
           </div>
         </div>
 
         {/* Metric 2: Total Action Clicks */}
-        <div className="relative overflow-hidden rounded-2xl bg-[#020b18] text-white border border-white/15 p-5 shadow-sm group">
-          {/* Ambient Feather Background */}
-          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-45">
-            <picture>
+        <div className="relative overflow-hidden rounded-2xl bg-[#020b18] text-white border border-white/20 p-5 shadow-sm group">
+          {/* Ambient Feather Background - Clear & Rich */}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+            <picture className="w-full h-full">
               <source srcSet="/card-bg.webp" type="image/webp" />
               <img
                 src="/card-bg.jpg"
                 alt=""
-                className="w-full h-full object-cover object-center scale-110 group-hover:scale-115 transition-transform duration-700"
+                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
               />
             </picture>
-            <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/60 via-[#020b18]/75 to-[#020b18]/90" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-[#020b18]/35 to-[#020b18]/60" />
           </div>
-          <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-sky-400/35 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-sky-400/40 to-transparent pointer-events-none" />
 
           <div className="relative z-10 flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold tracking-wider text-slate-300 uppercase">
+            <span className="text-[11px] font-bold tracking-wider text-slate-200 uppercase drop-shadow-sm">
               TOTAL ICON CLICKS
             </span>
             <MousePointerClick className="w-4 h-4 text-white drop-shadow" />
           </div>
           <div className="relative z-10 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-white tracking-tight drop-shadow-sm">
+            <span className="text-3xl font-extrabold text-white tracking-tight drop-shadow-md">
               {stats.totalClicks.toLocaleString()}
             </span>
-            <span className="text-xs text-slate-300 font-medium">Actions Taken</span>
+            <span className="text-xs text-slate-200 font-medium drop-shadow-sm">Actions Taken</span>
           </div>
         </div>
 
         {/* Metric 3: Tap-Through Rate */}
-        <div className="relative overflow-hidden rounded-2xl bg-[#020b18] text-white border border-white/15 p-5 shadow-sm group">
-          {/* Ambient Feather Background */}
-          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-45">
-            <picture>
+        <div className="relative overflow-hidden rounded-2xl bg-[#020b18] text-white border border-white/20 p-5 shadow-sm group">
+          {/* Ambient Feather Background - Clear & Rich */}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+            <picture className="w-full h-full">
               <source srcSet="/card-bg.webp" type="image/webp" />
               <img
                 src="/card-bg.jpg"
                 alt=""
-                className="w-full h-full object-cover object-right scale-110 group-hover:scale-115 transition-transform duration-700"
+                className="w-full h-full object-cover object-right group-hover:scale-105 transition-transform duration-700"
               />
             </picture>
-            <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/60 via-[#020b18]/75 to-[#020b18]/90" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-[#020b18]/35 to-[#020b18]/60" />
           </div>
-          <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-sky-400/35 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-sky-400/40 to-transparent pointer-events-none" />
 
           <div className="relative z-10 flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold tracking-wider text-slate-300 uppercase">
+            <span className="text-[11px] font-bold tracking-wider text-slate-200 uppercase drop-shadow-sm">
               INTERACTION RATE (CTR)
             </span>
             <TrendingUp className="w-4 h-4 text-white drop-shadow" />
           </div>
           <div className="relative z-10 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-white tracking-tight drop-shadow-sm">
+            <span className="text-3xl font-extrabold text-white tracking-tight drop-shadow-md">
               {stats.ctr}%
             </span>
-            <span className="text-xs text-slate-300 font-semibold">Conversion</span>
+            <span className="text-xs text-slate-200 font-semibold drop-shadow-sm">Conversion</span>
           </div>
         </div>
 
         {/* Metric 4: Top Performing Channel */}
-        <div className="relative overflow-hidden rounded-2xl bg-[#020b18] text-white border border-white/15 p-5 shadow-sm group">
-          {/* Ambient Feather Background */}
-          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-45">
-            <picture>
+        <div className="relative overflow-hidden rounded-2xl bg-[#020b18] text-white border border-white/20 p-5 shadow-sm group">
+          {/* Ambient Feather Background - Clear & Rich */}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+            <picture className="w-full h-full">
               <source srcSet="/card-bg.webp" type="image/webp" />
               <img
                 src="/card-bg.jpg"
                 alt=""
-                className="w-full h-full object-cover object-bottom scale-110 group-hover:scale-115 transition-transform duration-700"
+                className="w-full h-full object-cover object-bottom group-hover:scale-105 transition-transform duration-700"
               />
             </picture>
-            <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/60 via-[#020b18]/75 to-[#020b18]/90" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-[#020b18]/35 to-[#020b18]/60" />
           </div>
-          <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-sky-400/35 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-sky-400/40 to-transparent pointer-events-none" />
 
           <div className="relative z-10 flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold tracking-wider text-slate-300 uppercase">
+            <span className="text-[11px] font-bold tracking-wider text-slate-200 uppercase drop-shadow-sm">
               TOP PERFORMING CHANNEL
             </span>
             <Trophy className="w-4 h-4 text-white drop-shadow" />
           </div>
           <div className="relative z-10 flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-white tracking-tight truncate drop-shadow-sm">
+            <span className="text-2xl font-bold text-white tracking-tight truncate drop-shadow-md">
               {stats.topChannel?.name || "None yet"}
             </span>
           </div>
