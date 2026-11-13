@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { X, Lock, ShieldCheck } from "lucide-react";
 import {
   getAdminProfileAction,
   updateAdminCredentialsAction,
@@ -49,7 +50,7 @@ export default function AdminSecurityModal({
     setSuccess(null);
 
     if (!currentPassword) {
-      setError("Please enter your current password to authorize changes.");
+      setError("Current password is required.");
       return;
     }
 
@@ -88,133 +89,145 @@ export default function AdminSecurityModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150 font-sans">
-      <div className="relative w-full max-w-md bg-[#0c182b] border border-slate-800 rounded-xl shadow-xl text-white overflow-hidden">
-        {/* Modal Header - Formal, Zero Icons */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-[#091322]">
-          <div>
-            <h2 className="text-sm font-semibold text-white">
-              Security & Credentials
-            </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Update login credentials and master password
-            </p>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#020b18]/80 backdrop-blur-md animate-in fade-in duration-150 font-sans">
+      <div className="relative w-full max-w-md bg-[#020b18] border border-white/15 rounded-3xl shadow-2xl text-white overflow-hidden backdrop-blur-2xl">
+        {/* Approved Royal Dark Blue Feather Ambient Background */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-35">
+          <picture>
+            <source srcSet="/card-bg.webp" type="image/webp" />
+            <img
+              src="/card-bg.jpg"
+              alt=""
+              className="w-full h-full object-cover object-center scale-110"
+            />
+          </picture>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/80 via-[#020b18]/90 to-[#020b18]/98" />
+        </div>
+
+        {/* Modal Header */}
+        <div className="relative z-10 flex items-center justify-between px-7 py-5 border-b border-white/10">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white">
+              <ShieldCheck className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="text-sm font-bold text-white tracking-tight">
+                Settings & Credentials
+              </h2>
+              <span className="text-[11px] text-slate-400 font-mono">
+                Master Security
+              </span>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white text-lg leading-none p-1 cursor-pointer transition-colors"
+            className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer"
           >
-            ✕
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Modal Form - Formal Corporate Style */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        {/* Modal Form */}
+        <form onSubmit={handleSubmit} className="relative z-10 p-7 space-y-4">
           {error && (
-            <div className="p-3 rounded-lg bg-rose-950/40 border border-rose-900/60 text-rose-300 text-xs">
+            <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-medium">
               {error}
             </div>
           )}
 
           {success && (
-            <div className="p-3 rounded-lg bg-emerald-950/40 border border-emerald-900/60 text-emerald-300 text-xs">
+            <div className="p-3 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-medium">
               {success}
             </div>
           )}
 
           {/* Admin Name */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">
+            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
               Admin Name
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Reach World Admin"
-              className="w-full px-3 py-2 bg-[#07101e] border border-slate-700/80 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-slate-500"
+              className="w-full px-3.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-white/40 transition-colors"
             />
           </div>
 
-          {/* Login Email / Username */}
+          {/* Login Email */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">
-              Login Username / Email
+            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              Admin Email
             </label>
             <input
               type="email"
-              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@reachworld.com"
-              className="w-full px-3 py-2 bg-[#07101e] border border-slate-700/80 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-slate-500"
+              className="w-full px-3.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-white/40 transition-colors font-mono"
             />
           </div>
 
-          <div className="pt-2 border-t border-slate-800/80 space-y-3">
-            <span className="block text-xs font-medium text-slate-300">
-              Update Password (Optional)
-            </span>
+          <div className="h-px bg-white/10 my-2" />
 
-            <div>
-              <label className="block text-[11px] text-slate-400 mb-1">
-                New Password (leave empty to keep current)
-              </label>
-              <input
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="New password (min 5 chars)"
-                className="w-full px-3 py-2 bg-[#07101e] border border-slate-700/80 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-slate-500"
-              />
-            </div>
-
-            {newPassword && (
-              <div>
-                <label className="block text-[11px] text-slate-400 mb-1">
-                  Confirm New Password
-                </label>
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Repeat new password"
-                  className="w-full px-3 py-2 bg-[#07101e] border border-slate-700/80 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-slate-500"
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Current Password Verification */}
-          <div className="pt-2 border-t border-slate-800/80">
-            <label className="block text-xs font-medium text-slate-200 mb-1">
-              Current Password (Required to save changes)
+          {/* Current Password */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              Current Password <span className="text-rose-400">*</span>
             </label>
             <input
               type="password"
               required
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Enter current password (default: Hussein)"
-              className="w-full px-3 py-2 bg-[#07101e] border border-slate-700/80 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-slate-500"
+              placeholder="••••••••"
+              className="w-full px-3.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-white/40 transition-colors font-mono"
             />
           </div>
 
-          {/* Action Buttons */}
-          <div className="pt-3 flex items-center justify-end gap-2 border-t border-slate-800">
+          {/* New Password */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                New Password
+              </label>
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full px-3.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-white/40 transition-colors font-mono"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Confirm
+              </label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full px-3.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-white/40 transition-colors font-mono"
+              />
+            </div>
+          </div>
+
+          {/* Submit */}
+          <div className="pt-4 flex items-center justify-end gap-2 border-t border-white/10">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600/60 disabled:opacity-50 text-xs font-medium text-white transition-all cursor-pointer"
+              className="px-5 py-2 rounded-xl text-xs font-bold text-[#020b18] bg-white hover:bg-slate-100 transition-all shadow-sm cursor-pointer disabled:opacity-50"
             >
-              {isLoading ? "Saving..." : "Save Changes"}
+              {isLoading ? "Saving..." : "Save Credentials"}
             </button>
           </div>
         </form>

@@ -207,7 +207,7 @@ export default function CardsTable({
                         </div>
                         <div className="text-[11px] text-slate-500 truncate mt-0.5 font-medium">
                           {isDefaultName ? (
-                            <span className="text-slate-400 font-normal">Unassigned Slot • Click to edit</span>
+                            <span className="text-slate-400 font-normal">Unassigned Slot</span>
                           ) : (
                             <span>
                               {card.jobTitle || "Executive"} {card.department ? `• ${card.department}` : ""}

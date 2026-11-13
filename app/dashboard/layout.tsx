@@ -5,11 +5,9 @@ import DesktopOnlyGuard from "@/components/dashboard/DesktopOnlyGuard";
 import AdminSecurityModal from "@/components/dashboard/AdminSecurityModal";
 import { logoutAction } from "@/actions/auth-actions";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { Settings } from "lucide-react";
 
-export type DashboardViewType =
-  | "cards"
-  | "departments"
-  | "analytics";
+export type DashboardViewType = "cards" | "analytics";
 
 interface DashboardNavContextType {
   currentView: DashboardViewType;
@@ -36,10 +34,9 @@ function DashboardNavContent({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  // URL-driven navigation state (preserves view on reload & supports browser Back/Forward)
+  // URL-driven navigation state
   const viewParam = searchParams.get("view");
-  const currentView: DashboardViewType =
-    viewParam === "analytics" || viewParam === "departments" ? viewParam : "cards";
+  const currentView: DashboardViewType = viewParam === "analytics" ? "analytics" : "cards";
   const analyticsCardId = searchParams.get("card") || null;
 
   const [securityModalOpen, setSecurityModalOpen] = useState(false);
@@ -51,9 +48,6 @@ function DashboardNavContent({ children }: { children: React.ReactNode }) {
       params.delete("card");
     } else {
       params.set("view", view);
-      if (view !== "analytics") {
-        params.delete("card");
-      }
     }
     const qs = params.toString();
     router.push(qs ? `${pathname}?${qs}` : pathname);
@@ -115,7 +109,7 @@ function DashboardNavContent({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="relative z-10 space-y-6">
-            {/* Brand Logo & Console Tag */}
+            {/* Brand Logo & Tag */}
             <div className="space-y-3 pb-3 border-b border-white/10">
               <div className="flex items-center">
                 <img
@@ -126,13 +120,13 @@ function DashboardNavContent({ children }: { children: React.ReactNode }) {
               </div>
               <div className="flex items-center justify-between text-[11px] text-slate-300 font-medium">
                 <span>Fleet Console</span>
-                <span className="text-[10px] text-slate-300 font-semibold bg-white/10 px-2 py-0.5 rounded-full border border-white/15 backdrop-blur-sm">
-                  50 NFC Cards
+                <span className="text-[10px] text-slate-300 font-semibold bg-white/10 px-2 py-0.5 rounded-full border border-white/15">
+                  50 Cards
                 </span>
               </div>
             </div>
 
-            {/* Navigation Items - Glassmorphic Badges */}
+            {/* Navigation Items (Only Registry and Analytics) */}
             <nav className="space-y-1.5">
               <button
                 onClick={() => setCurrentView("cards")}
@@ -146,17 +140,6 @@ function DashboardNavContent({ children }: { children: React.ReactNode }) {
               </button>
 
               <button
-                onClick={() => setCurrentView("departments")}
-                className={`relative overflow-hidden w-full text-left px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer ${
-                  currentView === "departments"
-                    ? "bg-white/[0.12] text-white font-semibold border border-white/[0.18] shadow-sm before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-white before:rounded-r"
-                    : "text-slate-300/80 hover:text-white hover:bg-white/[0.06] border border-transparent font-medium"
-                }`}
-              >
-                Departments
-              </button>
-
-              <button
                 onClick={() => openAnalytics()}
                 className={`relative overflow-hidden w-full text-left px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer ${
                   currentView === "analytics"
@@ -164,47 +147,43 @@ function DashboardNavContent({ children }: { children: React.ReactNode }) {
                     : "text-slate-300/80 hover:text-white hover:bg-white/[0.06] border border-transparent font-medium"
                 }`}
               >
-                Clicks & Analytics
+                Analytics
               </button>
-
-              <div className="pt-4 pb-1">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3.5 mb-2">
-                  Security & Admin
-                </div>
-                <button
-                  onClick={() => setSecurityModalOpen(true)}
-                  className="w-full text-left px-3.5 py-2.5 rounded-xl text-xs text-slate-300/80 hover:text-white hover:bg-white/[0.06] border border-transparent font-medium transition-all cursor-pointer"
-                >
-                  Security & Account
-                </button>
-              </div>
             </nav>
           </div>
 
-          {/* Bottom Section - Glassmorphic Actions */}
-          <div className="relative z-10 space-y-2 pt-4 border-t border-white/10">
+          {/* Bottom Section - Settings, Site & Sign Out */}
+          <div className="relative z-10 space-y-1.5 pt-4 border-t border-white/10">
+            <button
+              onClick={() => setSecurityModalOpen(true)}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-slate-300 hover:text-white hover:bg-white/[0.08] transition-all cursor-pointer font-medium"
+            >
+              <Settings className="w-4 h-4 text-slate-400" />
+              <span>Settings</span>
+            </button>
+
             <a
               href="https://reachworld.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full block px-3.5 py-2 rounded-xl text-[11px] text-slate-300/75 hover:text-white hover:bg-white/[0.06] border border-transparent transition-all font-medium"
+              className="w-full block px-3 py-1.5 rounded-xl text-[11px] text-slate-400 hover:text-white hover:bg-white/[0.06] transition-all font-medium"
             >
               reachworld.com
             </a>
 
             <button
               onClick={handleLogout}
-              className="w-full text-left px-3.5 py-2 rounded-xl text-[11px] text-slate-300/75 hover:text-rose-300 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all cursor-pointer font-medium"
+              className="w-full text-left px-3 py-1.5 rounded-xl text-[11px] text-slate-400 hover:text-rose-300 hover:bg-rose-500/10 transition-all cursor-pointer font-medium"
             >
               Sign Out
             </button>
 
-            <div className="flex items-center justify-between text-[11px] p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md">
+            <div className="flex items-center justify-between text-[11px] p-2 rounded-xl bg-white/[0.04] border border-white/[0.08]">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-slate-300" />
-                <span className="font-semibold text-slate-200">Fleet Active</span>
+                <span className="w-2 h-2 rounded-full bg-slate-400" />
+                <span className="font-semibold text-slate-200">Active</span>
               </div>
-              <span className="text-[10px] text-slate-400 font-mono">Slots 01-50</span>
+              <span className="text-[10px] text-slate-400 font-mono">50 Slots</span>
             </div>
           </div>
         </aside>

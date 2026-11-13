@@ -7,10 +7,7 @@ import {
   Trash2,
   ExternalLink,
   Globe,
-  Link as LinkIcon,
   UserCheck,
-  Check,
-  Sparkles,
 } from "lucide-react";
 import { CardFormData } from "@/actions/card-actions";
 import { CardModeType } from "@/models/Card";
@@ -41,45 +38,28 @@ export default function CardEditorModal({
 }: CardEditorModalProps) {
   const isEditing = Boolean(initialData?._id);
   const cardNumber = initialData?.cardNumber || (initialData?.slug ? parseInt(initialData.slug, 10) : 1);
-  const cardSlug = initialData?.slug || String(cardNumber);
   const paddedSlot = cardNumber < 10 ? `0${cardNumber}` : `${cardNumber}`;
 
-  // Routing Mode: profile vs redirect
+  // Mode: profile vs redirect
   const [mode, setMode] = useState<CardModeType>(initialData?.mode || "profile");
   const [redirectUrl, setRedirectUrl] = useState(initialData?.redirectUrl || "");
-  const [slugVal, setSlugVal] = useState(initialData?.slug || String(cardNumber));
 
-  // Identity state
-  const [name, setName] = useState(initialData?.name || `Card #${paddedSlot}`);
-  const [jobTitle, setJobTitle] = useState(initialData?.jobTitle || "");
-  const [department, setDepartment] = useState(initialData?.department || "Reach World");
-
-  // Slug generator helpers
-  const generateRandomSlug = () => {
+  // Automatic secure slug
+  const [slugVal, setSlugVal] = useState(() => {
+    const raw = initialData?.slug;
+    if (raw && !/^\d+$/.test(raw)) return raw;
     const chars = "abcdefghjkmnpqrstuvwxyz23456789";
     let token = "";
     for (let i = 0; i < 4; i++) {
       token += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-    setSlugVal(`rw-${paddedSlot}-${token}`);
-  };
+    return `rw-${paddedSlot}-${token}`;
+  });
 
-  const generateNameSlug = () => {
-    if (!name || name.startsWith("Card #")) {
-      generateRandomSlug();
-      return;
-    }
-    const clean = name
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, ".");
-    setSlugVal(clean || `rw-${paddedSlot}`);
-  };
-
-  const resetSlugToSlot = () => {
-    setSlugVal(String(cardNumber));
-  };
+  // Identity state
+  const [name, setName] = useState(initialData?.name || `Card #${paddedSlot}`);
+  const [jobTitle, setJobTitle] = useState(initialData?.jobTitle || "");
+  const [department, setDepartment] = useState(initialData?.department || "Reach World");
 
   // Fixed Channels values
   const getInitialVal = (icon: string) => {
@@ -131,12 +111,13 @@ export default function CardEditorModal({
   const [facebookVal, setFacebookVal] = useState(() => getInitialVal("facebook") || "");
   const [twitterVal, setTwitterVal] = useState(() => getInitialVal("twitter") || "");
 
-  // Custom links
+  // Dynamic custom links
   const [customLinks, setCustomLinks] = useState<CustomLinkItem[]>(() => {
+    const fixedIcons = ["phone", "whatsapp", "email", "website", "maps", "linkedin", "instagram", "facebook", "twitter"];
     return (initialData?.links || [])
-      .filter((l) => l.icon === "custom")
-      .map((l, i) => ({
-        id: `custom-${i}`,
+      .filter((l: any) => !fixedIcons.includes(l.icon))
+      .map((l: any, i: number) => ({
+        id: l._id || `c-${i}`,
         title: l.title || "",
         url: l.url || "",
         subtitle: l.subtitle || "",
@@ -151,7 +132,19 @@ export default function CardEditorModal({
     if (initialData) {
       setMode(initialData.mode || (initialData.redirectUrl ? "redirect" : "profile"));
       setRedirectUrl(initialData.redirectUrl || "");
-      setSlugVal(initialData.slug || String(initialData.cardNumber || 1));
+
+      const raw = initialData.slug;
+      if (raw && !/^\d+$/.test(raw)) {
+        setSlugVal(raw);
+      } else {
+        const chars = "abcdefghjkmnpqrstuvwxyz23456789";
+        let token = "";
+        for (let i = 0; i < 4; i++) {
+          token += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        setSlugVal(`rw-${paddedSlot}-${token}`);
+      }
+
       setName(initialData.name || `Card #${paddedSlot}`);
       setJobTitle(initialData.jobTitle || "");
       setDepartment(initialData.department || "Reach World");
@@ -197,8 +190,9 @@ export default function CardEditorModal({
 
     // 1. Phone
     const cleanPhone = curPhone.replace(/\D/g, "");
-    const formattedPhone = cleanPhone ? `+962${cleanPhone}` : "";
+    let formattedPhone = "";
     if (cleanPhone) {
+      formattedPhone = `+962${cleanPhone}`;
       links.push({
         title: "Call Direct",
         subtitle: formattedPhone,
@@ -331,7 +325,7 @@ export default function CardEditorModal({
     return {
       name: currentName.trim() || `Card #${paddedSlot}`,
       cardNumber,
-      slug: slugVal.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "") || String(cardNumber),
+      slug: slugVal,
       jobTitle: currentJob.trim(),
       department: currentDept.trim(),
       phone: formattedPhone,
@@ -356,11 +350,6 @@ export default function CardEditorModal({
   const handleRedirectUrlChange = (val: string) => {
     setRedirectUrl(val);
     triggerLive(assembleData(mode, val));
-  };
-
-  const handleApplyPreset = (url: string) => {
-    setRedirectUrl(url);
-    triggerLive(assembleData(mode, url));
   };
 
   const handleAddCustomLink = () => {
@@ -410,28 +399,26 @@ export default function CardEditorModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#061528]/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl w-full max-w-2xl max-h-[92vh] shadow-[0_25px_70px_rgba(0,0,0,0.35)] border border-black/10 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        {/* Apple Style Sleek Header */}
-        <div className="flex items-center justify-between px-7 py-5 border-b border-black/[0.06] bg-white">
+    <div className="fixed inset-0 z-50 bg-[#020b18]/80 backdrop-blur-md flex items-center justify-center p-4 font-sans">
+      <div className="bg-white rounded-3xl w-full max-w-2xl max-h-[92vh] shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        {/* Header */}
+        <div className="flex items-center justify-between px-7 py-5 border-b border-slate-100 bg-white">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#0a192f] text-white flex flex-col items-center justify-center font-mono font-bold shadow-xs">
-              <span className="text-[9px] text-amber-400">#</span>
+            <div className="w-10 h-10 rounded-2xl bg-[#0A192F] text-white flex flex-col items-center justify-center font-mono font-bold shadow-xs">
               <span className="text-xs leading-none">{paddedSlot}</span>
             </div>
             <div>
               <h2 className="text-base font-extrabold text-[#0F172A] tracking-tight">
-                Configure Card #{paddedSlot}
+                Card #{paddedSlot}
               </h2>
-              <p className="text-xs text-[#64748B] mt-0.5 font-medium flex items-center gap-2">
-                <span>Hardware URL:</span>
-                <span className="font-mono text-[#0071E3] font-bold">reachworld.com/{slugVal}</span>
+              <p className="text-xs text-slate-500 font-mono mt-0.5">
+                reachworld.com/{slugVal}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full hover:bg-black/5 flex items-center justify-center text-[#64748B] hover:text-[#0F172A] transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -440,84 +427,24 @@ export default function CardEditorModal({
         {/* Modal Scrollable Form */}
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-7 py-6 space-y-6 bg-white">
           {errorMsg && (
-            <div className="p-3.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-600 font-medium">
+            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 font-medium">
               {errorMsg}
             </div>
           )}
 
-          {/* SECURE CARD URL & ANTI-ENUMERATION */}
-          <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <label className="block text-xs font-bold text-[#0F172A]">
-                  Card URL Handle (رابط البطاقة وحماية الخصوصية)
-                </label>
-                <p className="text-[11px] text-[#64748B] mt-0.5">
-                  تخصيص الرابط بالاسم أو بكود آمن يمنع الغرباء من تصفح باقي بطاقات الموظفين بالتخمين (/1, /2, /3).
-                </p>
-              </div>
-              <span className="text-[10px] font-mono text-[#0F172A] bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200 font-semibold">
-                Privacy Protected
-              </span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-              <div className="flex-1 flex items-center rounded-xl border border-black/15 bg-white overflow-hidden focus-within:ring-2 focus-within:ring-slate-900/10 focus-within:border-slate-900">
-                <span className="px-3 py-2 text-xs text-[#64748B] font-mono bg-slate-50 border-r border-slate-200 select-none">
-                  reachworld.com/
-                </span>
-                <input
-                  type="text"
-                  value={slugVal}
-                  onChange={(e) => setSlugVal(e.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, ""))}
-                  placeholder={String(cardNumber)}
-                  className="flex-1 px-3 py-2 text-xs text-[#0F172A] font-mono font-bold focus:outline-none bg-white"
-                />
-              </div>
-
-              {/* Quick actions */}
-              <div className="flex items-center gap-1.5 shrink-0">
-                <button
-                  type="button"
-                  onClick={generateNameSlug}
-                  className="px-2.5 py-2 rounded-xl bg-white border border-slate-200 hover:border-slate-400 text-xs font-semibold text-[#0F172A] transition-colors cursor-pointer shadow-2xs"
-                  title="Generate URL handle from employee name (e.g. mohammad.alseidi)"
-                >
-                  ⚡ By Name
-                </button>
-                <button
-                  type="button"
-                  onClick={generateRandomSlug}
-                  className="px-2.5 py-2 rounded-xl bg-slate-100 border border-slate-200 hover:bg-slate-200 text-xs font-semibold text-[#0F172A] transition-colors cursor-pointer shadow-2xs"
-                  title="Generate unguessable code (e.g. rw-01-k8f2)"
-                >
-                  🔒 Secure Code
-                </button>
-                <button
-                  type="button"
-                  onClick={resetSlugToSlot}
-                  className="px-2 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-xs text-slate-500 transition-colors cursor-pointer shadow-2xs"
-                  title="Reset to default slot number"
-                >
-                  Slot #{paddedSlot}
-                </button>
-              </div>
-            </div>
-          </div>
-
           {/* DESTINATION ROUTING MODE SWITCHER */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <label className="block text-xs font-bold uppercase tracking-wider text-[#0F172A]">
-              Card Destination Mode
+              Destination Mode
             </label>
-            <div className="grid grid-cols-2 gap-3 p-1.5 bg-[#F5F5F7] rounded-2xl border border-black/[0.05]">
+            <div className="grid grid-cols-2 gap-3 p-1.5 bg-slate-100 rounded-2xl border border-slate-200/80">
               <button
                 type="button"
                 onClick={() => handleModeChange("profile")}
                 className={`py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                   mode === "profile"
-                    ? "bg-white text-[#0F172A] shadow-md border border-black/[0.06]"
-                    : "text-[#64748B] hover:text-[#0F172A]"
+                    ? "bg-white text-[#0F172A] shadow-sm border border-slate-200"
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 <UserCheck className="w-4 h-4 text-[#0A192F]" />
@@ -529,102 +456,49 @@ export default function CardEditorModal({
                 onClick={() => handleModeChange("redirect")}
                 className={`py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                   mode === "redirect"
-                    ? "bg-[#0071E3] text-white shadow-md"
-                    : "text-[#64748B] hover:text-[#0F172A]"
+                    ? "bg-[#0A192F] text-white shadow-sm"
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 <Globe className="w-4 h-4" />
                 <span>Custom Web Link</span>
               </button>
             </div>
-            <p className="text-[11px] text-[#64748B] px-1 font-medium">
-              {mode === "redirect"
-                ? `When someone taps physical Card #${paddedSlot}, it will immediately open your assigned web link.`
-                : `Displays the complete Reach World digital employee business card.`}
-            </p>
           </div>
 
           {/* IF CUSTOM WEB LINK MODE */}
           {mode === "redirect" ? (
-            <div className="space-y-5 p-5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0]">
+            <div className="space-y-4 p-5 rounded-2xl bg-slate-50 border border-slate-200">
               <div>
                 <label className="block text-xs font-bold text-[#0F172A] mb-1.5 flex items-center justify-between">
-                  <span>Assigned Web Link <span className="text-red-500">*</span></span>
+                  <span>Destination URL</span>
                   {redirectUrl && (
                     <a
                       href={normalizeRedirectUrl(redirectUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#0071E3] hover:underline font-semibold flex items-center gap-1 text-[11px]"
+                      className="text-[#0A192F] hover:underline font-semibold flex items-center gap-1 text-[11px]"
                     >
-                      <ExternalLink className="w-3 h-3" /> Test Link Live
+                      <ExternalLink className="w-3 h-3" /> Test Link
                     </a>
                   )}
                 </label>
                 <div className="relative">
-                  <Globe className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
+                  <Globe className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                   <input
                     type="text"
                     required
-                    placeholder="https://instagram.com/mybrand or https://example.com"
+                    placeholder="https://example.com"
                     value={redirectUrl}
                     onChange={(e) => handleRedirectUrlChange(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 text-xs text-[#0F172A] font-semibold rounded-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-white font-mono"
+                    className="w-full pl-10 pr-4 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-slate-800 transition-all bg-white font-mono"
                   />
                 </div>
-                <p className="text-[11px] text-[#64748B] mt-1.5">
-                  Protocols like <span className="font-mono">https://</span> are auto-formatted. Works instantly on all phones.
-                </p>
               </div>
 
-              {/* Quick Presets */}
-              <div className="space-y-2">
-                <span className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider">
-                  Quick Destination Presets:
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleApplyPreset("https://instagram.com/")}
-                    className="px-2.5 py-1.5 rounded-lg bg-white border border-black/10 text-xs font-medium text-[#1D1D1F] hover:border-[#0071E3] transition-colors cursor-pointer"
-                  >
-                    Instagram
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleApplyPreset("https://wa.me/962")}
-                    className="px-2.5 py-1.5 rounded-lg bg-white border border-black/10 text-xs font-medium text-[#1D1D1F] hover:border-[#0071E3] transition-colors cursor-pointer"
-                  >
-                    WhatsApp (+962)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleApplyPreset("https://reachworld.com")}
-                    className="px-2.5 py-1.5 rounded-lg bg-white border border-black/10 text-xs font-medium text-[#1D1D1F] hover:border-[#0071E3] transition-colors cursor-pointer"
-                  >
-                    Reach World Website
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleApplyPreset("https://linkedin.com/in/")}
-                    className="px-2.5 py-1.5 rounded-lg bg-white border border-black/10 text-xs font-medium text-[#1D1D1F] hover:border-[#0071E3] transition-colors cursor-pointer"
-                  >
-                    LinkedIn
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleApplyPreset("https://maps.google.com")}
-                    className="px-2.5 py-1.5 rounded-lg bg-white border border-black/10 text-xs font-medium text-[#1D1D1F] hover:border-[#0071E3] transition-colors cursor-pointer"
-                  >
-                    Google Maps / Reviews
-                  </button>
-                </div>
-              </div>
-
-              {/* Label identifier */}
               <div>
-                <label className="block text-xs font-medium text-[#475569] mb-1.5">
-                  Card Reference Label / Assignee
+                <label className="block text-xs font-medium text-slate-600 mb-1.5">
+                  Reference Label / Assignee
                 </label>
                 <input
                   type="text"
@@ -633,7 +507,7 @@ export default function CardEditorModal({
                     setName(e.target.value);
                     triggerLive(assembleData(mode, redirectUrl, e.target.value));
                   }}
-                  className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-white"
+                  className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-slate-800 transition-all bg-white"
                 />
               </div>
             </div>
@@ -641,15 +515,15 @@ export default function CardEditorModal({
             /* IF DIGITAL BIO CARD PROFILE MODE */
             <>
               {/* Section: Employee Information */}
-              <div className="space-y-4">
+              <div className="space-y-3.5">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-[#0F172A]">
                   Employee Details
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-medium text-[#475569] mb-1.5">
-                      Full Name <span className="text-red-500">*</span>
+                    <label className="block text-xs font-medium text-slate-600 mb-1.5">
+                      Full Name
                     </label>
                     <input
                       type="text"
@@ -659,21 +533,12 @@ export default function CardEditorModal({
                         setName(e.target.value);
                         triggerLive(assembleData(mode, redirectUrl, e.target.value));
                       }}
-                      className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
+                      className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-slate-800 transition-all bg-slate-50"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-[#475569] mb-1.5">
-                      Physical NFC Path (Slot)
-                    </label>
-                    <div className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-bold font-mono rounded-xl border border-black/10 bg-[#F1F5F9] text-[#64748B]">
-                      reachworld.com/{cardSlug} (Fixed Slot #{paddedSlot})
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium text-[#475569] mb-1.5">
+                    <label className="block text-xs font-medium text-slate-600 mb-1.5">
                       Job Title
                     </label>
                     <input
@@ -683,12 +548,12 @@ export default function CardEditorModal({
                         setJobTitle(e.target.value);
                         triggerLive(assembleData(mode, redirectUrl, name, e.target.value));
                       }}
-                      className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
+                      className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-slate-800 transition-all bg-slate-50"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-medium text-[#475569] mb-1.5">
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-medium text-slate-600 mb-1.5">
                       Department
                     </label>
                     <input
@@ -698,31 +563,31 @@ export default function CardEditorModal({
                         setDepartment(e.target.value);
                         triggerLive(assembleData(mode, redirectUrl, name, jobTitle, e.target.value));
                       }}
-                      className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
+                      className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-slate-800 transition-all bg-slate-50"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="h-px bg-black/[0.08]" />
+              <div className="h-px bg-slate-100" />
 
               {/* Section: Channels */}
-              <div className="space-y-3">
+              <div className="space-y-3.5">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-[#0F172A]">
-                  Communication Channels
+                  Channels
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Phone */}
                   <div>
-                    <label className="block text-xs font-medium text-[#475569] mb-1.5 flex items-center gap-1.5">
-                      <div className="w-4 h-4 rounded bg-[#0a192f] p-0.5 flex items-center justify-center">
-                        <SocialIcon type="phone" className="w-full h-full" />
+                    <label className="block text-xs font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
+                      <div className="w-4 h-4 rounded bg-[#0A192F] p-0.5 flex items-center justify-center">
+                        <SocialIcon type="phone" className="w-full h-full text-white" />
                       </div>
                       Phone Number
                     </label>
                     <div className="flex items-center">
-                      <span className="text-xs text-[#1D1D1F] font-bold bg-[#E2E8F0] px-3 py-2.5 border border-r-0 border-black/15 rounded-l-xl font-mono">
+                      <span className="text-xs text-slate-700 font-bold bg-slate-100 px-3 py-2.5 border border-r-0 border-slate-200 rounded-l-xl font-mono">
                         +962
                       </span>
                       <input
@@ -734,21 +599,21 @@ export default function CardEditorModal({
                           setPhoneDigits(v);
                           triggerLive(assembleData(mode, redirectUrl, name, jobTitle, department, v));
                         }}
-                        className="w-full px-3 py-2.5 text-xs text-[#0F172A] font-semibold rounded-r-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
+                        className="w-full px-3 py-2.5 text-xs text-[#0F172A] font-semibold rounded-r-xl border border-slate-200 focus:outline-none focus:border-slate-800 transition-all bg-slate-50"
                       />
                     </div>
                   </div>
 
                   {/* WhatsApp */}
                   <div>
-                    <label className="block text-xs font-medium text-[#475569] mb-1.5 flex items-center gap-1.5">
-                      <div className="w-4 h-4 rounded bg-[#0a192f] p-0.5 flex items-center justify-center">
-                        <SocialIcon type="whatsapp" className="w-full h-full" />
+                    <label className="block text-xs font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
+                      <div className="w-4 h-4 rounded bg-[#0A192F] p-0.5 flex items-center justify-center">
+                        <SocialIcon type="whatsapp" className="w-full h-full text-white" />
                       </div>
                       WhatsApp
                     </label>
                     <div className="flex items-center">
-                      <span className="text-xs text-[#1D1D1F] font-bold bg-[#E2E8F0] px-3 py-2.5 border border-r-0 border-black/15 rounded-l-xl font-mono">
+                      <span className="text-xs text-slate-700 font-bold bg-slate-100 px-3 py-2.5 border border-r-0 border-slate-200 rounded-l-xl font-mono">
                         +962
                       </span>
                       <input
@@ -760,16 +625,16 @@ export default function CardEditorModal({
                           setWaDigits(v);
                           triggerLive(assembleData(mode, redirectUrl, name, jobTitle, department, phoneDigits, v));
                         }}
-                        className="w-full px-3 py-2.5 text-xs text-[#0F172A] font-semibold rounded-r-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
+                        className="w-full px-3 py-2.5 text-xs text-[#0F172A] font-semibold rounded-r-xl border border-slate-200 focus:outline-none focus:border-slate-800 transition-all bg-slate-50"
                       />
                     </div>
                   </div>
 
                   {/* Email */}
                   <div>
-                    <label className="block text-xs font-medium text-[#475569] mb-1.5 flex items-center gap-1.5">
-                      <div className="w-4 h-4 rounded bg-[#0a192f] p-0.5 flex items-center justify-center">
-                        <SocialIcon type="email" className="w-full h-full" />
+                    <label className="block text-xs font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
+                      <div className="w-4 h-4 rounded bg-[#0A192F] p-0.5 flex items-center justify-center">
+                        <SocialIcon type="email" className="w-full h-full text-white" />
                       </div>
                       Email Address
                     </label>
@@ -780,17 +645,17 @@ export default function CardEditorModal({
                         setEmailVal(e.target.value);
                         triggerLive(assembleData(mode, redirectUrl, name, jobTitle, department, phoneDigits, waDigits, e.target.value));
                       }}
-                      className="w-full px-3 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
+                      className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-slate-800 transition-all bg-slate-50"
                     />
                   </div>
 
                   {/* Website */}
                   <div>
-                    <label className="block text-xs font-medium text-[#475569] mb-1.5 flex items-center gap-1.5">
-                      <div className="w-4 h-4 rounded bg-[#0a192f] p-0.5 flex items-center justify-center">
-                        <SocialIcon type="website" className="w-full h-full" />
+                    <label className="block text-xs font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
+                      <div className="w-4 h-4 rounded bg-[#0A192F] p-0.5 flex items-center justify-center">
+                        <SocialIcon type="website" className="w-full h-full text-white" />
                       </div>
-                      Website
+                      Website URL
                     </label>
                     <input
                       type="text"
@@ -799,17 +664,17 @@ export default function CardEditorModal({
                         setWebsiteVal(e.target.value);
                         triggerLive(assembleData(mode, redirectUrl, name, jobTitle, department, phoneDigits, waDigits, emailVal, e.target.value));
                       }}
-                      className="w-full px-3 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
+                      className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-slate-800 transition-all bg-slate-50 font-mono"
                     />
                   </div>
 
                   {/* Google Maps */}
                   <div>
-                    <label className="block text-xs font-medium text-[#475569] mb-1.5 flex items-center gap-1.5">
-                      <div className="w-4 h-4 rounded bg-[#0a192f] p-0.5 flex items-center justify-center">
-                        <SocialIcon type="maps" className="w-full h-full" />
+                    <label className="block text-xs font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
+                      <div className="w-4 h-4 rounded bg-[#0A192F] p-0.5 flex items-center justify-center">
+                        <SocialIcon type="maps" className="w-full h-full text-white" />
                       </div>
-                      Google Maps Link
+                      Location / Maps URL
                     </label>
                     <input
                       type="text"
@@ -818,15 +683,15 @@ export default function CardEditorModal({
                         setMapsVal(e.target.value);
                         triggerLive(assembleData(mode, redirectUrl, name, jobTitle, department, phoneDigits, waDigits, emailVal, websiteVal, e.target.value));
                       }}
-                      className="w-full px-3 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
+                      className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-slate-800 transition-all bg-slate-50 font-mono"
                     />
                   </div>
 
                   {/* LinkedIn */}
                   <div>
-                    <label className="block text-xs font-medium text-[#475569] mb-1.5 flex items-center gap-1.5">
-                      <div className="w-4 h-4 rounded bg-[#0a192f] p-0.5 flex items-center justify-center">
-                        <SocialIcon type="linkedin" className="w-full h-full" />
+                    <label className="block text-xs font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
+                      <div className="w-4 h-4 rounded bg-[#0A192F] p-0.5 flex items-center justify-center">
+                        <SocialIcon type="linkedin" className="w-full h-full text-white" />
                       </div>
                       LinkedIn Profile
                     </label>
@@ -837,20 +702,20 @@ export default function CardEditorModal({
                         setLinkedinVal(e.target.value);
                         triggerLive(assembleData(mode, redirectUrl, name, jobTitle, department, phoneDigits, waDigits, emailVal, websiteVal, mapsVal, e.target.value));
                       }}
-                      className="w-full px-3 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
+                      className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-slate-800 transition-all bg-slate-50 font-mono"
                     />
                   </div>
 
                   {/* Instagram */}
                   <div>
-                    <label className="block text-xs font-medium text-[#475569] mb-1.5 flex items-center gap-1.5">
-                      <div className="w-4 h-4 rounded bg-[#0a192f] p-0.5 flex items-center justify-center">
-                        <SocialIcon type="instagram" className="w-full h-full" />
+                    <label className="block text-xs font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
+                      <div className="w-4 h-4 rounded bg-[#0A192F] p-0.5 flex items-center justify-center">
+                        <SocialIcon type="instagram" className="w-full h-full text-white" />
                       </div>
-                      Instagram Username
+                      Instagram Handle
                     </label>
                     <div className="flex items-center">
-                      <span className="text-xs text-[#1D1D1F] font-bold bg-[#E2E8F0] px-3 py-2.5 border border-r-0 border-black/15 rounded-l-xl font-mono">
+                      <span className="text-xs text-slate-600 bg-slate-100 px-3 py-2.5 border border-r-0 border-slate-200 rounded-l-xl font-mono">
                         @
                       </span>
                       <input
@@ -861,18 +726,18 @@ export default function CardEditorModal({
                           setInstagramVal(v);
                           triggerLive(assembleData(mode, redirectUrl, name, jobTitle, department, phoneDigits, waDigits, emailVal, websiteVal, mapsVal, linkedinVal, v));
                         }}
-                        className="w-full px-3 py-2.5 text-xs text-[#0F172A] font-semibold rounded-r-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
+                        className="w-full px-3 py-2.5 text-xs text-[#0F172A] font-semibold rounded-r-xl border border-slate-200 focus:outline-none focus:border-slate-800 transition-all bg-slate-50"
                       />
                     </div>
                   </div>
 
                   {/* Facebook */}
                   <div>
-                    <label className="block text-xs font-medium text-[#475569] mb-1.5 flex items-center gap-1.5">
-                      <div className="w-4 h-4 rounded bg-[#0a192f] p-0.5 flex items-center justify-center">
-                        <SocialIcon type="facebook" className="w-full h-full" />
+                    <label className="block text-xs font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
+                      <div className="w-4 h-4 rounded bg-[#0A192F] p-0.5 flex items-center justify-center">
+                        <SocialIcon type="facebook" className="w-full h-full text-white" />
                       </div>
-                      Facebook Username / Page
+                      Facebook Profile
                     </label>
                     <input
                       type="text"
@@ -881,20 +746,20 @@ export default function CardEditorModal({
                         setFacebookVal(e.target.value);
                         triggerLive(assembleData(mode, redirectUrl, name, jobTitle, department, phoneDigits, waDigits, emailVal, websiteVal, mapsVal, linkedinVal, instagramVal, e.target.value));
                       }}
-                      className="w-full px-3 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
+                      className="w-full px-3.5 py-2.5 text-xs text-[#0F172A] font-semibold rounded-xl border border-slate-200 focus:outline-none focus:border-slate-800 transition-all bg-slate-50"
                     />
                   </div>
 
-                  {/* X (Twitter) */}
-                  <div>
-                    <label className="block text-xs font-medium text-[#475569] mb-1.5 flex items-center gap-1.5">
-                      <div className="w-4 h-4 rounded bg-[#0a192f] p-0.5 flex items-center justify-center">
-                        <SocialIcon type="twitter" className="w-full h-full" />
+                  {/* Twitter / X */}
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
+                      <div className="w-4 h-4 rounded bg-[#0A192F] p-0.5 flex items-center justify-center">
+                        <SocialIcon type="twitter" className="w-full h-full text-white" />
                       </div>
-                      X Username
+                      X / Twitter
                     </label>
                     <div className="flex items-center">
-                      <span className="text-xs text-[#1D1D1F] font-bold bg-[#E2E8F0] px-3 py-2.5 border border-r-0 border-black/15 rounded-l-xl font-mono">
+                      <span className="text-xs text-slate-600 bg-slate-100 px-3 py-2.5 border border-r-0 border-slate-200 rounded-l-xl font-mono">
                         @
                       </span>
                       <input
@@ -905,7 +770,7 @@ export default function CardEditorModal({
                           setTwitterVal(v);
                           triggerLive(assembleData(mode, redirectUrl, name, jobTitle, department, phoneDigits, waDigits, emailVal, websiteVal, mapsVal, linkedinVal, instagramVal, facebookVal, v));
                         }}
-                        className="w-full px-3 py-2.5 text-xs text-[#0F172A] font-semibold rounded-r-xl border border-black/15 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition-all bg-[#F8FAFC]"
+                        className="w-full px-3 py-2.5 text-xs text-[#0F172A] font-semibold rounded-r-xl border border-slate-200 focus:outline-none focus:border-slate-800 transition-all bg-slate-50"
                       />
                     </div>
                   </div>
@@ -921,9 +786,9 @@ export default function CardEditorModal({
                   <button
                     type="button"
                     onClick={handleAddCustomLink}
-                    className="text-xs text-[#0071E3] font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                    className="text-xs text-[#0A192F] font-bold hover:underline flex items-center gap-1 cursor-pointer"
                   >
-                    <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                    <Plus className="w-3.5 h-3.5" />
                     <span>Add Custom Button</span>
                   </button>
                 </div>
@@ -931,36 +796,36 @@ export default function CardEditorModal({
                 {customLinks.map((cl, i) => (
                   <div
                     key={cl.id}
-                    className="p-3.5 rounded-2xl bg-[#F8FAFC] border border-black/10 flex items-center gap-3"
+                    className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center gap-3"
                   >
                     <div className="flex-1 grid grid-cols-2 gap-3">
                       <input
                         type="text"
-                        placeholder="Button Title (e.g. Portfolio)"
+                        placeholder="Title"
                         value={cl.title}
                         onChange={(e) => {
                           const u = [...customLinks];
                           u[i].title = e.target.value;
                           setCustomLinks(u);
                         }}
-                        className="px-3 py-2 text-xs rounded-xl border border-black/15 bg-white font-semibold"
+                        className="px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white font-semibold focus:outline-none focus:border-slate-800"
                       />
                       <input
                         type="text"
-                        placeholder="Target URL (e.g. https://...)"
+                        placeholder="https://..."
                         value={cl.url}
                         onChange={(e) => {
                           const u = [...customLinks];
                           u[i].url = e.target.value;
                           setCustomLinks(u);
                         }}
-                        className="px-3 py-2 text-xs rounded-xl border border-black/15 bg-white font-mono"
+                        className="px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white font-mono focus:outline-none focus:border-slate-800"
                       />
                     </div>
                     <button
                       type="button"
                       onClick={() => handleRemoveCustomLink(cl.id)}
-                      className="p-2 rounded-xl hover:bg-red-50 text-red-500 transition-colors cursor-pointer"
+                      className="p-2 rounded-xl hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -971,24 +836,24 @@ export default function CardEditorModal({
           )}
 
           {/* Modal Footer Buttons */}
-          <div className="pt-4 border-t border-black/[0.08] flex items-center justify-between">
-            <span className="text-xs text-[#64748B]">
-              Slot #{paddedSlot} • Slug: /{slugVal}
+          <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+            <span className="text-xs text-slate-500 font-mono">
+              Slot #{paddedSlot}
             </span>
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2.5 rounded-xl text-xs font-semibold text-[#64748B] hover:text-[#0F172A] hover:bg-black/5 transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-[#0071E3] hover:bg-[#0077ED] transition-all shadow-sm disabled:opacity-50 cursor-pointer active:scale-[0.98]"
+                className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-[#0A192F] hover:bg-[#071324] transition-all shadow-xs disabled:opacity-50 cursor-pointer active:scale-[0.98]"
               >
-                {saving ? "Saving Changes..." : "Save Card"}
+                {saving ? "Saving..." : "Save"}
               </button>
             </div>
           </div>

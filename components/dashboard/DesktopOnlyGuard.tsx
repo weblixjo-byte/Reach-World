@@ -69,7 +69,7 @@ export default function DesktopOnlyGuard({ children }: DesktopOnlyGuardProps) {
           >
             {copied ? (
               <>
-                <Check className="w-4 h-4 text-[#34C759]" />
+                <Check className="w-4 h-4 text-white" />
                 <span>Link Copied</span>
               </>
             ) : (

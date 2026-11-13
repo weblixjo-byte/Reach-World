@@ -183,11 +183,6 @@ export default function FleetAnalyticsView({
                 ? `Analytics: ${selectedCard.name}`
                 : "Fleet Clicks & Engagement Intelligence"}
             </h1>
-            <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
-              {selectedCard
-                ? `Direct link interaction breakdown, WhatsApp taps, and engagement rate for Card #${selectedCard.cardNumber}.`
-                : "Aggregated link interaction metrics, channel share, and real-time NFC conversion rates across all 50 slots."}
-            </p>
           </div>
 
           {/* Modern Card Scope Selector Filter */}
@@ -273,9 +268,6 @@ export default function FleetAnalyticsView({
             </span>
             <span className="text-xs text-slate-500 font-medium">Physical Taps</span>
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">
-            Bot-filtered hardware tap telemetry
-          </p>
         </div>
 
         {/* Metric 2: Total Action Clicks */}
@@ -292,9 +284,6 @@ export default function FleetAnalyticsView({
             </span>
             <span className="text-xs text-slate-500 font-medium">Actions Taken</span>
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">
-            WhatsApp, Call, Web & Social clicks
-          </p>
         </div>
 
         {/* Metric 3: Tap-Through Rate */}
@@ -311,9 +300,6 @@ export default function FleetAnalyticsView({
             </span>
             <span className="text-xs text-slate-700 font-semibold">Conversion</span>
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">
-            Percentage of scans that triggered action
-          </p>
         </div>
 
         {/* Metric 4: Top Performing Channel */}
@@ -329,11 +315,6 @@ export default function FleetAnalyticsView({
               {stats.topChannel?.name || "None yet"}
             </span>
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">
-            {stats.topChannel
-              ? `${stats.topChannel.clicks} clicks (${stats.topChannel.percentage}% of actions)`
-              : "Awaiting card interaction"}
-          </p>
         </div>
       </div>
 
@@ -345,9 +326,6 @@ export default function FleetAnalyticsView({
               <h3 className="text-base font-bold text-[#0F172A] tracking-tight">
                 Card #{selectedCard.cardNumber} Link Clicks & Actions
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Exact click counts for each active button configured on this card.
-              </p>
             </div>
             <span className="text-xs font-semibold text-slate-700 bg-slate-100 px-3 py-1 rounded-xl border border-slate-200">
               {(selectedCard.links || []).length} Active Buttons
@@ -462,9 +440,6 @@ export default function FleetAnalyticsView({
                 <h3 className="text-sm font-bold text-[#0F172A] tracking-tight">
                   Channel Engagement Distribution
                 </h3>
-                <p className="text-[11px] text-slate-500">
-                  Proportional click volume across all contact channels
-                </p>
               </div>
             </div>
 
@@ -552,7 +527,6 @@ export default function FleetAnalyticsView({
                 <h3 className="text-sm font-bold text-[#0F172A] tracking-tight">
                   Engagement Funnel
                 </h3>
-                <p className="text-[11px] text-slate-500">NFC Tap to Conversion Journey</p>
               </div>
             </div>
 
@@ -599,14 +573,6 @@ export default function FleetAnalyticsView({
               </div>
             </div>
           </div>
-
-          {/* Quick Context Card */}
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
-            <span className="font-bold text-[#0F172A] block">Fleet Hardware Scope:</span>
-            <p className="text-[11px] text-slate-600 leading-relaxed">
-              50 NFC smart business cards with customizable URLs. Each tap accurately triggers cloud-level analytics and link interaction tracking.
-            </p>
-          </div>
         </div>
       </div>
 
@@ -618,9 +584,6 @@ export default function FleetAnalyticsView({
               <h3 className="text-base font-bold text-[#0F172A] tracking-tight">
                 Top Engaged Cards in Fleet
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Highest interaction volume across the 50 registered NFC slots.
-              </p>
             </div>
             <span className="text-xs text-slate-500">Slots 01 – 50</span>
           </div>

@@ -83,12 +83,28 @@ export async function getDashboardData(): Promise<DashboardDataResponse> {
     await ensureSeedCards();
     await ensureDefaultAdmin();
 
-    const rawCards = await Card.find()
+    let rawCards = await Card.find()
       .select(
         "cardNumber name slug jobTitle department headline location avatarUrl themeColor phone email mode redirectUrl isActive views vcardClicks lastTappedAt links updatedAt"
       )
       .sort({ cardNumber: 1 })
       .lean();
+
+    // Auto-generate secure unguessable slug for any card with a sequential numeric slug
+    const numericCards = rawCards.filter((c: any) => !c.slug || /^\d+$/.test(c.slug));
+    if (numericCards.length > 0) {
+      const chars = "abcdefghjkmnpqrstuvwxyz23456789";
+      for (const nc of numericCards) {
+        let token = "";
+        for (let i = 0; i < 4; i++) {
+          token += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        const pad = nc.cardNumber < 10 ? `0${nc.cardNumber}` : `${nc.cardNumber}`;
+        const autoSecureSlug = `rw-${pad}-${token}`;
+        await Card.findByIdAndUpdate(nc._id, { $set: { slug: autoSecureSlug } });
+        (nc as any).slug = autoSecureSlug;
+      }
+    }
 
     let totalTaps = 0;
     let totalClicks = 0;
@@ -488,21 +504,18 @@ export async function updateCard(cardId: string, data: CardFormData) {
 
     const oldSlug = existing.slug;
 
-    // Optional URL slug customization (prevents sequential enumeration /1, /2, /3)
-    if (data.slug) {
+    // Automatically ensure unguessable secure slug (prevents sequential URL guessing /1, /2, /3)
+    if (!existing.slug || /^\d+$/.test(existing.slug)) {
+      const chars = "abcdefghjkmnpqrstuvwxyz23456789";
+      let token = "";
+      for (let i = 0; i < 4; i++) {
+        token += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      const pad = existing.cardNumber < 10 ? `0${existing.cardNumber}` : `${existing.cardNumber}`;
+      existing.slug = `rw-${pad}-${token}`;
+    } else if (data.slug) {
       const cleanSlug = data.slug.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
       if (cleanSlug && cleanSlug !== existing.slug) {
-        const reserved = ["dashboard", "login", "api", "admin", "icon", "favicon", "og-image", "apple-touch-icon"];
-        if (reserved.includes(cleanSlug)) {
-          return { success: false, error: `The URL handle /${cleanSlug} is reserved by the system.` };
-        }
-        const conflict = await Card.findOne({ slug: cleanSlug, _id: { $ne: existing._id } });
-        if (conflict) {
-          return {
-            success: false,
-            error: `The URL /${cleanSlug} is already used by Slot #${conflict.cardNumber}. Please choose another handle.`,
-          };
-        }
         existing.slug = cleanSlug;
       }
     }

@@ -163,7 +163,7 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
         >
           {copied ? (
             <>
-              <Check className="w-3.5 h-3.5 text-emerald-400" /> Copied
+              <Check className="w-3.5 h-3.5 text-white" /> Copied
             </>
           ) : (
             <>
@@ -345,7 +345,7 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
           {/* Compact Telemetry Footer Pill */}
           <div className="mt-4 w-[340px] bg-white/[0.04] rounded-2xl p-3 border border-white/[0.10] shadow-sm flex items-center justify-between text-xs backdrop-blur-md">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span className="w-2 h-2 rounded-full bg-slate-300" />
               <span className="font-semibold text-slate-200">
                 {cardViews} Scans • {totalIconClicks} Clicks
               </span>

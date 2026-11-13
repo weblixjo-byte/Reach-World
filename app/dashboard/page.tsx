@@ -162,7 +162,6 @@ export default function DashboardPage() {
 
       {/* View switching based on sidebar */}
       {currentView === "analytics" ? (
-        /* DEDICATED FULL-SCREEN FLEET ANALYTICS & ENGAGEMENT INTELLIGENCE */
         <FleetAnalyticsView
           cards={allCards}
           analytics={analytics}
@@ -171,55 +170,6 @@ export default function DashboardPage() {
           onBackToRegistry={() => setCurrentView("cards")}
           onEditCard={(card) => handleEdit(card)}
         />
-      ) : currentView === "departments" ? (
-        /* DEPARTMENTS OVERVIEW - Executive Light */
-        <div className="rounded-2xl bg-white p-6 sm:p-8 border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-6">
-          <div className="flex items-center justify-between pb-6 border-b border-slate-100">
-            <div>
-              <h2 className="text-base font-bold text-slate-900 tracking-tight">
-                Departments Overview (50 Cards)
-              </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Inspect and filter employee cards by company division.
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                setSelectedDept("all");
-                setCurrentView("cards");
-              }}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer border border-slate-200/80"
-            >
-              Reset to All
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            {departments.map((dept) => {
-              const countInDept = allCards.filter((c) => c.department === dept).length;
-              return (
-                <div
-                  key={dept}
-                  onClick={() => {
-                    setSelectedDept(dept);
-                    setCurrentView("cards");
-                  }}
-                  className="p-5 rounded-2xl border border-slate-200/80 hover:border-sky-400 bg-slate-50/60 hover:bg-white transition-all cursor-pointer shadow-xs flex items-center justify-between group"
-                >
-                  <div>
-                    <h3 className="font-bold text-sm text-slate-900 group-hover:text-sky-600 transition-colors">
-                      {dept || "General"}
-                    </h3>
-                    <p className="text-xs text-slate-500 mt-0.5">
-                      {countInDept} Active Cards
-                    </p>
-                  </div>
-                  <Users className="w-4 h-4 text-slate-400 group-hover:text-sky-600 transition-colors" />
-                </div>
-              );
-            })}
-          </div>
-        </div>
       ) : (
         /* MAIN REGISTRY VIEW (FULL WIDTH) */
         <div className="space-y-4">
@@ -228,11 +178,8 @@ export default function DashboardPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
               <div>
                 <h2 className="text-base font-bold text-slate-900 tracking-tight">
-                  50 Physical NFC Cards Registry
+                  50 Cards Registry
                 </h2>
-                <p className="text-xs text-slate-500">
-                  Fixed hardware slots (01 – 50) with customizable secure URLs
-                </p>
               </div>
 
               <div className="flex items-center gap-2.5">
@@ -282,7 +229,7 @@ export default function DashboardPage() {
                 <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
                   type="text"
-                  placeholder="Search 50 cards by slot, employee, or link..."
+                  placeholder="Search cards by slot, employee, or link..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 focus:border-slate-800 focus:bg-white focus:outline-none transition-all bg-slate-50 text-slate-900 placeholder:text-slate-400 font-medium"

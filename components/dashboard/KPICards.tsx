@@ -30,8 +30,6 @@ export default function KPICards({ analytics }: KPICardsProps) {
             <span className="w-1.5 h-1.5 rounded-full bg-[#0A192F]" />
             {analytics.totalActive} Active
           </span>
-          <span>•</span>
-          <span>Hardware Fleet</span>
         </div>
       </div>
 
@@ -49,9 +47,6 @@ export default function KPICards({ analytics }: KPICardsProps) {
           </span>
           <span className="text-xs text-slate-500 font-medium">Physical Taps</span>
         </div>
-        <div className="text-[11px] text-slate-500 font-medium pt-1">
-          <span>Bot-filtered NFC telemetry</span>
-        </div>
       </div>
 
       {/* 3. Link & Contact Interactions */}
@@ -67,9 +62,6 @@ export default function KPICards({ analytics }: KPICardsProps) {
             {analytics.tapThroughRate > 0 ? analytics.tapThroughRate : 0}
           </span>
           <span className="text-xs text-slate-500 font-medium">Total Icon Clicks</span>
-        </div>
-        <div className="text-[11px] text-slate-500 font-medium pt-1">
-          <span>WhatsApp, Call, & vCard saves</span>
         </div>
       </div>
 
@@ -95,9 +87,6 @@ export default function KPICards({ analytics }: KPICardsProps) {
             </span>
             <span className="text-[11px] text-slate-600 ml-1 font-medium">Custom</span>
           </div>
-        </div>
-        <div className="text-[11px] text-slate-500 font-medium pt-1">
-          <span>Configurable per card</span>
         </div>
       </div>
     </div>
