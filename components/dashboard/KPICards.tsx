@@ -17,21 +17,21 @@ export default function KPICards({ analytics }: KPICardsProps) {
           <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
             FLEET CAPACITY
           </span>
-          <CreditCard className="w-4 h-4 text-sky-600 stroke-[1.75]" />
+          <CreditCard className="w-4 h-4 text-[#0A192F] stroke-[1.75]" />
         </div>
         <div className="flex items-baseline gap-2 mb-1">
-          <span className="text-3xl font-extrabold tracking-tight text-slate-900">
+          <span className="text-3xl font-extrabold tracking-tight text-[#0F172A]">
             50
           </span>
           <span className="text-xs text-slate-500 font-medium">Slots (01 – 50)</span>
         </div>
         <div className="flex items-center gap-2 text-[11px] text-slate-500 font-medium pt-1">
-          <span className="inline-flex items-center gap-1.5 text-emerald-600 font-semibold">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+          <span className="inline-flex items-center gap-1.5 text-slate-800 font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0A192F]" />
             {analytics.totalActive} Active
           </span>
           <span>•</span>
-          <span>Permanent Hardware URLs</span>
+          <span>Hardware Fleet</span>
         </div>
       </div>
 
@@ -41,16 +41,16 @@ export default function KPICards({ analytics }: KPICardsProps) {
           <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
             TOTAL VERIFIED SCANS
           </span>
-          <Eye className="w-4 h-4 text-sky-600 stroke-[1.75]" />
+          <Eye className="w-4 h-4 text-[#0A192F] stroke-[1.75]" />
         </div>
         <div className="flex items-baseline gap-2 mb-1">
-          <span className="text-3xl font-extrabold tracking-tight text-slate-900">
+          <span className="text-3xl font-extrabold tracking-tight text-[#0F172A]">
             {analytics.totalTaps.toLocaleString()}
           </span>
           <span className="text-xs text-slate-500 font-medium">Physical Taps</span>
         </div>
         <div className="text-[11px] text-slate-500 font-medium pt-1">
-          <span>Real-time bot-filtered NFC telemetry</span>
+          <span>Bot-filtered NFC telemetry</span>
         </div>
       </div>
 
@@ -60,10 +60,10 @@ export default function KPICards({ analytics }: KPICardsProps) {
           <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
             LINK INTERACTIONS
           </span>
-          <MousePointerClick className="w-4 h-4 text-[#0071E3] stroke-[1.75]" />
+          <MousePointerClick className="w-4 h-4 text-[#0A192F] stroke-[1.75]" />
         </div>
         <div className="flex items-baseline gap-2 mb-1">
-          <span className="text-3xl font-extrabold tracking-tight text-[#0071E3]">
+          <span className="text-3xl font-extrabold tracking-tight text-[#0F172A]">
             {analytics.tapThroughRate > 0 ? analytics.tapThroughRate : 0}
           </span>
           <span className="text-xs text-slate-500 font-medium">Total Icon Clicks</span>
@@ -79,25 +79,25 @@ export default function KPICards({ analytics }: KPICardsProps) {
           <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
             CARD LINK TYPES
           </span>
-          <Layers className="w-4 h-4 text-sky-600 stroke-[1.75]" />
+          <Layers className="w-4 h-4 text-[#0A192F] stroke-[1.75]" />
         </div>
         <div className="flex items-baseline gap-3 mb-1">
           <div>
-            <span className="text-2xl font-extrabold tracking-tight text-slate-900">
+            <span className="text-2xl font-extrabold tracking-tight text-[#0F172A]">
               {analytics.totalProfiles}
             </span>
             <span className="text-[11px] text-slate-500 ml-1 font-medium">Bio</span>
           </div>
           <span className="text-slate-300">/</span>
           <div>
-            <span className="text-2xl font-extrabold tracking-tight text-[#0071E3]">
+            <span className="text-2xl font-extrabold tracking-tight text-[#0F172A]">
               {analytics.totalCustomLinks}
             </span>
-            <span className="text-[11px] text-sky-600 ml-1 font-medium">Custom</span>
+            <span className="text-[11px] text-slate-600 ml-1 font-medium">Custom</span>
           </div>
         </div>
         <div className="text-[11px] text-slate-500 font-medium pt-1">
-          <span>Configurable per individual card</span>
+          <span>Configurable per card</span>
         </div>
       </div>
     </div>

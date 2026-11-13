@@ -8,7 +8,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Check,
-  Eye,
   CreditCard,
   RotateCcw,
   UserCheck,
@@ -95,11 +94,11 @@ export default function CardsTable({
   };
 
   return (
-    <div className="w-full rounded-2xl bg-white border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col overflow-hidden">
+    <div className="w-full rounded-2xl bg-white border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col overflow-hidden font-sans">
       {/* Header bar */}
       <div className="px-6 py-4 border-b border-slate-200/80 bg-white flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+          <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
             PHYSICAL NFC CARDS
           </h3>
           <span className="text-xs text-slate-500 font-medium">
@@ -107,8 +106,8 @@ export default function CardsTable({
           </span>
         </div>
 
-        <div className="text-xs text-slate-600 flex items-center gap-2 font-medium">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+        <div className="text-xs text-slate-700 flex items-center gap-2 font-medium">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#0A192F]" />
           <span>Active Registry</span>
         </div>
       </div>
@@ -117,7 +116,7 @@ export default function CardsTable({
       <div className="overflow-x-auto w-full">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50/70 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+            <tr className="border-b border-slate-200 bg-slate-50/70 text-[11px] font-bold text-slate-700 uppercase tracking-wider">
               <th className="py-3.5 px-6 w-24">Slot</th>
               <th className="py-3.5 px-4">Card Assignment</th>
               <th className="py-3.5 px-4">Destination Link</th>
@@ -128,7 +127,6 @@ export default function CardsTable({
           </thead>
           <tbody className="divide-y divide-slate-100 text-xs">
             {isLoading ? (
-              // Fast loading skeleton placeholder rows
               Array.from({ length: 8 }).map((_, idx) => (
                 <tr key={idx} className="animate-pulse">
                   <td className="py-4 px-6">
@@ -187,13 +185,13 @@ export default function CardsTable({
                     }}
                     className={`cursor-pointer transition-colors ${
                       isSelected
-                        ? "bg-sky-50/70"
-                        : "hover:bg-slate-50/80"
+                        ? "bg-slate-100/70"
+                        : "hover:bg-slate-50/70"
                     }`}
                   >
-                    {/* Slot # Badge (Clean, Sans-serif) */}
+                    {/* Slot # Badge (Monochrome Navy/Black) */}
                     <td className="py-3.5 px-6 whitespace-nowrap">
-                      <span className="text-xs font-bold font-mono text-sky-800 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-200">
+                      <span className="text-xs font-bold font-mono text-[#0F172A] bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
                         #{paddedSlot}
                       </span>
                     </td>
@@ -201,10 +199,10 @@ export default function CardsTable({
                     {/* Card Assignment (Name & Department) */}
                     <td className="py-3.5 px-4 min-w-[220px]">
                       <div className="min-w-0">
-                        <div className="font-semibold text-xs text-slate-900 truncate flex items-center gap-1.5">
+                        <div className="font-semibold text-xs text-[#0F172A] truncate flex items-center gap-1.5">
                           {card.name}
                           {isSelected && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-sky-600" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#0A192F]" />
                           )}
                         </div>
                         <div className="text-[11px] text-slate-500 truncate mt-0.5 font-medium">
@@ -223,18 +221,18 @@ export default function CardsTable({
                     <td className="py-3.5 px-4 min-w-[240px]">
                       {isRedirect ? (
                         <div className="space-y-0.5">
-                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-sky-50 text-sky-700 border border-sky-200">
-                            <Globe className="w-3 h-3 text-sky-600" />
+                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 text-[#0F172A] border border-slate-200">
+                            <Globe className="w-3 h-3 text-[#0A192F]" />
                             <span>Custom Link</span>
                           </div>
-                          <div className="text-[11px] text-slate-500 truncate max-w-[220px] block" title={card.redirectUrl}>
+                          <div className="text-[11px] text-slate-500 truncate max-w-[220px] block font-mono" title={card.redirectUrl}>
                             {card.redirectUrl || "No destination URL"}
                           </div>
                         </div>
                       ) : (
                         <div className="space-y-0.5">
                           <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-                            <UserCheck className="w-3 h-3 text-slate-500" />
+                            <UserCheck className="w-3 h-3 text-[#0A192F]" />
                             <span>Digital Profile</span>
                           </div>
                           <div className="text-[11px] text-slate-500 font-mono">
@@ -251,7 +249,7 @@ export default function CardsTable({
                         onClick={(e) => handleToggle(card, e)}
                         disabled={togglingId === card._id}
                         className={`relative inline-flex h-4.5 w-8 items-center rounded-full transition-colors cursor-pointer disabled:opacity-50 ${
-                          card.isActive ? "bg-emerald-500" : "bg-slate-300"
+                          card.isActive ? "bg-[#0A192F]" : "bg-slate-300"
                         }`}
                         title={card.isActive ? "Active (Click to Pause)" : "Paused (Click to Activate)"}
                       >
@@ -273,11 +271,11 @@ export default function CardsTable({
                         className="inline-flex flex-col items-center hover:scale-105 transition-transform cursor-pointer group"
                         title="Click to view detailed analytics & clicks for this card"
                       >
-                        <span className="text-xs font-bold text-slate-900 font-mono group-hover:text-sky-600 transition-colors">
+                        <span className="text-xs font-bold text-[#0F172A] font-mono group-hover:underline transition-all">
                           {card.views.toLocaleString()} taps
                         </span>
                         {!isRedirect && totalIconClicks > 0 ? (
-                          <span className="text-[10px] text-sky-700 font-semibold bg-sky-50 px-1.5 py-0.2 rounded border border-sky-200 mt-0.5">
+                          <span className="text-[10px] text-[#0F172A] font-semibold bg-slate-100 px-1.5 py-0.2 rounded border border-slate-200 mt-0.5 font-mono">
                             {totalIconClicks} clicks
                           </span>
                         ) : (
@@ -286,7 +284,7 @@ export default function CardsTable({
                       </div>
                     </td>
 
-                    {/* Actions: In-Depth Analytics, Preview Modal, Edit, Live Test, Copy URL */}
+                    {/* Actions: Dedicated Analytics, Preview Modal, Copy URL, External, Edit, Reset */}
                     <td className="py-3.5 px-6 text-right whitespace-nowrap">
                       <div
                         className="inline-flex items-center gap-1.5"
@@ -295,31 +293,31 @@ export default function CardsTable({
                         {/* Dedicated In-Depth Analytics Button */}
                         <button
                           onClick={() => onOpenAnalytics ? onOpenAnalytics(card) : onSelectForPreview(card)}
-                          className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-sky-600 flex items-center justify-center transition-colors cursor-pointer border border-slate-200/80"
-                          title="Open In-Depth Analytics & Clicks"
+                          className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-[#0A192F] flex items-center justify-center transition-colors cursor-pointer border border-slate-200/80"
+                          title="Open Analytics for this card"
                         >
-                          <BarChart3 className="w-3.5 h-3.5 text-sky-600" />
+                          <BarChart3 className="w-3.5 h-3.5 text-[#0A192F]" />
                         </button>
 
                         {/* Preview Mobile Popup Button */}
                         <button
                           onClick={() => onOpenPreview(card)}
-                          className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-sky-600 flex items-center justify-center transition-colors cursor-pointer border border-slate-200/80"
+                          className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-[#0A192F] flex items-center justify-center transition-colors cursor-pointer border border-slate-200/80"
                           title="Open Mobile Screen Preview"
                         >
-                          <Smartphone className="w-3.5 h-3.5" />
+                          <Smartphone className="w-3.5 h-3.5 text-[#0A192F]" />
                         </button>
 
                         {/* Copy URL */}
                         <button
                           onClick={() => handleCopyLink(card.slug, card._id)}
-                          className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center transition-colors cursor-pointer border border-slate-200/80"
+                          className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-[#0A192F] flex items-center justify-center transition-colors cursor-pointer border border-slate-200/80"
                           title={`Copy URL (reachworld.com/${card.slug})`}
                         >
                           {copiedId === card._id ? (
-                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                            <Check className="w-3.5 h-3.5 text-slate-900" />
                           ) : (
-                            <Copy className="w-3.5 h-3.5" />
+                            <Copy className="w-3.5 h-3.5 text-[#0A192F]" />
                           )}
                         </button>
 
@@ -328,19 +326,19 @@ export default function CardsTable({
                           href={`/${card.slug}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center transition-colors border border-slate-200/80"
+                          className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-[#0A192F] flex items-center justify-center transition-colors border border-slate-200/80"
                           title="Open card link"
                         >
-                          <ExternalLink className="w-3.5 h-3.5" />
+                          <ExternalLink className="w-3.5 h-3.5 text-[#0A192F]" />
                         </a>
 
                         {/* Edit Button */}
                         <button
                           onClick={() => onEditCard(card)}
-                          className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs transition-all shadow-xs cursor-pointer flex items-center gap-1"
+                          className="px-2.5 py-1 rounded-lg bg-[#0A192F] hover:bg-[#071324] text-white font-medium text-xs transition-all shadow-xs cursor-pointer flex items-center gap-1"
                           title="Edit Card"
                         >
-                          <Pencil className="w-3 h-3 text-sky-400" />
+                          <Pencil className="w-3 h-3 text-slate-300" />
                           <span>Edit</span>
                         </button>
 

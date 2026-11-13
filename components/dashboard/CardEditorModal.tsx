@@ -456,13 +456,13 @@ export default function CardEditorModal({
                   تخصيص الرابط بالاسم أو بكود آمن يمنع الغرباء من تصفح باقي بطاقات الموظفين بالتخمين (/1, /2, /3).
                 </p>
               </div>
-              <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-semibold">
+              <span className="text-[10px] font-mono text-[#0F172A] bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200 font-semibold">
                 Privacy Protected
               </span>
             </div>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-              <div className="flex-1 flex items-center rounded-xl border border-black/15 bg-white overflow-hidden focus-within:ring-2 focus-within:ring-[#0071E3]/20 focus-within:border-[#0071E3]">
+              <div className="flex-1 flex items-center rounded-xl border border-black/15 bg-white overflow-hidden focus-within:ring-2 focus-within:ring-slate-900/10 focus-within:border-slate-900">
                 <span className="px-3 py-2 text-xs text-[#64748B] font-mono bg-slate-50 border-r border-slate-200 select-none">
                   reachworld.com/
                 </span>
@@ -480,7 +480,7 @@ export default function CardEditorModal({
                 <button
                   type="button"
                   onClick={generateNameSlug}
-                  className="px-2.5 py-2 rounded-xl bg-white border border-slate-200 hover:border-sky-400 text-xs font-semibold text-slate-700 hover:text-sky-700 transition-colors cursor-pointer shadow-2xs"
+                  className="px-2.5 py-2 rounded-xl bg-white border border-slate-200 hover:border-slate-400 text-xs font-semibold text-[#0F172A] transition-colors cursor-pointer shadow-2xs"
                   title="Generate URL handle from employee name (e.g. mohammad.alseidi)"
                 >
                   ⚡ By Name
@@ -488,7 +488,7 @@ export default function CardEditorModal({
                 <button
                   type="button"
                   onClick={generateRandomSlug}
-                  className="px-2.5 py-2 rounded-xl bg-sky-50 border border-sky-200 hover:bg-sky-100 text-xs font-semibold text-sky-800 transition-colors cursor-pointer shadow-2xs"
+                  className="px-2.5 py-2 rounded-xl bg-slate-100 border border-slate-200 hover:bg-slate-200 text-xs font-semibold text-[#0F172A] transition-colors cursor-pointer shadow-2xs"
                   title="Generate unguessable code (e.g. rw-01-k8f2)"
                 >
                   🔒 Secure Code
@@ -520,7 +520,7 @@ export default function CardEditorModal({
                     : "text-[#64748B] hover:text-[#0F172A]"
                 }`}
               >
-                <UserCheck className="w-4 h-4 text-emerald-600" />
+                <UserCheck className="w-4 h-4 text-[#0A192F]" />
                 <span>Digital Bio Profile</span>
               </button>
 

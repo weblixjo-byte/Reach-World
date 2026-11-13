@@ -19,6 +19,7 @@ import CardsTable from "@/components/dashboard/CardsTable";
 import CardPreviewModal from "@/components/dashboard/CardPreviewModal";
 import CardEditorModal from "@/components/dashboard/CardEditorModal";
 import FleetAnalyticsView from "@/components/dashboard/FleetAnalyticsView";
+import ModernDropdown from "@/components/dashboard/ModernDropdown";
 import { useDashboardNav } from "@/app/dashboard/layout";
 import {
   getDashboardData,
@@ -265,10 +266,10 @@ export default function DashboardPage() {
                 <button
                   onClick={handleExportCSV}
                   disabled={isExporting || allCards.length === 0}
-                  className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-white border border-slate-200/80 text-slate-700 hover:bg-slate-50 hover:text-slate-900 flex items-center gap-2 transition-all shadow-xs cursor-pointer disabled:opacity-40"
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-white border border-slate-200/80 text-[#0F172A] hover:bg-slate-50 flex items-center gap-2 transition-all shadow-xs cursor-pointer disabled:opacity-40"
                   title="Export 50 cards to CSV"
                 >
-                  <Download className="w-3.5 h-3.5 text-sky-600" />
+                  <Download className="w-3.5 h-3.5 text-[#0A192F]" />
                   <span>{isExporting ? "Exporting..." : "Export CSV"}</span>
                 </button>
               </div>
@@ -284,7 +285,7 @@ export default function DashboardPage() {
                   placeholder="Search 50 cards by slot, employee, or link..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 focus:border-sky-500 focus:bg-white focus:outline-none transition-all bg-slate-50 text-slate-900 placeholder:text-slate-400 font-medium"
+                  className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 focus:border-slate-800 focus:bg-white focus:outline-none transition-all bg-slate-50 text-slate-900 placeholder:text-slate-400 font-medium"
                 />
               </div>
 
@@ -322,31 +323,28 @@ export default function DashboardPage() {
                 </button>
               </div>
 
-              {/* Status Select */}
-              <select
+              {/* Modern Status Dropdown */}
+              <ModernDropdown
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-medium focus:outline-none focus:border-sky-500 shrink-0 cursor-pointer"
-              >
-                <option value="all">All Status</option>
-                <option value="active">Active Only</option>
-                <option value="paused">Paused Only</option>
-              </select>
+                onChange={setStatusFilter}
+                options={[
+                  { value: "all", label: "All Status" },
+                  { value: "active", label: "Active Only" },
+                  { value: "paused", label: "Paused Only" },
+                ]}
+              />
 
-              {/* Department Dropdown (if present) */}
+              {/* Modern Department Dropdown */}
               {departments.length > 0 && (
-                <select
+                <ModernDropdown
                   value={selectedDept}
-                  onChange={(e) => setSelectedDept(e.target.value)}
-                  className="text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-medium focus:outline-none focus:border-sky-500 shrink-0 cursor-pointer"
-                >
-                  <option value="all">All Departments</option>
-                  {departments.map((dept) => (
-                    <option key={dept} value={dept}>
-                      {dept}
-                    </option>
-                  ))}
-                </select>
+                  onChange={setSelectedDept}
+                  options={[
+                    { value: "all", label: "All Departments" },
+                    ...departments.map((dept) => ({ value: dept, label: dept })),
+                  ]}
+                  searchable
+                />
               )}
             </div>
           </div>
@@ -381,7 +379,7 @@ export default function DashboardPage() {
                       Click any card slot to inspect or test its destination.
                     </p>
                   </div>
-                  <span className="text-xs font-bold text-sky-800 bg-sky-50 px-3 py-1.5 rounded-xl border border-sky-200 font-mono">
+                  <span className="text-xs font-bold text-[#0F172A] bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 font-mono">
                     Slots 01 – 50
                   </span>
                 </div>
@@ -398,17 +396,17 @@ export default function DashboardPage() {
                         onClick={() => setPreviewCard(card)}
                         className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between h-36 ${
                           isSelected
-                            ? "bg-sky-50/70 border-sky-400 shadow-sm ring-2 ring-sky-300/40"
-                            : "bg-slate-50/60 border-slate-200/80 hover:border-sky-300 hover:bg-white hover:shadow-xs"
+                            ? "bg-slate-100 border-[#0A192F] shadow-sm ring-2 ring-slate-900/10"
+                            : "bg-slate-50/60 border-slate-200/80 hover:border-slate-400 hover:bg-white hover:shadow-xs"
                         }`}
                       >
                         <div className="flex items-start justify-between">
-                          <span className="text-xs font-bold font-mono text-sky-800 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-200">
+                          <span className="text-xs font-bold font-mono text-[#0F172A] bg-white px-2 py-0.5 rounded-md border border-slate-200 shadow-2xs">
                             #{padded}
                           </span>
                           <span
-                            className={`w-2.5 h-2.5 rounded-full ${
-                              card.isActive ? "bg-emerald-500" : "bg-slate-300"
+                            className={`w-2 h-2 rounded-full ${
+                              card.isActive ? "bg-[#0A192F]" : "bg-slate-300"
                             }`}
                             title={card.isActive ? "Active" : "Paused"}
                           />
@@ -424,7 +422,7 @@ export default function DashboardPage() {
                         </div>
 
                         <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                          <span className="text-[10px] font-bold text-sky-700 font-mono">
+                          <span className="text-[10px] font-bold text-[#0F172A] font-mono">
                             {card.views} taps
                           </span>
                           <button
