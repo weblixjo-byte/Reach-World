@@ -469,7 +469,7 @@ export default function FleetAnalyticsView({
                               {channel.name}
                             </span>
                             {isTop && (
-                              <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-200 text-[#0F172A]">
+                              <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-sky-50 text-sky-800 border border-sky-200">
                                 Top Channel
                               </span>
                             )}
@@ -497,8 +497,8 @@ export default function FleetAnalyticsView({
                       <div
                         className={`h-full rounded-full transition-all duration-500 ${
                           isTop
-                            ? "bg-[#0A192F]"
-                            : "bg-slate-400"
+                            ? "bg-[#0066CC]"
+                            : "bg-slate-300"
                         }`}
                         style={{
                           width: `${Math.max(channel.percentage, channel.clicks > 0 ? 3 : 0)}%`,

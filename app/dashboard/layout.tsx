@@ -180,7 +180,7 @@ function DashboardNavContent({ children }: { children: React.ReactNode }) {
 
             <div className="flex items-center justify-between text-[11px] p-2 rounded-xl bg-white/[0.04] border border-white/[0.08]">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-slate-400" />
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
                 <span className="font-semibold text-slate-200">Active</span>
               </div>
               <span className="text-[10px] text-slate-400 font-mono">50 Slots</span>

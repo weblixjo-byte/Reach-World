@@ -25,9 +25,9 @@ export default function KPICards({ analytics }: KPICardsProps) {
           </span>
           <span className="text-xs text-slate-500 font-medium">Slots (01 – 50)</span>
         </div>
-        <div className="flex items-center gap-2 text-[11px] text-slate-500 font-medium pt-1">
-          <span className="inline-flex items-center gap-1.5 text-slate-800 font-semibold">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0A192F]" />
+        <div className="flex items-center gap-2 text-[11px] pt-1">
+          <span className="inline-flex items-center gap-1.5 text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/70 font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
             {analytics.totalActive} Active
           </span>
         </div>
@@ -61,7 +61,9 @@ export default function KPICards({ analytics }: KPICardsProps) {
           <span className="text-3xl font-extrabold tracking-tight text-[#0F172A]">
             {analytics.tapThroughRate > 0 ? analytics.tapThroughRate : 0}
           </span>
-          <span className="text-xs text-slate-500 font-medium">Total Icon Clicks</span>
+          <span className="text-xs text-sky-700 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-200/70 font-semibold font-mono">
+            Clicks
+          </span>
         </div>
       </div>
 
