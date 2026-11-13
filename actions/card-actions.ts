@@ -625,6 +625,38 @@ export async function resetCard(cardId: string) {
   }
 }
 
+/**
+ * Zero-out all views, scans, and link clicks across all 50 cards for client handover.
+ */
+export async function resetAllAnalyticsAction() {
+  try {
+    await requireAuth();
+    await connectToDatabase();
+
+    await Card.updateMany({}, {
+      $set: {
+        views: 0,
+        vcardClicks: 0,
+        lastTappedAt: null,
+      },
+    });
+
+    const allCards = await Card.find().select("_id links").lean();
+    for (const card of allCards as any[]) {
+      if (Array.isArray(card.links) && card.links.length > 0) {
+        const resetLinks = card.links.map((l: any) => ({ ...l, clicks: 0 }));
+        await Card.updateOne({ _id: card._id }, { $set: { links: resetLinks } });
+      }
+    }
+
+    revalidatePath("/dashboard");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error resetting all analytics:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 export async function getCardById(cardId: string) {
   try {
     await connectToDatabase();
