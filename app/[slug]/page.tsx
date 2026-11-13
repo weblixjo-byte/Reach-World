@@ -61,16 +61,32 @@ export default async function PublicCardPage({ params }: PageProps) {
   // 2. If card is paused by admin/HR
   if (!card.isActive) {
     return (
-      <main className="min-h-[100dvh] w-full flex flex-col items-center justify-between bg-[#061528] text-white selection:bg-white/20 px-4 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(2rem,env(safe-area-inset-bottom))]">
-        {/* Top Reach World Official Logo */}
-        <div className="pt-4 pb-2">
-          <ReachWorldLogo className="w-36 sm:w-40 opacity-90" />
+      <main className="relative min-h-[100dvh] w-full flex flex-col items-center justify-between bg-[#020b18] text-white selection:bg-[#0071E3]/30 px-4 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(1.75rem,env(safe-area-inset-bottom))] font-sans overflow-hidden">
+        {/* Ultra-Fast Optimized Background (46KB WebP with dark base fallback) */}
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#020b18]">
+          <picture>
+            <source srcSet="/card-bg.webp" type="image/webp" />
+            <img
+              src="/card-bg.jpg"
+              alt="Reach World Background"
+              className="w-full h-full object-cover opacity-50 mix-blend-screen scale-105"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+            />
+          </picture>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/70 via-[#031126]/60 to-[#020b18]/90" />
         </div>
 
-        {/* Center Minimalist Status Notice (Zero Neon, Clean & Quiet) */}
-        <div className="max-w-sm w-full text-center flex flex-col items-center my-auto px-4 animate-in fade-in duration-300">
-          <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 mb-5 shadow-sm">
-            <Pause className="w-5 h-5 stroke-[1.5]" />
+        {/* Top Reach World Official Logo */}
+        <div className="relative z-10 pt-4 pb-2">
+          <ReachWorldLogo className="w-36 sm:w-40 opacity-90 drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]" />
+        </div>
+
+        {/* Center Minimalist Status Notice */}
+        <div className="relative z-10 max-w-sm w-full text-center flex flex-col items-center my-auto px-4 animate-in fade-in duration-300">
+          <div className="w-14 h-14 rounded-2xl bg-[#07172e]/80 border border-white/10 flex items-center justify-center text-white/70 mb-5 shadow-lg backdrop-blur-md">
+            <Pause className="w-6 h-6 stroke-[1.5] text-amber-400/90" />
           </div>
 
           <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2.5">
@@ -85,7 +101,7 @@ export default async function PublicCardPage({ params }: PageProps) {
             href="https://reachworld.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-2.5 rounded-full text-xs font-semibold text-white/90 hover:text-white bg-white/10 hover:bg-white/15 border border-white/15 transition-all inline-flex items-center gap-2 active:scale-95 shadow-sm"
+            className="px-6 py-2.5 rounded-full text-xs font-semibold text-white/90 hover:text-white bg-white/10 hover:bg-white/15 border border-white/15 transition-all inline-flex items-center gap-2 active:scale-95 shadow-sm cursor-pointer backdrop-blur-sm"
           >
             <span>reachworld.com</span>
             <ArrowRight className="w-3.5 h-3.5 text-white/50" />
@@ -93,7 +109,7 @@ export default async function PublicCardPage({ params }: PageProps) {
         </div>
 
         {/* Official Clean Footer */}
-        <footer className="w-full max-w-[420px] pt-6 pb-2 flex flex-col items-center">
+        <footer className="relative z-10 w-full max-w-[420px] pt-6 pb-2 flex flex-col items-center">
           <div className="w-full h-px bg-white/10 mb-4" />
           <p className="text-center text-[10px] text-white/40 font-medium tracking-wide">
             powered by{" "}
