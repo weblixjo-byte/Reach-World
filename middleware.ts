@@ -5,7 +5,7 @@ const JWT_SECRET_STRING =
   process.env.JWT_SECRET ||
   "reach-world-nfc-ultra-secure-key-2026-vct-94817265934-prod";
 const SECRET_KEY = new TextEncoder().encode(JWT_SECRET_STRING);
-const COOKIE_NAME = "rw_session";
+const COOKIE_NAME = "rw_session_v2";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -30,9 +30,12 @@ export async function middleware(req: NextRequest) {
     const loginUrl = new URL("/login", req.url);
     loginUrl.searchParams.set("from", pathname);
     const response = NextResponse.redirect(loginUrl);
-    // Clear invalid cookie if present
+    // Clear cookies if present
     if (token) {
       response.cookies.delete(COOKIE_NAME);
+    }
+    if (req.cookies.get("rw_session")) {
+      response.cookies.delete("rw_session");
     }
     return response;
   }

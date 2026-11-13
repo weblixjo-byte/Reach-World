@@ -6,8 +6,8 @@ import { loginAction } from "@/actions/auth-actions";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("admin@reachworld.com");
-  const [password, setPassword] = useState("Hussein");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -75,17 +75,18 @@ export default function LoginPage() {
           )}
 
           {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} autoComplete="off" className="space-y-4">
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                Username / Email
+                Username
               </label>
               <input
-                type="email"
+                type="text"
                 required
+                autoComplete="off"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@reachworld.com"
+                placeholder="Username"
                 className="w-full px-3.5 py-2.5 bg-white/[0.04] border border-white/[0.12] rounded-xl text-sm text-white placeholder-slate-400/60 focus:outline-none focus:border-sky-400 focus:bg-white/[0.08] focus:ring-2 focus:ring-sky-500/20 transition-all backdrop-blur-sm"
               />
             </div>
@@ -97,9 +98,10 @@ export default function LoginPage() {
               <input
                 type="password"
                 required
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="Password"
                 className="w-full px-3.5 py-2.5 bg-white/[0.04] border border-white/[0.12] rounded-xl text-sm text-white placeholder-slate-400/60 focus:outline-none focus:border-sky-400 focus:bg-white/[0.08] focus:ring-2 focus:ring-sky-500/20 transition-all backdrop-blur-sm"
               />
             </div>

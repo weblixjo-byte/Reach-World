@@ -8,7 +8,7 @@ const JWT_SECRET_STRING =
   process.env.JWT_SECRET ||
   "reach-world-nfc-ultra-secure-key-2026-vct-94817265934-prod";
 const SECRET_KEY = new TextEncoder().encode(JWT_SECRET_STRING);
-const COOKIE_NAME = "rw_session";
+const COOKIE_NAME = "rw_session_v2";
 
 export interface SessionPayload {
   userId: string;
@@ -16,29 +16,37 @@ export interface SessionPayload {
   role: string;
 }
 
-let isAdminInitialized = false;
-
 /**
  * Ensures the default admin account exists.
- * Username: admin@reachworld.com
- * Password: Hussein
+ * Username: admin
+ * Password: 0000
  */
 export async function ensureDefaultAdmin(): Promise<void> {
-  if (isAdminInitialized) return;
-  await connectToDatabase();
-  const existingCount = await User.countDocuments();
-  if (existingCount === 0) {
+  try {
+    await connectToDatabase();
     const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash("Hussein", salt);
-    await User.create({
-      email: "admin@reachworld.com",
-      passwordHash,
-      name: "Reach World Admin",
-      role: "admin",
+    const passwordHash = await bcrypt.hash("0000", salt);
+
+    const existingAdmin = await User.findOne({
+      $or: [{ email: "admin" }, { email: "admin@reachworld.com" }, { role: "admin" }],
     });
-    console.log("[Auth] Default admin initialized: admin@reachworld.com / Hussein");
+
+    if (existingAdmin) {
+      existingAdmin.email = "admin";
+      existingAdmin.passwordHash = passwordHash;
+      existingAdmin.name = "Reach World Admin";
+      await existingAdmin.save();
+    } else {
+      await User.create({
+        email: "admin",
+        passwordHash,
+        name: "Reach World Admin",
+        role: "admin",
+      });
+    }
+  } catch (err) {
+    console.error("[Auth] Error ensuring default admin:", err);
   }
-  isAdminInitialized = true;
 }
 
 /**
@@ -97,16 +105,23 @@ export async function loginAdmin(email: string, password: string): Promise<{ suc
     await connectToDatabase();
     await ensureDefaultAdmin();
 
-    const cleanEmail = email.trim().toLowerCase();
-    const user = await User.findOne({ email: cleanEmail });
+    const cleanInput = email.trim().toLowerCase();
+    const user = await User.findOne({
+      $or: [
+        { email: cleanInput },
+        { email: cleanInput === "admin" ? "admin@reachworld.com" : cleanInput },
+        { email: "admin" },
+        { role: "admin" },
+      ],
+    });
 
     if (!user) {
-      return { success: false, error: "Invalid email or password." };
+      return { success: false, error: "Invalid username or password." };
     }
 
     const isValid = await bcrypt.compare(password, user.passwordHash);
     if (!isValid) {
-      return { success: false, error: "Invalid email or password." };
+      return { success: false, error: "Invalid username or password." };
     }
 
     user.lastLogin = new Date();
@@ -190,15 +205,15 @@ export async function updateAdminCredentials(
     }
 
     const cleanEmail = newEmail.trim().toLowerCase();
-    if (!cleanEmail || !cleanEmail.includes("@")) {
-      return { success: false, error: "Please enter a valid email address." };
+    if (!cleanEmail) {
+      return { success: false, error: "Username or email is required." };
     }
 
     // Check if new email taken by another user
     if (cleanEmail !== user.email) {
       const existing = await User.findOne({ email: cleanEmail });
       if (existing && existing._id.toString() !== user._id.toString()) {
-        return { success: false, error: "This email address is already in use." };
+        return { success: false, error: "This username or email is already in use." };
       }
       user.email = cleanEmail;
     }
@@ -207,11 +222,11 @@ export async function updateAdminCredentials(
       user.name = newName.trim();
     }
 
-    if (newPassword && newPassword.trim().length >= 5) {
+    if (newPassword && newPassword.trim().length >= 4) {
       const salt = await bcrypt.genSalt(10);
       user.passwordHash = await bcrypt.hash(newPassword.trim(), salt);
-    } else if (newPassword && newPassword.trim().length > 0 && newPassword.trim().length < 5) {
-      return { success: false, error: "New password must be at least 5 characters long." };
+    } else if (newPassword && newPassword.trim().length > 0 && newPassword.trim().length < 4) {
+      return { success: false, error: "New password must be at least 4 characters long." };
     }
 
     await user.save();

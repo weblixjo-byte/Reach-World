@@ -59,8 +59,8 @@ export default function AdminSecurityModal({
       return;
     }
 
-    if (newPassword && newPassword.length < 5) {
-      setError("New password must be at least 5 characters.");
+    if (newPassword && newPassword.length < 4) {
+      setError("New password must be at least 4 characters.");
       return;
     }
 
