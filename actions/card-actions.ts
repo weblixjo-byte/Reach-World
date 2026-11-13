@@ -458,6 +458,7 @@ export async function toggleCardStatus(cardId: string, isActive: boolean) {
 export interface CardFormData {
   name: string;
   cardNumber?: number;
+  slug?: string;
   jobTitle?: string;
   department?: string;
   headline?: string;
@@ -473,7 +474,7 @@ export interface CardFormData {
 }
 
 /**
- * Update card details (Slot and Slug remain fixed 1-50).
+ * Update card details (including optional custom/secure unguessable URL slug).
  */
 export async function updateCard(cardId: string, data: CardFormData) {
   try {
@@ -483,6 +484,27 @@ export async function updateCard(cardId: string, data: CardFormData) {
     const existing = await Card.findById(cardId);
     if (!existing) {
       return { success: false, error: "Card not found" };
+    }
+
+    const oldSlug = existing.slug;
+
+    // Optional URL slug customization (prevents sequential enumeration /1, /2, /3)
+    if (data.slug) {
+      const cleanSlug = data.slug.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
+      if (cleanSlug && cleanSlug !== existing.slug) {
+        const reserved = ["dashboard", "login", "api", "admin", "icon", "favicon", "og-image", "apple-touch-icon"];
+        if (reserved.includes(cleanSlug)) {
+          return { success: false, error: `The URL handle /${cleanSlug} is reserved by the system.` };
+        }
+        const conflict = await Card.findOne({ slug: cleanSlug, _id: { $ne: existing._id } });
+        if (conflict) {
+          return {
+            success: false,
+            error: `The URL /${cleanSlug} is already used by Slot #${conflict.cardNumber}. Please choose another handle.`,
+          };
+        }
+        existing.slug = cleanSlug;
+      }
     }
 
     const cleanUrl = normalizeRedirectUrl(data.redirectUrl);
@@ -523,6 +545,9 @@ export async function updateCard(cardId: string, data: CardFormData) {
 
     revalidatePath("/dashboard");
     revalidatePath(`/${existing.slug}`);
+    if (oldSlug && oldSlug !== existing.slug) {
+      revalidatePath(`/${oldSlug}`);
+    }
 
     return { success: true, cardId: existing._id.toString(), slug: existing.slug };
   } catch (error: any) {
@@ -675,23 +700,25 @@ export async function getCardById(cardId: string) {
 }
 
 /**
- * Fetch card by slug or cardNumber.
+ * Fetch card by slug (Strict slug routing to prevent sequential enumeration /1, /2, /3).
  */
-export async function getCardBySlug(slugOrNumber: string) {
+export async function getCardBySlug(slug: string) {
   try {
     await connectToDatabase();
 
-    const cleanParam = (slugOrNumber || "").trim().toLowerCase();
-    const num = parseInt(cleanParam.replace(/^card-?/, ""), 10);
+    const cleanSlug = (slug || "").trim().toLowerCase();
 
-    const query: Record<string, unknown> = {
-      $or: [
-        { slug: cleanParam },
-        ...(isNaN(num) ? [] : [{ cardNumber: num }, { slug: String(num) }]),
-      ],
-    };
+    // Strict slug match: prevents guessing other employee cards by changing URL numbers
+    let doc = await Card.findOne({ slug: cleanSlug }).lean();
 
-    const doc = await Card.findOne(query).lean();
+    // Fallback for default slots that haven't been assigned a secure custom handle yet
+    if (!doc) {
+      const num = parseInt(cleanSlug, 10);
+      if (!isNaN(num)) {
+        doc = await Card.findOne({ cardNumber: num, slug: String(num) }).lean();
+      }
+    }
+
     if (!doc) return null;
 
     return {

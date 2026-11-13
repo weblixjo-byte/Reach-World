@@ -95,22 +95,20 @@ export default function CardsTable({
   };
 
   return (
-    <div className="w-full relative overflow-hidden rounded-3xl bg-white/[0.04] border border-white/[0.10] shadow-[0_8px_32px_rgba(0,0,0,0.37)] backdrop-blur-2xl flex flex-col">
-      <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-sky-400/30 to-transparent pointer-events-none" />
-
+    <div className="w-full rounded-2xl bg-white border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col overflow-hidden">
       {/* Header bar */}
-      <div className="px-6 py-4 border-b border-white/[0.08] flex items-center justify-between">
+      <div className="px-6 py-4 border-b border-slate-200/80 bg-white flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h3 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
             PHYSICAL NFC CARDS
           </h3>
-          <span className="text-xs text-slate-400 font-medium">
+          <span className="text-xs text-slate-500 font-medium">
             Showing {cards.length} of {total} slots
           </span>
         </div>
 
-        <div className="text-xs text-slate-300 flex items-center gap-2 font-medium">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+        <div className="text-xs text-slate-600 flex items-center gap-2 font-medium">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
           <span>Active Registry</span>
         </div>
       </div>
@@ -119,7 +117,7 @@ export default function CardsTable({
       <div className="overflow-x-auto w-full">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-white/[0.08] bg-white/[0.02] text-[11px] font-bold text-slate-300 uppercase tracking-wider">
+            <tr className="border-b border-slate-200 bg-slate-50/70 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
               <th className="py-3.5 px-6 w-24">Slot</th>
               <th className="py-3.5 px-4">Card Assignment</th>
               <th className="py-3.5 px-4">Destination Link</th>
@@ -128,29 +126,29 @@ export default function CardsTable({
               <th className="py-3.5 px-6 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/[0.05] text-xs">
+          <tbody className="divide-y divide-slate-100 text-xs">
             {isLoading ? (
               // Fast loading skeleton placeholder rows
               Array.from({ length: 8 }).map((_, idx) => (
                 <tr key={idx} className="animate-pulse">
                   <td className="py-4 px-6">
-                    <div className="h-5 w-10 bg-white/10 rounded-md" />
+                    <div className="h-5 w-10 bg-slate-200 rounded-md" />
                   </td>
                   <td className="py-4 px-4">
-                    <div className="h-4 w-32 bg-white/10 rounded mb-1" />
-                    <div className="h-3 w-20 bg-white/5 rounded" />
+                    <div className="h-4 w-32 bg-slate-200 rounded mb-1" />
+                    <div className="h-3 w-20 bg-slate-100 rounded" />
                   </td>
                   <td className="py-4 px-4">
-                    <div className="h-4 w-28 bg-white/10 rounded" />
+                    <div className="h-4 w-28 bg-slate-200 rounded" />
                   </td>
                   <td className="py-4 px-4 text-center">
-                    <div className="h-5 w-10 bg-white/10 rounded-full mx-auto" />
+                    <div className="h-5 w-10 bg-slate-200 rounded-full mx-auto" />
                   </td>
                   <td className="py-4 px-4 text-center">
-                    <div className="h-4 w-12 bg-white/10 rounded mx-auto" />
+                    <div className="h-4 w-12 bg-slate-200 rounded mx-auto" />
                   </td>
                   <td className="py-4 px-6 text-right">
-                    <div className="h-7 w-20 bg-white/10 rounded-lg ml-auto" />
+                    <div className="h-7 w-20 bg-slate-200 rounded-lg ml-auto" />
                   </td>
                 </tr>
               ))
@@ -158,13 +156,13 @@ export default function CardsTable({
               <tr>
                 <td colSpan={6} className="text-center py-16">
                   <div className="flex flex-col items-center justify-center">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-slate-400 mb-2">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 mb-2">
                       <CreditCard className="w-5 h-5 stroke-[1.5]" />
                     </div>
-                    <p className="text-xs font-semibold text-slate-300">
+                    <p className="text-xs font-semibold text-slate-800">
                       No cards match your query
                     </p>
-                    <p className="text-[11px] text-slate-400 mt-0.5">
+                    <p className="text-[11px] text-slate-500 mt-0.5">
                       Clear search query or switch filter to view slots.
                     </p>
                   </div>
@@ -189,13 +187,13 @@ export default function CardsTable({
                     }}
                     className={`cursor-pointer transition-colors ${
                       isSelected
-                        ? "bg-white/[0.08]"
-                        : "hover:bg-white/[0.04]"
+                        ? "bg-sky-50/70"
+                        : "hover:bg-slate-50/80"
                     }`}
                   >
                     {/* Slot # Badge (Clean, Sans-serif) */}
                     <td className="py-3.5 px-6 whitespace-nowrap">
-                      <span className="text-xs font-bold font-mono text-sky-300 bg-sky-500/15 px-2 py-0.5 rounded-md border border-sky-400/25">
+                      <span className="text-xs font-bold font-mono text-sky-800 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-200">
                         #{paddedSlot}
                       </span>
                     </td>
@@ -203,15 +201,15 @@ export default function CardsTable({
                     {/* Card Assignment (Name & Department) */}
                     <td className="py-3.5 px-4 min-w-[220px]">
                       <div className="min-w-0">
-                        <div className="font-semibold text-xs text-white truncate flex items-center gap-1.5">
+                        <div className="font-semibold text-xs text-slate-900 truncate flex items-center gap-1.5">
                           {card.name}
                           {isSelected && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-sky-600" />
                           )}
                         </div>
-                        <div className="text-[11px] text-slate-400 truncate mt-0.5 font-medium">
+                        <div className="text-[11px] text-slate-500 truncate mt-0.5 font-medium">
                           {isDefaultName ? (
-                            <span className="text-slate-500 font-normal">Unassigned Slot • Click to edit</span>
+                            <span className="text-slate-400 font-normal">Unassigned Slot • Click to edit</span>
                           ) : (
                             <span>
                               {card.jobTitle || "Executive"} {card.department ? `• ${card.department}` : ""}
@@ -225,22 +223,22 @@ export default function CardsTable({
                     <td className="py-3.5 px-4 min-w-[240px]">
                       {isRedirect ? (
                         <div className="space-y-0.5">
-                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-sky-500/15 text-sky-300 border border-sky-400/25">
-                            <Globe className="w-3 h-3 text-sky-400" />
+                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-sky-50 text-sky-700 border border-sky-200">
+                            <Globe className="w-3 h-3 text-sky-600" />
                             <span>Custom Link</span>
                           </div>
-                          <div className="text-[11px] text-slate-400 truncate max-w-[220px] block" title={card.redirectUrl}>
+                          <div className="text-[11px] text-slate-500 truncate max-w-[220px] block" title={card.redirectUrl}>
                             {card.redirectUrl || "No destination URL"}
                           </div>
                         </div>
                       ) : (
                         <div className="space-y-0.5">
-                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-white/[0.06] text-slate-200 border border-white/10">
-                            <UserCheck className="w-3 h-3 text-slate-400" />
+                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                            <UserCheck className="w-3 h-3 text-slate-500" />
                             <span>Digital Profile</span>
                           </div>
-                          <div className="text-[11px] text-slate-400">
-                            reachworld.com/{card.slug}
+                          <div className="text-[11px] text-slate-500 font-mono">
+                            /{card.slug}
                           </div>
                         </div>
                       )}
@@ -253,7 +251,7 @@ export default function CardsTable({
                         onClick={(e) => handleToggle(card, e)}
                         disabled={togglingId === card._id}
                         className={`relative inline-flex h-4.5 w-8 items-center rounded-full transition-colors cursor-pointer disabled:opacity-50 ${
-                          card.isActive ? "bg-emerald-500" : "bg-slate-700"
+                          card.isActive ? "bg-emerald-500" : "bg-slate-300"
                         }`}
                         title={card.isActive ? "Active (Click to Pause)" : "Paused (Click to Activate)"}
                       >
@@ -275,15 +273,15 @@ export default function CardsTable({
                         className="inline-flex flex-col items-center hover:scale-105 transition-transform cursor-pointer group"
                         title="Click to view detailed analytics & clicks for this card"
                       >
-                        <span className="text-xs font-bold text-white font-mono group-hover:text-sky-300 transition-colors">
+                        <span className="text-xs font-bold text-slate-900 font-mono group-hover:text-sky-600 transition-colors">
                           {card.views.toLocaleString()} taps
                         </span>
                         {!isRedirect && totalIconClicks > 0 ? (
-                          <span className="text-[10px] text-sky-300 font-semibold bg-sky-500/15 px-1.5 py-0.2 rounded border border-sky-400/25 mt-0.5">
+                          <span className="text-[10px] text-sky-700 font-semibold bg-sky-50 px-1.5 py-0.2 rounded border border-sky-200 mt-0.5">
                             {totalIconClicks} clicks
                           </span>
                         ) : (
-                          <span className="text-[9px] text-slate-500 font-mono">0 clicks</span>
+                          <span className="text-[9px] text-slate-400 font-mono">0 clicks</span>
                         )}
                       </div>
                     </td>
@@ -297,16 +295,16 @@ export default function CardsTable({
                         {/* Dedicated In-Depth Analytics Button */}
                         <button
                           onClick={() => onOpenAnalytics ? onOpenAnalytics(card) : onSelectForPreview(card)}
-                          className="w-7 h-7 rounded-lg bg-white/[0.05] hover:bg-white/[0.12] text-slate-300 hover:text-sky-300 flex items-center justify-center transition-colors cursor-pointer border border-white/[0.08]"
+                          className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-sky-600 flex items-center justify-center transition-colors cursor-pointer border border-slate-200/80"
                           title="Open In-Depth Analytics & Clicks"
                         >
-                          <BarChart3 className="w-3.5 h-3.5 text-sky-400" />
+                          <BarChart3 className="w-3.5 h-3.5 text-sky-600" />
                         </button>
 
                         {/* Preview Mobile Popup Button */}
                         <button
                           onClick={() => onOpenPreview(card)}
-                          className="w-7 h-7 rounded-lg bg-white/[0.05] hover:bg-white/[0.12] text-slate-300 hover:text-sky-300 flex items-center justify-center transition-colors cursor-pointer border border-white/[0.08]"
+                          className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-sky-600 flex items-center justify-center transition-colors cursor-pointer border border-slate-200/80"
                           title="Open Mobile Screen Preview"
                         >
                           <Smartphone className="w-3.5 h-3.5" />
@@ -315,11 +313,11 @@ export default function CardsTable({
                         {/* Copy URL */}
                         <button
                           onClick={() => handleCopyLink(card.slug, card._id)}
-                          className="w-7 h-7 rounded-lg bg-white/[0.05] hover:bg-white/[0.12] text-slate-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer border border-white/[0.08]"
+                          className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center transition-colors cursor-pointer border border-slate-200/80"
                           title={`Copy URL (reachworld.com/${card.slug})`}
                         >
                           {copiedId === card._id ? (
-                            <Check className="w-3.5 h-3.5 text-emerald-400" />
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
                           ) : (
                             <Copy className="w-3.5 h-3.5" />
                           )}
@@ -330,7 +328,7 @@ export default function CardsTable({
                           href={`/${card.slug}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-7 h-7 rounded-lg bg-white/[0.05] hover:bg-white/[0.12] text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-white/[0.08]"
+                          className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center transition-colors border border-slate-200/80"
                           title="Open card link"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
@@ -339,7 +337,7 @@ export default function CardsTable({
                         {/* Edit Button */}
                         <button
                           onClick={() => onEditCard(card)}
-                          className="px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.14] text-white font-semibold text-xs transition-all shadow-xs cursor-pointer flex items-center gap-1"
+                          className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs transition-all shadow-xs cursor-pointer flex items-center gap-1"
                           title="Edit Card"
                         >
                           <Pencil className="w-3 h-3 text-sky-400" />
@@ -350,7 +348,7 @@ export default function CardsTable({
                         <button
                           onClick={(e) => handleResetCard(card, e)}
                           disabled={resettingId === card._id}
-                          className="w-7 h-7 rounded-lg hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition-colors disabled:opacity-40 cursor-pointer"
+                          className="w-7 h-7 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 flex items-center justify-center transition-colors disabled:opacity-40 cursor-pointer"
                           title="Reset Slot"
                         >
                           <RotateCcw className="w-3 h-3" />
@@ -367,7 +365,7 @@ export default function CardsTable({
 
       {/* Pagination Footer */}
       {totalPages > 1 && (
-        <div className="px-6 py-3.5 border-t border-white/[0.08] bg-white/[0.02] flex items-center justify-between text-xs text-slate-400">
+        <div className="px-6 py-3.5 border-t border-slate-200 bg-slate-50/60 flex items-center justify-between text-xs text-slate-500">
           <span>
             Page {currentPage} of {totalPages} (50 Enterprise Slots)
           </span>
@@ -375,14 +373,14 @@ export default function CardsTable({
             <button
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage <= 1}
-              className="px-2.5 py-1 rounded-lg border border-white/10 bg-white/[0.05] hover:bg-white/[0.10] disabled:opacity-30 disabled:pointer-events-none transition-colors text-slate-200 font-medium text-xs"
+              className="px-2.5 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:pointer-events-none transition-colors text-slate-700 font-medium text-xs shadow-xs"
             >
               Prev
             </button>
             <button
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage >= totalPages}
-              className="px-2.5 py-1 rounded-lg border border-white/10 bg-white/[0.05] hover:bg-white/[0.10] disabled:opacity-30 disabled:pointer-events-none transition-colors text-slate-200 font-medium text-xs"
+              className="px-2.5 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 disabled:pointer-events-none transition-colors text-slate-700 font-medium text-xs shadow-xs"
             >
               Next
             </button>

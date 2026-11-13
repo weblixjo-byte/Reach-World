@@ -40,16 +40,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const cardTitle = card.cardNumber
-    ? `Card #${card.cardNumber < 10 ? '0' + card.cardNumber : card.cardNumber} — ${card.name}`
-    : card.name;
-
-  const title = `${cardTitle} | Reach World`;
-  const description =
-    card.headline ||
-    (card.jobTitle
-      ? `${card.name} — ${card.jobTitle} | Reach World`
-      : `Reach World Digital Card for ${card.name}`);
+  // Ultra-clean, prestigious executive title & description (short & elegant)
+  const title = `${card.name} — Reach World`;
+  const description = card.jobTitle
+    ? `${card.jobTitle} • Reach World`
+    : "Digital Business Card • Reach World";
 
   const cardUrl = `${baseUrl}/${resolvedParams.slug}`;
 

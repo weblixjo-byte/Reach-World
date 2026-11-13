@@ -64,32 +64,19 @@ export default function DashboardLayout({
           openSecurityModal: () => setSecurityModalOpen(true),
         }}
       >
-        <div className="relative min-h-screen bg-[#020b18] text-white flex font-sans overflow-hidden">
-          {/* Global Ambient Royal Feather Background */}
-          <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#020b18]">
-            <picture>
-              <source srcSet="/card-bg.webp" type="image/webp" />
-              <img
-                src="/card-bg.jpg"
-                alt="Reach World Background"
-                className="w-full h-full object-cover object-center opacity-30"
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-              />
-            </picture>
-            <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/70 via-[#020b18]/85 to-[#020b18]/95" />
-          </div>
-
+        <div className="relative min-h-screen bg-[#F8F9FA] text-[#0F172A] flex font-sans">
           {/* Executive Corporate Sidebar - Royal Feather Glassmorphism */}
-          <aside className="relative z-10 w-64 bg-[#020b18]/80 backdrop-blur-2xl border-r border-white/[0.08] p-6 flex flex-col justify-between select-none text-white shadow-2xl min-h-screen shrink-0 sticky top-0 h-screen overflow-hidden">
+          <aside className="relative z-10 w-64 bg-[#020b18] border-r border-slate-900/10 p-6 flex flex-col justify-between select-none text-white shadow-2xl min-h-screen shrink-0 sticky top-0 h-screen overflow-hidden">
             {/* Ambient Feather Background */}
-            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-30">
-              <img
-                src="/card-bg.webp"
-                alt=""
-                className="w-full h-full object-cover object-left scale-110"
-              />
+            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-35">
+              <picture>
+                <source srcSet="/card-bg.webp" type="image/webp" />
+                <img
+                  src="/card-bg.jpg"
+                  alt=""
+                  className="w-full h-full object-cover object-left scale-110"
+                />
+              </picture>
               <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/70 via-[#020b18]/85 to-[#020b18]/95" />
             </div>
 

@@ -171,16 +171,14 @@ export default function DashboardPage() {
           onEditCard={(card) => handleEdit(card)}
         />
       ) : currentView === "departments" ? (
-        /* DEPARTMENTS OVERVIEW - Frosted Glass Luxury */
-        <div className="relative overflow-hidden rounded-3xl bg-white/[0.04] p-8 border border-white/[0.10] shadow-[0_8px_32px_rgba(0,0,0,0.37)] backdrop-blur-2xl space-y-6">
-          <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-sky-400/30 to-transparent pointer-events-none" />
-
-          <div className="flex items-center justify-between pb-6 border-b border-white/[0.08]">
+        /* DEPARTMENTS OVERVIEW - Executive Light */
+        <div className="rounded-2xl bg-white p-6 sm:p-8 border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-6">
+          <div className="flex items-center justify-between pb-6 border-b border-slate-100">
             <div>
-              <h2 className="text-base font-bold text-white tracking-tight">
+              <h2 className="text-base font-bold text-slate-900 tracking-tight">
                 Departments Overview (50 Cards)
               </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 Inspect and filter employee cards by company division.
               </p>
             </div>
@@ -189,7 +187,7 @@ export default function DashboardPage() {
                 setSelectedDept("all");
                 setCurrentView("cards");
               }}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-white/[0.08] hover:bg-white/[0.14] text-white transition-colors cursor-pointer border border-white/10"
+              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer border border-slate-200/80"
             >
               Reset to All
             </button>
@@ -205,17 +203,17 @@ export default function DashboardPage() {
                     setSelectedDept(dept);
                     setCurrentView("cards");
                   }}
-                  className="p-5 rounded-2xl border border-white/[0.08] hover:border-sky-400/40 bg-white/[0.03] hover:bg-white/[0.07] transition-all cursor-pointer shadow-sm flex items-center justify-between group backdrop-blur-md"
+                  className="p-5 rounded-2xl border border-slate-200/80 hover:border-sky-400 bg-slate-50/60 hover:bg-white transition-all cursor-pointer shadow-xs flex items-center justify-between group"
                 >
                   <div>
-                    <h3 className="font-bold text-sm text-white group-hover:text-sky-300 transition-colors">
+                    <h3 className="font-bold text-sm text-slate-900 group-hover:text-sky-600 transition-colors">
                       {dept || "General"}
                     </h3>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="text-xs text-slate-500 mt-0.5">
                       {countInDept} Active Cards
                     </p>
                   </div>
-                  <Users className="w-4 h-4 text-slate-400 group-hover:text-sky-300 transition-colors" />
+                  <Users className="w-4 h-4 text-slate-400 group-hover:text-sky-600 transition-colors" />
                 </div>
               );
             })}
@@ -228,23 +226,23 @@ export default function DashboardPage() {
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
               <div>
-                <h2 className="text-base font-bold text-white tracking-tight">
+                <h2 className="text-base font-bold text-slate-900 tracking-tight">
                   50 Physical NFC Cards Registry
                 </h2>
-                <p className="text-xs text-slate-400">
-                  Fixed hardware slots (01 – 50) with permanent URLs (reachworld.com/1 to 50)
+                <p className="text-xs text-slate-500">
+                  Fixed hardware slots (01 – 50) with customizable secure URLs
                 </p>
               </div>
 
               <div className="flex items-center gap-2.5">
                 {/* View Switcher (Table vs Rack) */}
-                <div className="bg-white/[0.06] p-0.5 rounded-xl flex items-center border border-white/10 backdrop-blur-md">
+                <div className="bg-slate-100/90 p-0.5 rounded-xl flex items-center border border-slate-200/80">
                   <button
                     onClick={() => setViewMode("table")}
                     className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                       viewMode === "table"
-                        ? "bg-white/[0.12] text-white shadow-xs border border-white/15"
-                        : "text-slate-400 hover:text-white"
+                        ? "bg-white text-slate-900 shadow-xs border border-slate-200"
+                        : "text-slate-500 hover:text-slate-900"
                     }`}
                   >
                     <List className="w-3.5 h-3.5" />
@@ -254,8 +252,8 @@ export default function DashboardPage() {
                     onClick={() => setViewMode("rack")}
                     className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                       viewMode === "rack"
-                        ? "bg-white/[0.12] text-white shadow-xs border border-white/15"
-                        : "text-slate-400 hover:text-white"
+                        ? "bg-white text-slate-900 shadow-xs border border-slate-200"
+                        : "text-slate-500 hover:text-slate-900"
                     }`}
                   >
                     <LayoutGrid className="w-3.5 h-3.5" />
@@ -267,17 +265,17 @@ export default function DashboardPage() {
                 <button
                   onClick={handleExportCSV}
                   disabled={isExporting || allCards.length === 0}
-                  className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-white/[0.06] border border-white/10 text-slate-200 hover:bg-white/[0.12] hover:text-white flex items-center gap-2 transition-all shadow-xs cursor-pointer disabled:opacity-40 backdrop-blur-md"
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-white border border-slate-200/80 text-slate-700 hover:bg-slate-50 hover:text-slate-900 flex items-center gap-2 transition-all shadow-xs cursor-pointer disabled:opacity-40"
                   title="Export 50 cards to CSV"
                 >
-                  <Download className="w-3.5 h-3.5 text-sky-400" />
+                  <Download className="w-3.5 h-3.5 text-sky-600" />
                   <span>{isExporting ? "Exporting..." : "Export CSV"}</span>
                 </button>
               </div>
             </div>
 
-            {/* Clean Single-Row Search & Filter Bar - Frosted Glass */}
-            <div className="relative overflow-hidden rounded-2xl bg-white/[0.04] p-3 border border-white/[0.10] shadow-[0_4px_24px_rgba(0,0,0,0.2)] backdrop-blur-2xl flex flex-wrap lg:flex-nowrap items-center gap-3">
+            {/* Clean Single-Row Search & Filter Bar - Executive Light */}
+            <div className="rounded-2xl bg-white p-3 border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-wrap lg:flex-nowrap items-center gap-3">
               {/* Search input */}
               <div className="relative flex-1 min-w-[200px]">
                 <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -286,18 +284,18 @@ export default function DashboardPage() {
                   placeholder="Search 50 cards by slot, employee, or link..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-white/[0.08] focus:border-sky-400 focus:bg-white/[0.08] focus:outline-none transition-all bg-white/[0.03] text-white placeholder:text-slate-400 font-medium"
+                  className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 focus:border-sky-500 focus:bg-white focus:outline-none transition-all bg-slate-50 text-slate-900 placeholder:text-slate-400 font-medium"
                 />
               </div>
 
               {/* Mode Filter Pills */}
-              <div className="flex items-center gap-1 shrink-0 bg-white/[0.05] p-1 rounded-xl border border-white/[0.08]">
+              <div className="flex items-center gap-1 shrink-0 bg-slate-100 p-1 rounded-xl border border-slate-200/70">
                 <button
                   onClick={() => setModeFilter("all")}
                   className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                     modeFilter === "all"
-                      ? "bg-white/[0.14] text-white shadow-xs border border-white/10"
-                      : "text-slate-400 hover:text-white"
+                      ? "bg-white text-slate-900 shadow-xs border border-slate-200"
+                      : "text-slate-500 hover:text-slate-900"
                   }`}
                 >
                   All (50)
@@ -306,8 +304,8 @@ export default function DashboardPage() {
                   onClick={() => setModeFilter("profile")}
                   className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                     modeFilter === "profile"
-                      ? "bg-white/[0.14] text-white shadow-xs border border-white/10"
-                      : "text-slate-400 hover:text-white"
+                      ? "bg-white text-slate-900 shadow-xs border border-slate-200"
+                      : "text-slate-500 hover:text-slate-900"
                   }`}
                 >
                   Bio Profiles
@@ -316,8 +314,8 @@ export default function DashboardPage() {
                   onClick={() => setModeFilter("redirect")}
                   className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                     modeFilter === "redirect"
-                      ? "bg-white/[0.14] text-white shadow-xs border border-white/10"
-                      : "text-slate-400 hover:text-white"
+                      ? "bg-white text-slate-900 shadow-xs border border-slate-200"
+                      : "text-slate-500 hover:text-slate-900"
                   }`}
                 >
                   Custom Links
@@ -328,11 +326,11 @@ export default function DashboardPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="text-xs px-3 py-2 rounded-xl border border-white/[0.10] bg-white/[0.05] text-slate-200 font-medium focus:outline-none focus:border-sky-400 shrink-0 cursor-pointer backdrop-blur-md"
+                className="text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-medium focus:outline-none focus:border-sky-500 shrink-0 cursor-pointer"
               >
-                <option value="all" className="bg-[#041226] text-white">All Status</option>
-                <option value="active" className="bg-[#041226] text-white">Active Only</option>
-                <option value="paused" className="bg-[#041226] text-white">Paused Only</option>
+                <option value="all">All Status</option>
+                <option value="active">Active Only</option>
+                <option value="paused">Paused Only</option>
               </select>
 
               {/* Department Dropdown (if present) */}
@@ -340,11 +338,11 @@ export default function DashboardPage() {
                 <select
                   value={selectedDept}
                   onChange={(e) => setSelectedDept(e.target.value)}
-                  className="text-xs px-3 py-2 rounded-xl border border-white/[0.10] bg-white/[0.05] text-slate-200 font-medium focus:outline-none focus:border-sky-400 shrink-0 cursor-pointer backdrop-blur-md"
+                  className="text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-medium focus:outline-none focus:border-sky-500 shrink-0 cursor-pointer"
                 >
-                  <option value="all" className="bg-[#041226] text-white">All Departments</option>
+                  <option value="all">All Departments</option>
                   {departments.map((dept) => (
-                    <option key={dept} value={dept} className="bg-[#041226] text-white">
+                    <option key={dept} value={dept}>
                       {dept}
                     </option>
                   ))}
@@ -372,20 +370,18 @@ export default function DashboardPage() {
                 onResetSuccess={() => loadData()}
               />
             ) : (
-              /* Visual 50-Card Hardware Rack View (Full Width) - Frosted Glass */
-              <div className="relative overflow-hidden rounded-3xl bg-white/[0.04] p-6 border border-white/[0.10] shadow-[0_8px_32px_rgba(0,0,0,0.37)] backdrop-blur-2xl space-y-4">
-                <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-sky-400/30 to-transparent pointer-events-none" />
-
-                <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+              /* Visual 50-Card Hardware Rack View (Full Width) - Executive Light */
+              <div className="rounded-2xl bg-white p-6 border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
+                <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                   <div>
-                    <h3 className="text-sm font-bold text-white">
+                    <h3 className="text-sm font-bold text-slate-900">
                       50 Physical NFC Cards Rack
                     </h3>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-slate-500">
                       Click any card slot to inspect or test its destination.
                     </p>
                   </div>
-                  <span className="text-xs font-bold text-sky-300 bg-sky-500/15 px-3 py-1.5 rounded-xl border border-sky-400/25 font-mono">
+                  <span className="text-xs font-bold text-sky-800 bg-sky-50 px-3 py-1.5 rounded-xl border border-sky-200 font-mono">
                     Slots 01 – 50
                   </span>
                 </div>
@@ -400,35 +396,35 @@ export default function DashboardPage() {
                       <div
                         key={card._id}
                         onClick={() => setPreviewCard(card)}
-                        className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between h-36 backdrop-blur-md ${
+                        className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between h-36 ${
                           isSelected
-                            ? "bg-white/[0.12] border-sky-400 shadow-[0_0_20px_rgba(56,189,248,0.25)] ring-2 ring-sky-400/30"
-                            : "bg-white/[0.03] border-white/[0.08] hover:border-sky-400/50 hover:bg-white/[0.06] hover:shadow-sm"
+                            ? "bg-sky-50/70 border-sky-400 shadow-sm ring-2 ring-sky-300/40"
+                            : "bg-slate-50/60 border-slate-200/80 hover:border-sky-300 hover:bg-white hover:shadow-xs"
                         }`}
                       >
                         <div className="flex items-start justify-between">
-                          <span className="text-xs font-bold font-mono text-sky-300 bg-white/[0.06] px-2 py-0.5 rounded-md border border-white/10">
+                          <span className="text-xs font-bold font-mono text-sky-800 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-200">
                             #{padded}
                           </span>
                           <span
                             className={`w-2.5 h-2.5 rounded-full ${
-                              card.isActive ? "bg-emerald-400" : "bg-slate-600"
+                              card.isActive ? "bg-emerald-500" : "bg-slate-300"
                             }`}
                             title={card.isActive ? "Active" : "Paused"}
                           />
                         </div>
 
                         <div className="my-1 min-w-0">
-                          <h4 className="font-bold text-xs text-white truncate" title={card.name}>
+                          <h4 className="font-bold text-xs text-slate-900 truncate" title={card.name}>
                             {card.name}
                           </h4>
-                          <p className="text-[10px] text-slate-400 truncate">
+                          <p className="text-[10px] text-slate-500 truncate">
                             {isRedirect ? "Custom Link" : card.jobTitle || "Digital Profile"}
                           </p>
                         </div>
 
-                        <div className="pt-2 border-t border-white/[0.08] flex items-center justify-between">
-                          <span className="text-[10px] font-bold text-sky-400 font-mono">
+                        <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                          <span className="text-[10px] font-bold text-sky-700 font-mono">
                             {card.views} taps
                           </span>
                           <button
@@ -436,7 +432,7 @@ export default function DashboardPage() {
                               e.stopPropagation();
                               handleEdit(card);
                             }}
-                            className="p-1 rounded-md hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+                            className="p-1 rounded-md hover:bg-slate-200 text-slate-500 hover:text-slate-900 transition-colors"
                             title="Edit Slot"
                           >
                             <Pencil className="w-3 h-3" />

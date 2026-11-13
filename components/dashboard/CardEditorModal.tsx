@@ -47,11 +47,39 @@ export default function CardEditorModal({
   // Routing Mode: profile vs redirect
   const [mode, setMode] = useState<CardModeType>(initialData?.mode || "profile");
   const [redirectUrl, setRedirectUrl] = useState(initialData?.redirectUrl || "");
+  const [slugVal, setSlugVal] = useState(initialData?.slug || String(cardNumber));
 
   // Identity state
   const [name, setName] = useState(initialData?.name || `Card #${paddedSlot}`);
   const [jobTitle, setJobTitle] = useState(initialData?.jobTitle || "");
   const [department, setDepartment] = useState(initialData?.department || "Reach World");
+
+  // Slug generator helpers
+  const generateRandomSlug = () => {
+    const chars = "abcdefghjkmnpqrstuvwxyz23456789";
+    let token = "";
+    for (let i = 0; i < 4; i++) {
+      token += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    setSlugVal(`rw-${paddedSlot}-${token}`);
+  };
+
+  const generateNameSlug = () => {
+    if (!name || name.startsWith("Card #")) {
+      generateRandomSlug();
+      return;
+    }
+    const clean = name
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, ".");
+    setSlugVal(clean || `rw-${paddedSlot}`);
+  };
+
+  const resetSlugToSlot = () => {
+    setSlugVal(String(cardNumber));
+  };
 
   // Fixed Channels values
   const getInitialVal = (icon: string) => {
@@ -123,6 +151,7 @@ export default function CardEditorModal({
     if (initialData) {
       setMode(initialData.mode || (initialData.redirectUrl ? "redirect" : "profile"));
       setRedirectUrl(initialData.redirectUrl || "");
+      setSlugVal(initialData.slug || String(initialData.cardNumber || 1));
       setName(initialData.name || `Card #${paddedSlot}`);
       setJobTitle(initialData.jobTitle || "");
       setDepartment(initialData.department || "Reach World");
@@ -302,6 +331,7 @@ export default function CardEditorModal({
     return {
       name: currentName.trim() || `Card #${paddedSlot}`,
       cardNumber,
+      slug: slugVal.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "") || String(cardNumber),
       jobTitle: currentJob.trim(),
       department: currentDept.trim(),
       phone: formattedPhone,
@@ -395,7 +425,7 @@ export default function CardEditorModal({
               </h2>
               <p className="text-xs text-[#64748B] mt-0.5 font-medium flex items-center gap-2">
                 <span>Hardware URL:</span>
-                <span className="font-mono text-[#0071E3] font-bold">reachworld.com/{cardSlug}</span>
+                <span className="font-mono text-[#0071E3] font-bold">reachworld.com/{slugVal}</span>
               </p>
             </div>
           </div>
@@ -414,6 +444,66 @@ export default function CardEditorModal({
               {errorMsg}
             </div>
           )}
+
+          {/* SECURE CARD URL & ANTI-ENUMERATION */}
+          <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <label className="block text-xs font-bold text-[#0F172A]">
+                  Card URL Handle (رابط البطاقة وحماية الخصوصية)
+                </label>
+                <p className="text-[11px] text-[#64748B] mt-0.5">
+                  تخصيص الرابط بالاسم أو بكود آمن يمنع الغرباء من تصفح باقي بطاقات الموظفين بالتخمين (/1, /2, /3).
+                </p>
+              </div>
+              <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-semibold">
+                Privacy Protected
+              </span>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <div className="flex-1 flex items-center rounded-xl border border-black/15 bg-white overflow-hidden focus-within:ring-2 focus-within:ring-[#0071E3]/20 focus-within:border-[#0071E3]">
+                <span className="px-3 py-2 text-xs text-[#64748B] font-mono bg-slate-50 border-r border-slate-200 select-none">
+                  reachworld.com/
+                </span>
+                <input
+                  type="text"
+                  value={slugVal}
+                  onChange={(e) => setSlugVal(e.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, ""))}
+                  placeholder={String(cardNumber)}
+                  className="flex-1 px-3 py-2 text-xs text-[#0F172A] font-mono font-bold focus:outline-none bg-white"
+                />
+              </div>
+
+              {/* Quick actions */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={generateNameSlug}
+                  className="px-2.5 py-2 rounded-xl bg-white border border-slate-200 hover:border-sky-400 text-xs font-semibold text-slate-700 hover:text-sky-700 transition-colors cursor-pointer shadow-2xs"
+                  title="Generate URL handle from employee name (e.g. mohammad.alseidi)"
+                >
+                  ⚡ By Name
+                </button>
+                <button
+                  type="button"
+                  onClick={generateRandomSlug}
+                  className="px-2.5 py-2 rounded-xl bg-sky-50 border border-sky-200 hover:bg-sky-100 text-xs font-semibold text-sky-800 transition-colors cursor-pointer shadow-2xs"
+                  title="Generate unguessable code (e.g. rw-01-k8f2)"
+                >
+                  🔒 Secure Code
+                </button>
+                <button
+                  type="button"
+                  onClick={resetSlugToSlot}
+                  className="px-2 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-xs text-slate-500 transition-colors cursor-pointer shadow-2xs"
+                  title="Reset to default slot number"
+                >
+                  Slot #{paddedSlot}
+                </button>
+              </div>
+            </div>
+          </div>
 
           {/* DESTINATION ROUTING MODE SWITCHER */}
           <div className="space-y-3">
@@ -883,7 +973,7 @@ export default function CardEditorModal({
           {/* Modal Footer Buttons */}
           <div className="pt-4 border-t border-black/[0.08] flex items-center justify-between">
             <span className="text-xs text-[#64748B]">
-              Slot #{paddedSlot} • Slug: /{cardSlug}
+              Slot #{paddedSlot} • Slug: /{slugVal}
             </span>
             <div className="flex items-center gap-2">
               <button
