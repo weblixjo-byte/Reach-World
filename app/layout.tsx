@@ -9,10 +9,47 @@ const jakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL && !process.env.NEXT_PUBLIC_BASE_URL.includes("localhost")
+    ? process.env.NEXT_PUBLIC_BASE_URL
+    : process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "https://reach-world.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Reach World — Digital Bio & NFC Cards Console",
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: "Reach World — Digital Bio & NFC Cards Console",
+    template: "%s | Reach World",
+  },
   description:
     "Enterprise NFC and Digital Business Card management platform for Reach World.",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: baseUrl,
+    siteName: "Reach World",
+    title: "Reach World — Digital Business Cards",
+    description: "Connect instantly with Reach World NFC Smart Business Cards.",
+    images: [
+      {
+        url: `${baseUrl}/og-image.jpg`,
+        secureUrl: `${baseUrl}/og-image.jpg`,
+        width: 1024,
+        height: 1024,
+        type: "image/jpeg",
+        alt: "Reach World Digital Business Cards",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Reach World — Digital Business Cards",
+    description: "Connect instantly with Reach World NFC Smart Business Cards.",
+    images: [`${baseUrl}/og-image.jpg`],
+  },
   icons: {
     icon: "/favicon.ico",
   },

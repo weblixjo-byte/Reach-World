@@ -21,8 +21,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const resolvedParams = await params;
   const card = await getCardBySlug(resolvedParams.slug);
 
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL && !process.env.NEXT_PUBLIC_BASE_URL.includes("localhost")
+      ? process.env.NEXT_PUBLIC_BASE_URL
+      : process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "https://reach-world.vercel.app";
+
+  const ogImageUrl = `${baseUrl}/og-image.jpg`;
+
   if (!card) {
     return {
+      metadataBase: new URL(baseUrl),
       title: "Card Not Found — Reach World",
       description: "Reach World Digital Card",
     };
@@ -32,13 +44,42 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? `Card #${card.cardNumber < 10 ? '0' + card.cardNumber : card.cardNumber} — ${card.name}`
     : card.name;
 
+  const title = `${cardTitle} | Reach World`;
+  const description =
+    card.headline ||
+    (card.jobTitle
+      ? `${card.name} — ${card.jobTitle} | Reach World`
+      : `Reach World Digital Card for ${card.name}`);
+
+  const cardUrl = `${baseUrl}/${resolvedParams.slug}`;
+
   return {
-    title: `${cardTitle} | Reach World NFC`,
-    description: `${card.jobTitle || "Executive"} — Reach World (${card.department || "Corporate"})`,
+    metadataBase: new URL(baseUrl),
+    title,
+    description,
     openGraph: {
-      title: `${cardTitle} — Reach World`,
-      description: card.headline || `${card.jobTitle} at Reach World`,
-      images: card.avatarUrl ? [{ url: card.avatarUrl }] : [],
+      type: "profile",
+      url: cardUrl,
+      title,
+      description,
+      siteName: "Reach World",
+      locale: "en_US",
+      images: [
+        {
+          url: ogImageUrl,
+          secureUrl: ogImageUrl,
+          width: 1024,
+          height: 1024,
+          type: "image/jpeg",
+          alt: `${card.name} — Reach World Digital Card`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
     },
   };
 }
@@ -96,7 +137,7 @@ export default async function PublicCardPage({ params }: PageProps) {
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-300/80 leading-relaxed max-w-xs mx-auto mb-7 font-normal">
-            This digital card is currently inactive. Please visit our official corporate website for assistance.
+            This digital card is currently inactive. Please visit our official website for assistance.
           </p>
 
           <a

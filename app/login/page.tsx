@@ -63,7 +63,7 @@ export default function LoginPage() {
               NFC Management Console
             </h1>
             <p className="text-xs text-slate-300/70 mt-1 font-medium">
-              Authorized Corporate Access
+              Authorized Console Access
             </p>
           </div>
 
@@ -116,7 +116,7 @@ export default function LoginPage() {
           {/* Security Notice */}
           <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
             <span>256-bit Encrypted Session</span>
-            <span>Reach World Corp</span>
+            <span>Reach World</span>
           </div>
         </div>
 

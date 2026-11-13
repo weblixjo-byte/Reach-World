@@ -59,7 +59,7 @@ export default function BioCardView({ card }: BioCardViewProps) {
       if (navigator.share) {
         navigator.share({
           title: `${card.name} — Reach World`,
-          text: `Reach World Corporate Digital Card: ${card.name}`,
+          text: `Reach World Digital Card: ${card.name}`,
           url: window.location.href,
         }).catch(() => {});
       } else {
