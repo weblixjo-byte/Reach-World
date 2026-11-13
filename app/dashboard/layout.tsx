@@ -8,17 +8,24 @@ import { useRouter } from "next/navigation";
 
 export type DashboardViewType =
   | "cards"
-  | "departments";
+  | "departments"
+  | "analytics";
 
 interface DashboardNavContextType {
   currentView: DashboardViewType;
   setCurrentView: (view: DashboardViewType) => void;
+  analyticsCardId: string | null;
+  setAnalyticsCardId: (id: string | null) => void;
+  openAnalytics: (cardId?: string) => void;
   openSecurityModal: () => void;
 }
 
 export const DashboardNavContext = createContext<DashboardNavContextType>({
   currentView: "cards",
   setCurrentView: () => {},
+  analyticsCardId: null,
+  setAnalyticsCardId: () => {},
+  openAnalytics: () => {},
   openSecurityModal: () => {},
 });
 
@@ -30,8 +37,14 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const [currentView, setCurrentView] = useState<DashboardViewType>("cards");
+  const [analyticsCardId, setAnalyticsCardId] = useState<string | null>(null);
   const [securityModalOpen, setSecurityModalOpen] = useState(false);
   const router = useRouter();
+
+  const openAnalytics = (cardId?: string) => {
+    setAnalyticsCardId(cardId || null);
+    setCurrentView("analytics");
+  };
 
   const handleLogout = async () => {
     await logoutAction();
@@ -45,14 +58,33 @@ export default function DashboardLayout({
         value={{
           currentView,
           setCurrentView,
+          analyticsCardId,
+          setAnalyticsCardId,
+          openAnalytics,
           openSecurityModal: () => setSecurityModalOpen(true),
         }}
       >
-        <div className="min-h-screen bg-[#F8F9FA] flex font-sans">
+        <div className="relative min-h-screen bg-[#020b18] text-white flex font-sans overflow-hidden">
+          {/* Global Ambient Royal Feather Background */}
+          <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#020b18]">
+            <picture>
+              <source srcSet="/card-bg.webp" type="image/webp" />
+              <img
+                src="/card-bg.jpg"
+                alt="Reach World Background"
+                className="w-full h-full object-cover object-center opacity-30"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+              />
+            </picture>
+            <div className="absolute inset-0 bg-gradient-to-b from-[#020b18]/70 via-[#020b18]/85 to-[#020b18]/95" />
+          </div>
+
           {/* Executive Corporate Sidebar - Royal Feather Glassmorphism */}
-          <aside className="relative w-64 bg-[#020b18] border-r border-white/[0.08] p-6 flex flex-col justify-between select-none text-white shadow-2xl min-h-screen shrink-0 sticky top-0 h-screen overflow-hidden">
+          <aside className="relative z-10 w-64 bg-[#020b18]/80 backdrop-blur-2xl border-r border-white/[0.08] p-6 flex flex-col justify-between select-none text-white shadow-2xl min-h-screen shrink-0 sticky top-0 h-screen overflow-hidden">
             {/* Ambient Feather Background */}
-            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-35">
+            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-30">
               <img
                 src="/card-bg.webp"
                 alt=""
@@ -103,6 +135,17 @@ export default function DashboardLayout({
                   Departments
                 </button>
 
+                <button
+                  onClick={() => openAnalytics()}
+                  className={`relative overflow-hidden w-full text-left px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer ${
+                    currentView === "analytics"
+                      ? "bg-white/[0.10] text-white font-semibold border border-white/[0.15] shadow-[0_4px_16px_rgba(0,0,0,0.3)] backdrop-blur-xl before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-sky-400 before:rounded-r"
+                      : "text-slate-300/80 hover:text-white hover:bg-white/[0.06] border border-transparent hover:border-white/[0.08] font-medium backdrop-blur-sm"
+                  }`}
+                >
+                  Clicks & Analytics
+                </button>
+
                 <div className="pt-4 pb-1">
                   <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400/70 px-3.5 mb-2">
                     Security & Admin
@@ -149,7 +192,7 @@ export default function DashboardLayout({
           </aside>
 
           {/* Main Content Area */}
-          <main className="flex-1 overflow-y-auto p-10">{children}</main>
+          <main className="relative z-10 flex-1 overflow-y-auto p-6 sm:p-10">{children}</main>
 
           {/* Security & Credentials Modal */}
           <AdminSecurityModal

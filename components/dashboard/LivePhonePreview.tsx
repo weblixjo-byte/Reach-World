@@ -145,49 +145,25 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
   }
 
   return (
-    <div className="flex flex-col items-center select-none sticky top-8 w-full max-w-[360px] mx-auto">
-      {/* Top Segmented Control Switcher */}
-      <div className="w-full flex items-center justify-between mb-3 px-1">
-        <div className="bg-[#EAEAEA] p-1 rounded-2xl flex items-center gap-1 border border-black/5 shadow-inner">
-          <button
-            type="button"
-            onClick={() => setActiveTab("preview")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeTab === "preview"
-                ? "bg-white text-[#1D1D1F] shadow-xs"
-                : "text-[#64748B] hover:text-[#1D1D1F]"
-            }`}
-          >
-            <Smartphone className="w-3.5 h-3.5" />
-            <span>Mobile View</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("analytics")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeTab === "analytics"
-                ? "bg-white text-[#0071E3] shadow-xs"
-                : "text-[#64748B] hover:text-[#1D1D1F]"
-            }`}
-          >
-            <BarChart3 className="w-3.5 h-3.5" />
-            <span>Icon Clicks</span>
-            {totalIconClicks > 0 && (
-              <span className="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] bg-[#0071E3]/10 text-[#0071E3] font-mono">
-                {totalIconClicks}
-              </span>
-            )}
-          </button>
+    <div className="flex flex-col items-center select-none sticky top-8 w-full max-w-[360px] mx-auto text-white">
+      {/* Top Header Bar */}
+      <div className="w-full flex items-center justify-between mb-4 px-2">
+        <div className="flex items-center gap-2">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-sky-500/15 border border-sky-400/25 text-sky-300">
+            Card #{slotPadded}
+          </span>
+          <span className="text-xs font-semibold text-slate-300 truncate max-w-[150px]">
+            {card.name || "Preview"}
+          </span>
         </div>
 
         <button
           onClick={handleCopy}
-          className="text-xs text-[#0071E3] hover:underline flex items-center gap-1 font-semibold cursor-pointer shrink-0"
+          className="text-xs text-sky-400 hover:text-white px-3 py-1 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 flex items-center gap-1 font-semibold cursor-pointer transition-all active:scale-95 shrink-0"
         >
           {copied ? (
             <>
-              <Check className="w-3.5 h-3.5 text-[#34C759]" /> Copied
+              <Check className="w-3.5 h-3.5 text-emerald-400" /> Copied
             </>
           ) : (
             <>
@@ -197,9 +173,8 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
         </button>
       </div>
 
-      {/* TAB 1: REALISTIC IPHONE MOBILE VIEW */}
-      {activeTab === "preview" && (
-        <div className="flex flex-col items-center w-full animate-in fade-in duration-200">
+      {/* REALISTIC IPHONE MOBILE VIEW */}
+      <div className="flex flex-col items-center w-full animate-in fade-in duration-200">
           <div className="relative w-[340px] h-[670px] bg-black rounded-[54px] p-3 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] ring-1 ring-black/20 border-4 border-[#2A2B2E]">
             {/* Dynamic Island Pill */}
             <div className="absolute top-5 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-full z-40 flex items-center justify-between px-2.5">
@@ -368,229 +343,18 @@ export default function LivePhonePreview({ card }: LivePhonePreviewProps) {
           </div>
 
           {/* Compact Telemetry Footer Pill */}
-          {!isCustomLink && (
-            <div className="mt-4 w-[340px] bg-white rounded-2xl p-3 border border-black/[0.06] shadow-xs flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#34C759]" />
-                <span className="text-xs font-semibold text-[#1D1D1F]">
-                  {cardViews} Scans • {totalIconClicks} Clicks
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setActiveTab("analytics")}
-                className="text-[11px] font-bold text-[#0071E3] hover:underline flex items-center gap-1 cursor-pointer"
-              >
-                <span>View Breakdown</span>
-                <ArrowRight className="w-3 h-3" />
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* TAB 2: DEDICATED ICON & LINK CLICK TELEMETRY (CLEAN & NON-CLUTTERED) */}
-      {activeTab === "analytics" && (
-        <div className="w-[340px] bg-white rounded-3xl p-6 border border-black/[0.06] shadow-sm animate-in fade-in duration-200 space-y-5">
-          {/* Header */}
-          <div className="flex items-start justify-between pb-3 border-b border-black/[0.05]">
-            <div>
-              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-[#0a192f] text-white font-mono font-bold text-[10px] mb-1.5">
-                <span>Card #{slotPadded}</span>
-              </div>
-              <h3 className="text-sm font-bold text-[#1D1D1F] tracking-tight truncate max-w-[200px]">
-                {card.name}
-              </h3>
-              <p className="text-[11px] text-[#86868B]">
-                {isCustomLink ? "Custom Destination Link" : "Profile Link Engagement"}
-              </p>
-            </div>
-
-            <div className="text-right">
-              <span className="text-xl font-extrabold text-[#0071E3] font-mono block">
-                {isCustomLink ? cardViews : totalIconClicks}
-              </span>
-              <span className="text-[10px] text-[#86868B] font-medium uppercase tracking-wider">
-                Total Clicks
+          <div className="mt-4 w-[340px] bg-white/[0.04] rounded-2xl p-3 border border-white/[0.10] shadow-sm flex items-center justify-between text-xs backdrop-blur-md">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span className="font-semibold text-slate-200">
+                {cardViews} Scans • {totalIconClicks} Clicks
               </span>
             </div>
+            <span className="text-[11px] text-sky-400 font-mono font-bold">
+              Slot #{slotPadded}
+            </span>
           </div>
-
-          {/* If Custom Web Link Mode */}
-          {isCustomLink ? (
-            <div className="space-y-4 py-2 text-center">
-              <div className="w-12 h-12 rounded-2xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center mx-auto">
-                <Globe className="w-6 h-6" />
-              </div>
-              <div>
-                <h4 className="text-xs font-bold text-[#1D1D1F]">
-                  100% Direct Forwarding
-                </h4>
-                <p className="text-[11px] text-[#86868B] mt-1 leading-relaxed">
-                  All {cardViews} physical taps immediately opened this card&apos;s assigned web link:
-                </p>
-              </div>
-
-              <div className="p-3 rounded-xl bg-[#F5F5F7] border border-black/5 text-left">
-                <span className="text-[10px] text-[#86868B] block font-mono">TARGET URL</span>
-                <p className="text-xs font-bold text-[#0071E3] font-mono truncate" title={card.redirectUrl}>
-                  {card.redirectUrl || "https://reachworld.com"}
-                </p>
-              </div>
-
-              <a
-                href={card.redirectUrl || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-2.5 px-3 rounded-xl text-xs font-semibold text-white bg-[#0071E3] hover:bg-[#0077ED] flex items-center justify-center gap-1.5"
-              >
-                <span>Test Link Live</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
-          ) : (
-            /* Digital Bio Profile: Detailed Icon & Action Breakdown */
-            <div className="space-y-4">
-              {/* Top Summary KPI Mini Cards */}
-              <div className="grid grid-cols-2 gap-2">
-                <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-black/[0.04]">
-                  <span className="text-[10px] text-[#64748B] font-medium block">
-                    Card Scans (Visits)
-                  </span>
-                  <span className="text-base font-bold text-[#0F172A] font-mono mt-0.5 block">
-                    {cardViews}
-                  </span>
-                </div>
-
-                <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-black/[0.04]">
-                  <span className="text-[10px] text-[#64748B] font-medium block">
-                    Interaction Rate
-                  </span>
-                  <span className="text-base font-bold text-[#34C759] font-mono mt-0.5 block">
-                    {engagementRate}%
-                  </span>
-                </div>
-              </div>
-
-              {/* Breakdown Title */}
-              <div className="flex items-center justify-between pt-1">
-                <span className="text-[11px] font-bold text-[#86868B] uppercase tracking-wider flex items-center gap-1.5">
-                  <MousePointerClick className="w-3.5 h-3.5 text-[#0071E3]" />
-                  <span>Clicks Per Channel</span>
-                </span>
-                {topItemTitle && topClickCount > 0 && (
-                  <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                    ⭐ Top: {topItemTitle}
-                  </span>
-                )}
-              </div>
-
-              {/* Items List */}
-              <div className="space-y-2.5">
-                {/* 1. All Registered Contact Links */}
-                {allActiveLinks.map((link, idx) => {
-                  const clicks = link.clicks || 0;
-                  const percentage =
-                    totalIconClicks > 0
-                      ? Math.round((clicks / totalIconClicks) * 100)
-                      : 0;
-
-                  return (
-                    <div
-                      key={link._id || idx}
-                      className="p-3 rounded-2xl bg-[#FBFBFD] border border-black/[0.04] space-y-2"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <div className="w-7 h-7 rounded-lg bg-[#0a192f] text-white flex items-center justify-center p-1.5 shrink-0 shadow-xs">
-                            <SocialIcon type={link.icon} className="w-full h-full" />
-                          </div>
-                          <div className="min-w-0">
-                            <span className="text-xs font-bold text-[#1D1D1F] block truncate">
-                              {link.title}
-                            </span>
-                            <span className="text-[10px] text-[#86868B] truncate block font-mono">
-                              {link.subtitle || link.url.replace(/^https?:\/\//, "")}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="text-right shrink-0">
-                          <span className="text-xs font-bold text-[#1D1D1F] font-mono block">
-                            {clicks} <span className="text-[10px] font-normal text-[#86868B]">clicks</span>
-                          </span>
-                          <span className="text-[10px] text-[#0071E3] font-semibold font-mono">
-                            {percentage}%
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Visual progress bar */}
-                      <div className="w-full h-1.5 bg-black/[0.04] rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-[#0071E3] rounded-full transition-all duration-300"
-                          style={{ width: `${percentage}%` }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-
-                {/* 2. Save Contact (vCard) Action */}
-                {(() => {
-                  const percentage =
-                    totalIconClicks > 0
-                      ? Math.round((vcardClicksCount / totalIconClicks) * 100)
-                      : 0;
-
-                  return (
-                    <div className="p-3 rounded-2xl bg-[#FBFBFD] border border-black/[0.04] space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <div className="w-7 h-7 rounded-lg bg-[#0071E3] text-white flex items-center justify-center p-1.5 shrink-0 shadow-xs">
-                            <Download className="w-3.5 h-3.5" />
-                          </div>
-                          <div className="min-w-0">
-                            <span className="text-xs font-bold text-[#1D1D1F] block truncate">
-                              Save Contact to Phone
-                            </span>
-                            <span className="text-[10px] text-[#86868B] truncate block font-mono">
-                              Direct Address Book VCF Download
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="text-right shrink-0">
-                          <span className="text-xs font-bold text-[#1D1D1F] font-mono block">
-                            {vcardClicksCount} <span className="text-[10px] font-normal text-[#86868B]">saved</span>
-                          </span>
-                          <span className="text-[10px] text-[#0071E3] font-semibold font-mono">
-                            {percentage}%
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="w-full h-1.5 bg-black/[0.04] rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-emerald-500 rounded-full transition-all duration-300"
-                          style={{ width: `${percentage}%` }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })()}
-              </div>
-
-              {/* Informative Note */}
-              <div className="pt-2 text-center">
-                <p className="text-[10px] text-[#86868B] leading-relaxed">
-                  Every click on WhatsApp, Call, Email, Socials, or Contact Download is tracked in real-time.
-                </p>
-              </div>
-            </div>
-          )}
         </div>
-      )}
-    </div>
+      </div>
   );
 }
