@@ -39,39 +39,3 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(15, 23, 42, 0.28);
 }
-
-@keyframes orbitSlow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes orbitReverse {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
-}
-
-@keyframes floatGentle {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes pulseRadar {
-  0%, 100% { opacity: 0.25; transform: scale(0.95); }
-  50% { opacity: 0.65; transform: scale(1.05); }
-}
-
-.animate-orbit-slow {
-  animation: orbitSlow 25s linear infinite;
-}
-
-.animate-orbit-reverse {
-  animation: orbitReverse 35s linear infinite;
-}
-
-.animate-float-gentle {
-  animation: floatGentle 4s ease-in-out infinite;
-}
-
-.animate-pulse-radar {
-  animation: pulseRadar 3s ease-in-out infinite;
-}

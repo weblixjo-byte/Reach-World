@@ -11,7 +11,7 @@ import {
   Pencil,
   BarChart3,
   Layers,
-  Sparkles,
+  Trophy,
   Smartphone,
   X,
   CreditCard,
@@ -252,66 +252,66 @@ export default function FleetAnalyticsView({
         )}
       </div>
 
-      {/* KPI Highlight Matrix */}
+      {/* KPI Highlight Matrix - Navy Background with Crisp White Typography */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Metric 1: Verified Scans */}
-        <div className="rounded-2xl bg-white border border-slate-200/80 p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+        <div className="rounded-2xl bg-[#0A192F] text-white border border-slate-800/80 p-5 shadow-sm">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
+            <span className="text-[11px] font-bold tracking-wider text-slate-300 uppercase">
               VERIFIED NFC SCANS
             </span>
-            <Eye className="w-4 h-4 text-[#0A192F]" />
+            <Eye className="w-4 h-4 text-white" />
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-[#0F172A] tracking-tight">
+            <span className="text-3xl font-extrabold text-white tracking-tight">
               {stats.totalTaps.toLocaleString()}
             </span>
-            <span className="text-xs text-slate-500 font-medium">Physical Taps</span>
+            <span className="text-xs text-slate-300 font-medium">Physical Taps</span>
           </div>
         </div>
 
         {/* Metric 2: Total Action Clicks */}
-        <div className="rounded-2xl bg-white border border-slate-200/80 p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+        <div className="rounded-2xl bg-[#0A192F] text-white border border-slate-800/80 p-5 shadow-sm">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
+            <span className="text-[11px] font-bold tracking-wider text-slate-300 uppercase">
               TOTAL ICON CLICKS
             </span>
-            <MousePointerClick className="w-4 h-4 text-[#0A192F]" />
+            <MousePointerClick className="w-4 h-4 text-white" />
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-[#0F172A] tracking-tight">
+            <span className="text-3xl font-extrabold text-white tracking-tight">
               {stats.totalClicks.toLocaleString()}
             </span>
-            <span className="text-xs text-slate-500 font-medium">Actions Taken</span>
+            <span className="text-xs text-slate-300 font-medium">Actions Taken</span>
           </div>
         </div>
 
         {/* Metric 3: Tap-Through Rate */}
-        <div className="rounded-2xl bg-white border border-slate-200/80 p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+        <div className="rounded-2xl bg-[#0A192F] text-white border border-slate-800/80 p-5 shadow-sm">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
+            <span className="text-[11px] font-bold tracking-wider text-slate-300 uppercase">
               INTERACTION RATE (CTR)
             </span>
-            <TrendingUp className="w-4 h-4 text-[#0A192F]" />
+            <TrendingUp className="w-4 h-4 text-white" />
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-[#0F172A] tracking-tight">
+            <span className="text-3xl font-extrabold text-white tracking-tight">
               {stats.ctr}%
             </span>
-            <span className="text-xs text-slate-700 font-semibold">Conversion</span>
+            <span className="text-xs text-slate-300 font-semibold">Conversion</span>
           </div>
         </div>
 
         {/* Metric 4: Top Performing Channel */}
-        <div className="rounded-2xl bg-white border border-slate-200/80 p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+        <div className="rounded-2xl bg-[#0A192F] text-white border border-slate-800/80 p-5 shadow-sm">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
+            <span className="text-[11px] font-bold tracking-wider text-slate-300 uppercase">
               TOP PERFORMING CHANNEL
             </span>
-            <Sparkles className="w-4 h-4 text-[#0A192F]" />
+            <Trophy className="w-4 h-4 text-white" />
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-[#0F172A] tracking-tight truncate">
+            <span className="text-2xl font-bold text-white tracking-tight truncate">
               {stats.topChannel?.name || "None yet"}
             </span>
           </div>
@@ -348,8 +348,8 @@ export default function FleetAnalyticsView({
                 <tr className="hover:bg-slate-50/70 transition-colors">
                   <td className="py-3.5 px-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-[#0A192F]">
-                        <Download className="w-4 h-4" />
+                      <div className="w-8 h-8 rounded-xl bg-[#0A192F] flex items-center justify-center p-1.5 shadow-2xs">
+                        <Download className="w-4 h-4 text-white" />
                       </div>
                       <div>
                         <span className="font-semibold text-slate-900 block">Save Contact</span>
@@ -385,8 +385,8 @@ export default function FleetAnalyticsView({
                     <tr key={link._id || idx} className="hover:bg-slate-50/70 transition-colors">
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center p-1.5 shadow-2xs">
-                            <SocialIcon type={link.icon} className="w-full h-full text-[#0A192F]" />
+                          <div className="w-8 h-8 rounded-xl bg-[#0A192F] flex items-center justify-center p-1.5 shadow-2xs">
+                            <SocialIcon type={link.icon} className="w-full h-full" />
                           </div>
                           <div>
                             <span className="font-semibold text-slate-900 block">
@@ -433,7 +433,7 @@ export default function FleetAnalyticsView({
         <div className="lg:col-span-2 rounded-2xl bg-white border border-slate-200/80 p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-6">
           <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-[#0A192F]">
+              <div className="w-8 h-8 rounded-xl bg-[#0A192F] flex items-center justify-center text-white shadow-2xs">
                 <BarChart3 className="w-4 h-4" />
               </div>
               <div>
@@ -460,8 +460,8 @@ export default function FleetAnalyticsView({
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center p-2 shadow-2xs">
-                          <SocialIcon type={channel.icon} className="w-full h-full text-[#0A192F]" />
+                        <div className="w-9 h-9 rounded-xl bg-[#0A192F] flex items-center justify-center p-2 shadow-2xs">
+                          <SocialIcon type={channel.icon} className="w-full h-full" />
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
@@ -516,15 +516,15 @@ export default function FleetAnalyticsView({
           )}
         </div>
 
-        {/* Right Column (1 span): Funnel & Scope Summary */}
-        <div className="rounded-2xl bg-white border border-slate-200/80 p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col justify-between space-y-6">
+        {/* Right Column (1 span): Funnel & Scope Summary - Dark Navy with Crisp White Typography */}
+        <div className="rounded-2xl bg-[#0A192F] text-white border border-slate-800/80 p-6 sm:p-7 shadow-sm flex flex-col justify-between space-y-6">
           <div className="space-y-4">
-            <div className="flex items-center gap-2.5 pb-4 border-b border-slate-100">
-              <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-[#0A192F]">
+            <div className="flex items-center gap-2.5 pb-4 border-b border-white/10">
+              <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white shadow-2xs">
                 <Layers className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-[#0F172A] tracking-tight">
+                <h3 className="text-sm font-bold text-white tracking-tight">
                   Engagement Funnel
                 </h3>
               </div>
@@ -532,42 +532,42 @@ export default function FleetAnalyticsView({
 
             {/* Funnel Steps */}
             <div className="space-y-2.5 pt-1">
-              <div className="p-3.5 rounded-xl bg-slate-50/70 border border-slate-200/70 flex items-center justify-between">
+              <div className="p-3.5 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-[#0A192F]" />
-                  <span className="text-xs text-slate-700 font-medium">1. Physical NFC Tap</span>
+                  <div className="w-2 h-2 rounded-full bg-sky-400" />
+                  <span className="text-xs text-slate-200 font-medium">1. Physical NFC Tap</span>
                 </div>
-                <span className="text-xs font-bold text-[#0F172A] font-mono">
+                <span className="text-xs font-bold text-white font-mono">
                   {stats.totalTaps} (100%)
                 </span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-slate-50/70 border border-slate-200/70 flex items-center justify-between">
+              <div className="p-3.5 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-slate-500" />
-                  <span className="text-xs text-slate-700 font-medium">2. Profile Impression</span>
+                  <div className="w-2 h-2 rounded-full bg-sky-300" />
+                  <span className="text-xs text-slate-200 font-medium">2. Profile Impression</span>
                 </div>
-                <span className="text-xs font-bold text-[#0F172A] font-mono">
+                <span className="text-xs font-bold text-white font-mono">
                   {stats.totalTaps} ({stats.totalTaps > 0 ? "100%" : "0%"})
                 </span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-slate-50/70 border border-slate-200/70 flex items-center justify-between">
+              <div className="p-3.5 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-slate-700" />
-                  <span className="text-xs text-slate-700 font-medium">3. Contact Action Click</span>
+                  <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span className="text-xs text-slate-200 font-medium">3. Contact Action Click</span>
                 </div>
-                <span className="text-xs font-bold text-[#0F172A] font-mono">
+                <span className="text-xs font-bold text-white font-mono">
                   {stats.totalClicks} ({stats.ctr}%)
                 </span>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-slate-50/70 border border-slate-200/70 flex items-center justify-between">
+              <div className="p-3.5 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-slate-900" />
-                  <span className="text-xs text-slate-700 font-medium">4. Contact Saved (vCard)</span>
+                  <div className="w-2 h-2 rounded-full bg-teal-300" />
+                  <span className="text-xs text-slate-200 font-medium">4. Contact Saved (vCard)</span>
                 </div>
-                <span className="text-xs font-bold text-[#0F172A] font-mono">
+                <span className="text-xs font-bold text-white font-mono">
                   {stats.vcardClicks}
                 </span>
               </div>
