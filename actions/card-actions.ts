@@ -90,8 +90,8 @@ export async function getDashboardData(): Promise<DashboardDataResponse> {
       .sort({ cardNumber: 1 })
       .lean();
 
-    // Auto-generate secure unguessable slug for any card with a sequential numeric slug
-    const numericCards = rawCards.filter((c: any) => !c.slug || /^\d+$/.test(c.slug));
+    // Auto-generate secure unguessable slug for any card with a sequential numeric slug (except Card #2 if configured as "2" for live QR testing)
+    const numericCards = rawCards.filter((c: any) => (!c.slug || /^\d+$/.test(c.slug)) && !(c.cardNumber === 2 && c.slug === "2"));
     if (numericCards.length > 0) {
       const chars = "abcdefghjkmnpqrstuvwxyz23456789";
       for (const nc of numericCards) {
@@ -505,7 +505,8 @@ export async function updateCard(cardId: string, data: CardFormData) {
     const oldSlug = existing.slug;
 
     // Automatically ensure unguessable secure slug (prevents sequential URL guessing /1, /2, /3)
-    if (!existing.slug || /^\d+$/.test(existing.slug)) {
+    // Card #2 is allowed to maintain slug "2" for physical QR testing per admin requirement
+    if ((!existing.slug || /^\d+$/.test(existing.slug)) && !(existing.cardNumber === 2 && (data.slug === "2" || existing.slug === "2"))) {
       const chars = "abcdefghjkmnpqrstuvwxyz23456789";
       let token = "";
       for (let i = 0; i < 4; i++) {
@@ -723,6 +724,11 @@ export async function getCardBySlug(slug: string) {
 
     // Strict slug match: prevents guessing other employee cards by changing URL numbers
     let doc = await Card.findOne({ slug: cleanSlug }).lean();
+
+    // Support both /2 and previous /rw-02-ey39 for Card #2
+    if (!doc && (cleanSlug === "2" || cleanSlug === "rw-02-ey39")) {
+      doc = await Card.findOne({ cardNumber: 2 }).lean();
+    }
 
     // Fallback for default slots that haven't been assigned a secure custom handle yet
     if (!doc) {

@@ -44,10 +44,10 @@ export default function CardEditorModal({
   const [mode, setMode] = useState<CardModeType>(initialData?.mode || "profile");
   const [redirectUrl, setRedirectUrl] = useState(initialData?.redirectUrl || "");
 
-  // Automatic secure slug
+  // Automatic secure slug (Card #2 retains "2" for live QR testing)
   const [slugVal, setSlugVal] = useState(() => {
     const raw = initialData?.slug;
-    if (raw && !/^\d+$/.test(raw)) return raw;
+    if (raw && (!/^\d+$/.test(raw) || initialData?.cardNumber === 2)) return raw;
     const chars = "abcdefghjkmnpqrstuvwxyz23456789";
     let token = "";
     for (let i = 0; i < 4; i++) {
@@ -134,7 +134,7 @@ export default function CardEditorModal({
       setRedirectUrl(initialData.redirectUrl || "");
 
       const raw = initialData.slug;
-      if (raw && !/^\d+$/.test(raw)) {
+      if (raw && (!/^\d+$/.test(raw) || initialData.cardNumber === 2)) {
         setSlugVal(raw);
       } else {
         const chars = "abcdefghjkmnpqrstuvwxyz23456789";
